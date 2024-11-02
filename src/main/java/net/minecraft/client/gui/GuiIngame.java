@@ -3,6 +3,8 @@ package net.minecraft.client.gui;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
+import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -43,6 +45,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
+import top.zklmc.Pisces;
+import top.zklmc.utils.render.RoundedUtil;
+import top.zklmc.utils.wed.CheckProvince;
 
 public class GuiIngame extends Gui
 {
@@ -393,6 +398,12 @@ public class GuiIngame extends Gui
             RenderHelper.disableStandardItemLighting();
             GlStateManager.disableRescaleNormal();
             GlStateManager.disableBlend();
+
+            Color color = new Color(255,131,250);
+            getFontRenderer().drawStringWithShadow(Pisces.NAME,5,5,color.getRGB());
+            getFontRenderer().drawStringWithShadow(" [FPS:" + Minecraft.getDebugFPS() +"]",getFontRenderer().getStringWidth(Pisces.NAME) + 5,5, Color.WHITE.getRGB());
+            getFontRenderer().drawStringWithShadow("Beautiful Shit Client Updated!",5,15, Color.WHITE.getRGB());
+
         }
     }
 
@@ -899,6 +910,7 @@ public class GuiIngame extends Gui
                     }
                 }
             }
+
 
             this.mc.mcProfiler.endSection();
         }
