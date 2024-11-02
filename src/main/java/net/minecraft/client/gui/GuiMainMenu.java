@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
+import top.zklmc.Pisces;
 
 public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 {
@@ -268,6 +269,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer")));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer")));
 
+        /*
         if (Reflector.GuiModList_Constructor.exists())
         {
             this.buttonList.add(this.realmsButton = new GuiButton(14, this.width / 2 + 2, p_73969_1_ + p_73969_2_ * 2, 98, 20, I18n.format("menu.online").replace("Minecraft", "").trim()));
@@ -277,6 +279,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         {
             this.buttonList.add(this.realmsButton = new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.format("menu.online")));
         }
+        */
     }
 
     /**
@@ -636,7 +639,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         GlStateManager.scale(f, f, f);
         this.drawCenteredString(this.fontRendererObj, this.splashText, 0, -8, -256);
         GlStateManager.popMatrix();
-        String s = "Minecraft 1.8.9";
+        String s = Pisces.NAME + " " + Pisces.VERSION;
 
         if (this.mc.isDemo())
         {
