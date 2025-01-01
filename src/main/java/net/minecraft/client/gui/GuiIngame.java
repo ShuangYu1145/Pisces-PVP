@@ -45,9 +45,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
-import top.zklmc.Pisces;
-import top.zklmc.utils.render.RoundedUtil;
-import top.zklmc.utils.wed.CheckProvince;
 
 public class GuiIngame extends Gui
 {
@@ -400,8 +397,8 @@ public class GuiIngame extends Gui
             GlStateManager.disableBlend();
 
             Color color = new Color(255,131,250);
-            getFontRenderer().drawStringWithShadow(Pisces.NAME,5,5,color.getRGB());
-            getFontRenderer().drawStringWithShadow(" [FPS:" + Minecraft.getDebugFPS() +"]",getFontRenderer().getStringWidth(Pisces.NAME) + 5,5, Color.WHITE.getRGB());
+            getFontRenderer().drawStringWithShadow("Furry",5,5,color.getRGB());
+            getFontRenderer().drawStringWithShadow(" [FPS:" + Minecraft.getDebugFPS() +"]",getFontRenderer().getStringWidth("Furry") + 5,5, Color.WHITE.getRGB());
             getFontRenderer().drawStringWithShadow("Beautiful Shit Client Updated!",5,15, Color.WHITE.getRGB());
 
         }

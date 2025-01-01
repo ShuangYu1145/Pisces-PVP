@@ -36,7 +36,6 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
-import top.zklmc.Pisces;
 
 public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 {
@@ -630,7 +629,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         GlStateManager.scale(f, f, f);
         this.drawCenteredString(this.fontRendererObj, this.splashText, 0, -8, -256);
         GlStateManager.popMatrix();
-        String s = Pisces.NAME + " " + Pisces.VERSION;
+        String s = "Furry";
 
         if (this.mc.isDemo())
         {

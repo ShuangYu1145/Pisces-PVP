@@ -186,7 +186,6 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.OpenGLException;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
-import top.zklmc.Pisces;
 
 public class Minecraft implements IThreadListener, IPlayerUsage
 {
@@ -581,8 +580,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
         this.checkGLError("Post startup");
         this.ingameGUI = new GuiIngame(this);
-
-        Pisces.instance.run();
 
         if (this.serverName != null)
         {
@@ -1068,7 +1065,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         try
         {
             this.stream.shutdownStream();
-            Pisces.instance.stop();
             logger.info("Stopping!");
 
             try
