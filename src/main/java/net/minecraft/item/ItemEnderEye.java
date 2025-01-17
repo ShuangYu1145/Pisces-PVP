@@ -20,14 +20,11 @@ public class ItemEnderEye extends Item
         this.setCreativeTab(CreativeTabs.tabMisc);
     }
 
-    /**
-     * Called when a Block is right-clicked with this Item
-     */
     public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         IBlockState iblockstate = worldIn.getBlockState(pos);
 
-        if (playerIn.canPlayerEdit(pos.offset(side), side, stack) && iblockstate.getBlock() == Blocks.end_portal_frame && !iblockstate.getValue(BlockEndPortalFrame.EYE))
+        if (playerIn.canPlayerEdit(pos.offset(side), side, stack) && iblockstate.getBlock() == Blocks.end_portal_frame && !((Boolean)iblockstate.getValue(BlockEndPortalFrame.EYE)).booleanValue())
         {
             if (worldIn.isRemote)
             {
@@ -35,7 +32,7 @@ public class ItemEnderEye extends Item
             }
             else
             {
-                worldIn.setBlockState(pos, iblockstate.withProperty(BlockEndPortalFrame.EYE, true), 2);
+                worldIn.setBlockState(pos, iblockstate.withProperty(BlockEndPortalFrame.EYE, Boolean.valueOf(true)), 2);
                 worldIn.updateComparatorOutputLevel(pos, Blocks.end_portal_frame);
                 --stack.stackSize;
 
@@ -47,10 +44,10 @@ public class ItemEnderEye extends Item
                     double d3 = 0.0D;
                     double d4 = 0.0D;
                     double d5 = 0.0D;
-                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5);
+                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5, new int[0]);
                 }
 
-                EnumFacing enumfacing = iblockstate.getValue(BlockEndPortalFrame.FACING);
+                EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(BlockEndPortalFrame.FACING);
                 int l = 0;
                 int j = 0;
                 boolean flag1 = false;
@@ -64,7 +61,7 @@ public class ItemEnderEye extends Item
 
                     if (iblockstate1.getBlock() == Blocks.end_portal_frame)
                     {
-                        if (!iblockstate1.getValue(BlockEndPortalFrame.EYE))
+                        if (!((Boolean)iblockstate1.getValue(BlockEndPortalFrame.EYE)).booleanValue())
                         {
                             flag = false;
                             break;
@@ -89,7 +86,7 @@ public class ItemEnderEye extends Item
                         BlockPos blockpos2 = blockpos.offset(enumfacing1, i1);
                         IBlockState iblockstate3 = worldIn.getBlockState(blockpos2);
 
-                        if (iblockstate3.getBlock() != Blocks.end_portal_frame || !iblockstate3.getValue(BlockEndPortalFrame.EYE))
+                        if (iblockstate3.getBlock() != Blocks.end_portal_frame || !((Boolean)iblockstate3.getValue(BlockEndPortalFrame.EYE)).booleanValue())
                         {
                             flag = false;
                             break;
@@ -105,7 +102,7 @@ public class ItemEnderEye extends Item
                             BlockPos blockpos3 = blockpos.offset(enumfacing, l1);
                             IBlockState iblockstate2 = worldIn.getBlockState(blockpos3);
 
-                            if (iblockstate2.getBlock() != Blocks.end_portal_frame || !iblockstate2.getValue(BlockEndPortalFrame.EYE))
+                            if (iblockstate2.getBlock() != Blocks.end_portal_frame || !((Boolean)iblockstate2.getValue(BlockEndPortalFrame.EYE)).booleanValue())
                             {
                                 flag = false;
                                 break;
@@ -137,9 +134,6 @@ public class ItemEnderEye extends Item
         }
     }
 
-    /**
-     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
-     */
     public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
     {
         MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(worldIn, playerIn, false);

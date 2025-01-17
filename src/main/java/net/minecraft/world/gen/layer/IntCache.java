@@ -6,10 +6,10 @@ import java.util.List;
 public class IntCache
 {
     private static int intCacheSize = 256;
-    private static List<int[]> freeSmallArrays = Lists.newArrayList();
-    private static List<int[]> inUseSmallArrays = Lists.newArrayList();
-    private static List<int[]> freeLargeArrays = Lists.newArrayList();
-    private static List<int[]> inUseLargeArrays = Lists.newArrayList();
+    private static List<int[]> freeSmallArrays = Lists.<int[]>newArrayList();
+    private static List<int[]> inUseSmallArrays = Lists.<int[]>newArrayList();
+    private static List<int[]> freeLargeArrays = Lists.<int[]>newArrayList();
+    private static List<int[]> inUseLargeArrays = Lists.<int[]>newArrayList();
 
     public static synchronized int[] getIntCache(int p_76445_0_)
     {
@@ -23,7 +23,7 @@ public class IntCache
             }
             else
             {
-                int[] aint3 = freeSmallArrays.remove(freeSmallArrays.size() - 1);
+                int[] aint3 = (int[])freeSmallArrays.remove(freeSmallArrays.size() - 1);
                 inUseSmallArrays.add(aint3);
                 return aint3;
             }
@@ -45,15 +45,12 @@ public class IntCache
         }
         else
         {
-            int[] aint = freeLargeArrays.remove(freeLargeArrays.size() - 1);
+            int[] aint = (int[])freeLargeArrays.remove(freeLargeArrays.size() - 1);
             inUseLargeArrays.add(aint);
             return aint;
         }
     }
 
-    /**
-     * Mark all pre-allocated arrays as available for re-use by moving them to the appropriate free lists.
-     */
     public static synchronized void resetIntCache()
     {
         if (!freeLargeArrays.isEmpty())
@@ -72,10 +69,6 @@ public class IntCache
         inUseSmallArrays.clear();
     }
 
-    /**
-     * Gets a human-readable string that indicates the sizes of all the cache fields.  Basically a synchronized static
-     * toString.
-     */
     public static synchronized String getCacheSizes()
     {
         return "cache: " + freeLargeArrays.size() + ", tcache: " + freeSmallArrays.size() + ", allocated: " + inUseLargeArrays.size() + ", tallocated: " + inUseSmallArrays.size();

@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 
 public class ItemFishFood extends ItemFood
 {
-    /** Indicates whether this fish is "cooked" or not. */
     private final boolean cooked;
 
     public ItemFishFood(boolean cooked)
@@ -52,9 +51,6 @@ public class ItemFishFood extends ItemFood
         super.onFoodEaten(stack, worldIn, player);
     }
 
-    /**
-     * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
-     */
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
     {
         for (ItemFishFood.FishType itemfishfood$fishtype : ItemFishFood.FishType.values())
@@ -66,10 +62,6 @@ public class ItemFishFood extends ItemFood
         }
     }
 
-    /**
-     * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have
-     * different names based on their damage or NBT.
-     */
     public String getUnlocalizedName(ItemStack stack)
     {
         ItemFishFood.FishType itemfishfood$fishtype = ItemFishFood.FishType.byItemStack(stack);
@@ -83,7 +75,7 @@ public class ItemFishFood extends ItemFood
         CLOWNFISH(2, "clownfish", 1, 0.1F),
         PUFFERFISH(3, "pufferfish", 1, 0.1F);
 
-        private static final Map<Integer, ItemFishFood.FishType> META_LOOKUP = Maps.newHashMap();
+        private static final Map<Integer, ItemFishFood.FishType> META_LOOKUP = Maps.<Integer, ItemFishFood.FishType>newHashMap();
         private final int meta;
         private final String unlocalizedName;
         private final int uncookedHealAmount;
@@ -151,7 +143,7 @@ public class ItemFishFood extends ItemFood
 
         public static ItemFishFood.FishType byMetadata(int meta)
         {
-            ItemFishFood.FishType itemfishfood$fishtype = META_LOOKUP.get(meta);
+            ItemFishFood.FishType itemfishfood$fishtype = (ItemFishFood.FishType)META_LOOKUP.get(Integer.valueOf(meta));
             return itemfishfood$fishtype == null ? COD : itemfishfood$fishtype;
         }
 
@@ -163,7 +155,7 @@ public class ItemFishFood extends ItemFood
         static {
             for (ItemFishFood.FishType itemfishfood$fishtype : values())
             {
-                META_LOOKUP.put(itemfishfood$fishtype.getMetadata(), itemfishfood$fishtype);
+                META_LOOKUP.put(Integer.valueOf(itemfishfood$fishtype.getMetadata()), itemfishfood$fishtype);
             }
         }
     }

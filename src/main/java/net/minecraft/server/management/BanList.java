@@ -25,7 +25,7 @@ public class BanList extends UserList<String, IPBanEntry>
     public IPBanEntry getBanEntry(SocketAddress address)
     {
         String s = this.addressToString(address);
-        return this.getEntry(s);
+        return (IPBanEntry)this.getEntry(s);
     }
 
     private String addressToString(SocketAddress address)

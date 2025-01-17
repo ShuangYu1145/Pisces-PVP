@@ -11,38 +11,26 @@ import net.minecraft.world.gen.structure.StructureBoundingBox;
 
 public class CommandCompare extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "testforblocks";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.compare.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 9)
         {
-            throw new WrongUsageException("commands.compare.usage");
+            throw new WrongUsageException("commands.compare.usage", new Object[0]);
         }
         else
         {
@@ -56,7 +44,7 @@ public class CommandCompare extends CommandBase
 
             if (i > 524288)
             {
-                throw new CommandException("commands.compare.tooManyBlocks", i, 524288);
+                throw new CommandException("commands.compare.tooManyBlocks", new Object[] {Integer.valueOf(i), Integer.valueOf(524288)});
             }
             else if (structureboundingbox.minY >= 0 && structureboundingbox.maxY < 256 && structureboundingbox1.minY >= 0 && structureboundingbox1.maxY < 256)
             {
@@ -126,7 +114,7 @@ public class CommandCompare extends CommandBase
 
                                     if (flag1)
                                     {
-                                        throw new CommandException("commands.compare.failed");
+                                        throw new CommandException("commands.compare.failed", new Object[0]);
                                     }
                                 }
                             }
@@ -134,37 +122,22 @@ public class CommandCompare extends CommandBase
                     }
 
                     sender.setCommandStat(CommandResultStats.Type.AFFECTED_BLOCKS, i);
-                    notifyOperators(sender, this, "commands.compare.success", new Object[] {i});
+                    notifyOperators(sender, this, "commands.compare.success", new Object[] {Integer.valueOf(i)});
                 }
                 else
                 {
-                    throw new CommandException("commands.compare.outOfWorld");
+                    throw new CommandException("commands.compare.outOfWorld", new Object[0]);
                 }
             }
             else
             {
-                throw new CommandException("commands.compare.outOfWorld");
+                throw new CommandException("commands.compare.outOfWorld", new Object[0]);
             }
         }
     }
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length > 0 && args.length <= 3)
-        {
-            return func_175771_a(args, 0, pos);
-        }
-        else if (args.length > 3 && args.length <= 6)
-        {
-            return func_175771_a(args, 3, pos);
-        }
-        else if (args.length > 6 && args.length <= 9)
-        {
-            return func_175771_a(args, 6, pos);
-        }
-        else
-        {
-            return args.length == 10 ? getListOfStringsMatchingLastWord(args, new String[] {"masked", "all"}) : null;
-        }
+        return args.length > 0 && args.length <= 3 ? func_175771_a(args, 0, pos) : (args.length > 3 && args.length <= 6 ? func_175771_a(args, 3, pos) : (args.length > 6 && args.length <= 9 ? func_175771_a(args, 6, pos) : (args.length == 10 ? getListOfStringsMatchingLastWord(args, new String[] {"masked", "all"}): null)));
     }
 }

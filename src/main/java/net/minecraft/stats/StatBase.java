@@ -12,15 +12,12 @@ import net.minecraft.util.IJsonSerializable;
 
 public class StatBase
 {
-    /** The Stat ID */
     public final String statId;
-
-    /** The Stat name */
     private final IChatComponent statName;
     public boolean isIndependent;
     private final IStatType type;
     private final IScoreObjectiveCriteria objectiveCriteria;
-    private Class<? extends IJsonSerializable> field_150956_d;
+    private Class <? extends IJsonSerializable > field_150956_d;
     private static NumberFormat numberFormat = NumberFormat.getIntegerInstance(Locale.US);
     public static IStatType simpleStatType = new IStatType()
     {
@@ -39,23 +36,7 @@ public class StatBase
             double d2 = d1 / 60.0D;
             double d3 = d2 / 24.0D;
             double d4 = d3 / 365.0D;
-
-            if (d4 > 0.5D)
-            {
-                return StatBase.decimalFormat.format(d4) + " y";
-            }
-            else if (d3 > 0.5D)
-            {
-                return StatBase.decimalFormat.format(d3) + " d";
-            }
-            else if (d2 > 0.5D)
-            {
-                return StatBase.decimalFormat.format(d2) + " h";
-            }
-            else
-            {
-                return d1 > 0.5D ? StatBase.decimalFormat.format(d1) + " m" : d0 + " s";
-            }
+            return d4 > 0.5D ? StatBase.decimalFormat.format(d4) + " y" : (d3 > 0.5D ? StatBase.decimalFormat.format(d3) + " d" : (d2 > 0.5D ? StatBase.decimalFormat.format(d2) + " h" : (d1 > 0.5D ? StatBase.decimalFormat.format(d1) + " m" : d0 + " s")));
         }
     };
     public static IStatType distanceStatType = new IStatType()
@@ -64,15 +45,7 @@ public class StatBase
         {
             double d0 = (double)number / 100.0D;
             double d1 = d0 / 1000.0D;
-
-            if (d1 > 0.5D)
-            {
-                return StatBase.decimalFormat.format(d1) + " km";
-            }
-            else
-            {
-                return d0 > 0.5D ? StatBase.decimalFormat.format(d0) + " m" : number + " cm";
-            }
+            return d1 > 0.5D ? StatBase.decimalFormat.format(d1) + " km" : (d0 > 0.5D ? StatBase.decimalFormat.format(d0) + " m" : number + " cm");
         }
     };
     public static IStatType field_111202_k = new IStatType()
@@ -97,24 +70,17 @@ public class StatBase
         this(statIdIn, statNameIn, simpleStatType);
     }
 
-    /**
-     * Initializes the current stat as independent (i.e., lacking prerequisites for being updated) and returns the
-     * current instance.
-     */
     public StatBase initIndependentStat()
     {
         this.isIndependent = true;
         return this;
     }
 
-    /**
-     * Register the stat into StatList.
-     */
     public StatBase registerStat()
     {
         if (StatList.oneShotStats.containsKey(this.statId))
         {
-            throw new RuntimeException("Duplicate stat id: \"" + (StatList.oneShotStats.get(this.statId)).statName + "\" and \"" + this.statName + "\" at id " + this.statId);
+            throw new RuntimeException("Duplicate stat id: \"" + ((StatBase)StatList.oneShotStats.get(this.statId)).statName + "\" and \"" + this.statName + "\" at id " + this.statId);
         }
         else
         {
@@ -124,9 +90,6 @@ public class StatBase
         }
     }
 
-    /**
-     * Returns whether or not the StatBase-derived class is a statistic (running counter) or an achievement (one-shot).
-     */
     public boolean isAchievement()
     {
         return false;
@@ -145,9 +108,6 @@ public class StatBase
         return ichatcomponent;
     }
 
-    /**
-     * 1.8.9
-     */
     public IChatComponent createChatComponent()
     {
         IChatComponent ichatcomponent = this.getStatName();
@@ -183,20 +143,17 @@ public class StatBase
         return "Stat{id=" + this.statId + ", nameId=" + this.statName + ", awardLocallyOnly=" + this.isIndependent + ", formatter=" + this.type + ", objectiveCriteria=" + this.objectiveCriteria + '}';
     }
 
-    /**
-     * 1.8.9
-     */
     public IScoreObjectiveCriteria getCriteria()
     {
         return this.objectiveCriteria;
     }
 
-    public Class<? extends IJsonSerializable> func_150954_l()
+    public Class <? extends IJsonSerializable > func_150954_l()
     {
         return this.field_150956_d;
     }
 
-    public StatBase func_150953_b(Class<? extends IJsonSerializable> p_150953_1_)
+    public StatBase func_150953_b(Class <? extends IJsonSerializable > p_150953_1_)
     {
         this.field_150956_d = p_150953_1_;
         return this;

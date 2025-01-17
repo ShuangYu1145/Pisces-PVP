@@ -20,34 +20,20 @@ import net.minecraft.world.World;
 
 public abstract class MobSpawnerBaseLogic
 {
-    /** The delay to spawn. */
     private int spawnDelay = 20;
     private String mobID = "Pig";
-    private final List<MobSpawnerBaseLogic.WeightedRandomMinecart> minecartToSpawn = Lists.newArrayList();
+    private final List<MobSpawnerBaseLogic.WeightedRandomMinecart> minecartToSpawn = Lists.<MobSpawnerBaseLogic.WeightedRandomMinecart>newArrayList();
     private MobSpawnerBaseLogic.WeightedRandomMinecart randomEntity;
-
-    /** The rotation of the mob inside the mob spawner */
     private double mobRotation;
-
-    /** the previous rotation of the mob inside the mob spawner */
     private double prevMobRotation;
     private int minSpawnDelay = 200;
     private int maxSpawnDelay = 800;
     private int spawnCount = 4;
-
-    /** Cached instance of the entity to render inside the spawner. */
     private Entity cachedEntity;
     private int maxNearbyEntities = 6;
-
-    /** The distance from which a player activates the spawner. */
     private int activatingRangeFromPlayer = 16;
-
-    /** The range coefficient for spawning entities around. */
     private int spawnRange = 4;
 
-    /**
-     * Gets the entity name that should be spawned.
-     */
     private String getEntityNameToSpawn()
     {
         if (this.getRandomEntity() == null)
@@ -70,9 +56,6 @@ public abstract class MobSpawnerBaseLogic
         this.mobID = name;
     }
 
-    /**
-     * Returns true if there's a player close enough to this mob spawner to activate it.
-     */
     private boolean isActivated()
     {
         BlockPos blockpos = this.getSpawnerPosition();
@@ -90,8 +73,8 @@ public abstract class MobSpawnerBaseLogic
                 double d3 = (double)((float)blockpos.getX() + this.getSpawnerWorld().rand.nextFloat());
                 double d4 = (double)((float)blockpos.getY() + this.getSpawnerWorld().rand.nextFloat());
                 double d5 = (double)((float)blockpos.getZ() + this.getSpawnerWorld().rand.nextFloat());
-                this.getSpawnerWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d3, d4, d5, 0.0D, 0.0D, 0.0D);
-                this.getSpawnerWorld().spawnParticle(EnumParticleTypes.FLAME, d3, d4, d5, 0.0D, 0.0D, 0.0D);
+                this.getSpawnerWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d3, d4, d5, 0.0D, 0.0D, 0.0D, new int[0]);
+                this.getSpawnerWorld().spawnParticle(EnumParticleTypes.FLAME, d3, d4, d5, 0.0D, 0.0D, 0.0D, new int[0]);
 
                 if (this.spawnDelay > 0)
                 {
@@ -240,7 +223,7 @@ public abstract class MobSpawnerBaseLogic
 
         if (this.minecartToSpawn.size() > 0)
         {
-            this.setRandomEntity(WeightedRandom.getRandomItem(this.getSpawnerWorld().rand, this.minecartToSpawn));
+            this.setRandomEntity((MobSpawnerBaseLogic.WeightedRandomMinecart)WeightedRandom.getRandomItem(this.getSpawnerWorld().rand, this.minecartToSpawn));
         }
 
         this.func_98267_a(1);
@@ -352,9 +335,6 @@ public abstract class MobSpawnerBaseLogic
         return this.cachedEntity;
     }
 
-    /**
-     * Sets the delay to minDelay if parameter given is 1, else return false.
-     */
     public boolean setDelayToMin(int delay)
     {
         if (delay == 1 && this.getSpawnerWorld().isRemote)

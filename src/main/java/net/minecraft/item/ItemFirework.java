@@ -13,9 +13,6 @@ import net.minecraft.world.World;
 
 public class ItemFirework extends Item
 {
-    /**
-     * Called when a Block is right-clicked with this Item
-     */
     public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (!worldIn.isRemote)
@@ -36,9 +33,6 @@ public class ItemFirework extends Item
         }
     }
 
-    /**
-     * allows items to add custom lines of information to the mouseover description
-     */
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
         if (stack.hasTagCompound())
@@ -59,12 +53,12 @@ public class ItemFirework extends Item
                     for (int i = 0; i < nbttaglist.tagCount(); ++i)
                     {
                         NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
-                        List<String> list = Lists.newArrayList();
+                        List<String> list = Lists.<String>newArrayList();
                         ItemFireworkCharge.addExplosionInfo(nbttagcompound1, list);
 
                         if (list.size() > 0)
                         {
-                            for (int j = 1; j < list.size(); ++j)
+                            for (int j = 1; j < ((List)list).size(); ++j)
                             {
                                 list.set(j, "  " + (String)list.get(j));
                             }

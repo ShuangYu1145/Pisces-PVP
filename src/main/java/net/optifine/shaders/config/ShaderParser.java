@@ -106,14 +106,7 @@ public class ShaderParser
 
     public static int getShadowDepthIndex(String uniform)
     {
-        if (uniform.equals("shadow"))
-        {
-            return 0;
-        }
-        else
-        {
-            return uniform.equals("watershadow") ? 1 : getIndex(uniform, "shadowtex", 0, 1);
-        }
+        return uniform.equals("shadow") ? 0 : (uniform.equals("watershadow") ? 1 : getIndex(uniform, "shadowtex", 0, 1));
     }
 
     public static int getShadowColorIndex(String uniform)

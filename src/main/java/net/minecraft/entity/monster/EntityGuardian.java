@@ -33,6 +33,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.WeightedRandomFishable;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -62,7 +63,7 @@ public class EntityGuardian extends EntityMob
         this.tasks.addTask(9, new EntityAILookIdle(this));
         this.wander.setMutexBits(3);
         entityaimovetowardsrestriction.setMutexBits(3);
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 10, true, false, new EntityGuardian.GuardianTargetSelector(this)));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 10, true, false, new EntityGuardian.GuardianTargetSelector(this)));
         this.moveHelper = new EntityGuardian.GuardianMoveHelper(this);
         this.field_175484_c = this.field_175482_b = this.rand.nextFloat();
     }
@@ -76,27 +77,18 @@ public class EntityGuardian extends EntityMob
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(30.0D);
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     public void readEntityFromNBT(NBTTagCompound tagCompund)
     {
         super.readEntityFromNBT(tagCompund);
         this.setElder(tagCompund.getBoolean("Elder"));
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     public void writeEntityToNBT(NBTTagCompound tagCompound)
     {
         super.writeEntityToNBT(tagCompound);
         tagCompound.setBoolean("Elder", this.isElder());
     }
 
-    /**
-     * Returns new PathNavigateGround instance
-     */
     protected PathNavigate getNewNavigator(World worldIn)
     {
         return new PathNavigateSwimmer(this, worldIn);
@@ -105,32 +97,26 @@ public class EntityGuardian extends EntityMob
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(16, 0);
-        this.dataWatcher.addObject(17, 0);
+        this.dataWatcher.addObject(16, Integer.valueOf(0));
+        this.dataWatcher.addObject(17, Integer.valueOf(0));
     }
 
-    /**
-     * Returns true if given flag is set
-     */
     private boolean isSyncedFlagSet(int flagId)
     {
         return (this.dataWatcher.getWatchableObjectInt(16) & flagId) != 0;
     }
 
-    /**
-     * Sets a flag state "on/off" on both sides (client/server) by using DataWatcher
-     */
     private void setSyncedFlag(int flagId, boolean state)
     {
         int i = this.dataWatcher.getWatchableObjectInt(16);
 
         if (state)
         {
-            this.dataWatcher.updateObject(16, i | flagId);
+            this.dataWatcher.updateObject(16, Integer.valueOf(i | flagId));
         }
         else
         {
-            this.dataWatcher.updateObject(16, i & ~flagId);
+            this.dataWatcher.updateObject(16, Integer.valueOf(i & ~flagId));
         }
     }
 
@@ -154,9 +140,6 @@ public class EntityGuardian extends EntityMob
         return this.isSyncedFlagSet(4);
     }
 
-    /**
-     * Sets this Guardian to be an elder or not.
-     */
     public void setElder(boolean elder)
     {
         this.setSyncedFlag(4, elder);
@@ -164,7 +147,7 @@ public class EntityGuardian extends EntityMob
         if (elder)
         {
             this.setSize(1.9975F, 1.9975F);
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)0.3F);
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.30000001192092896D);
             this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(8.0D);
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(80.0D);
             this.enablePersistence();
@@ -180,7 +163,7 @@ public class EntityGuardian extends EntityMob
 
     private void setTargetedEntity(int entityId)
     {
-        this.dataWatcher.updateObject(17, entityId);
+        this.dataWatcher.updateObject(17, Integer.valueOf(entityId));
     }
 
     public boolean hasTargetedEntity()
@@ -239,63 +222,26 @@ public class EntityGuardian extends EntityMob
         }
     }
 
-    /**
-     * Get number of ticks, at least during which the living entity will be silent.
-     */
     public int getTalkInterval()
     {
         return 160;
     }
 
-    /**
-     * Returns the sound this mob makes while it's alive.
-     */
     protected String getLivingSound()
     {
-        if (!this.isInWater())
-        {
-            return "mob.guardian.land.idle";
-        }
-        else
-        {
-            return this.isElder() ? "mob.guardian.elder.idle" : "mob.guardian.idle";
-        }
+        return !this.isInWater() ? "mob.guardian.land.idle" : (this.isElder() ? "mob.guardian.elder.idle" : "mob.guardian.idle");
     }
 
-    /**
-     * Returns the sound this mob makes when it is hurt.
-     */
     protected String getHurtSound()
     {
-        if (!this.isInWater())
-        {
-            return "mob.guardian.land.hit";
-        }
-        else
-        {
-            return this.isElder() ? "mob.guardian.elder.hit" : "mob.guardian.hit";
-        }
+        return !this.isInWater() ? "mob.guardian.land.hit" : (this.isElder() ? "mob.guardian.elder.hit" : "mob.guardian.hit");
     }
 
-    /**
-     * Returns the sound this mob makes on death.
-     */
     protected String getDeathSound()
     {
-        if (!this.isInWater())
-        {
-            return "mob.guardian.land.death";
-        }
-        else
-        {
-            return this.isElder() ? "mob.guardian.elder.death" : "mob.guardian.death";
-        }
+        return !this.isInWater() ? "mob.guardian.land.death" : (this.isElder() ? "mob.guardian.elder.death" : "mob.guardian.death");
     }
 
-    /**
-     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
-     * prevent them from trampling crops
-     */
     protected boolean canTriggerWalking()
     {
         return false;
@@ -311,10 +257,6 @@ public class EntityGuardian extends EntityMob
         return this.worldObj.getBlockState(pos).getBlock().getMaterial() == Material.water ? 10.0F + this.worldObj.getLightBrightness(pos) - 0.5F : super.getBlockPathWeight(pos);
     }
 
-    /**
-     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-     * use this to react to sunlight and start to burn.
-     */
     public void onLivingUpdate()
     {
         if (this.worldObj.isRemote)
@@ -370,7 +312,7 @@ public class EntityGuardian extends EntityMob
 
                 for (int i = 0; i < 2; ++i)
                 {
-                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width - vec3.xCoord * 1.5D, this.posY + this.rand.nextDouble() * (double)this.height - vec3.yCoord * 1.5D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width - vec3.zCoord * 1.5D, 0.0D, 0.0D, 0.0D);
+                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width - vec3.xCoord * 1.5D, this.posY + this.rand.nextDouble() * (double)this.height - vec3.yCoord * 1.5D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width - vec3.zCoord * 1.5D, 0.0D, 0.0D, 0.0D, new int[0]);
                 }
             }
 
@@ -400,7 +342,7 @@ public class EntityGuardian extends EntityMob
                     while (d4 < d3)
                     {
                         d4 += 1.8D - d5 + this.rand.nextDouble() * (1.7D - d5);
-                        this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX + d0 * d4, this.posY + d1 * d4 + (double)this.getEyeHeight(), this.posZ + d2 * d4, 0.0D, 0.0D, 0.0D);
+                        this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX + d0 * d4, this.posY + d1 * d4 + (double)this.getEyeHeight(), this.posZ + d2 * d4, 0.0D, 0.0D, 0.0D, new int[0]);
                     }
                 }
             }
@@ -481,13 +423,6 @@ public class EntityGuardian extends EntityMob
         }
     }
 
-    /**
-     * Drop 0-2 items of this living's type
-     *  
-     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
-     * or tameable)
-     * @param lootingModifier level of enchanment to be applied to this drop
-     */
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         int i = this.rand.nextInt(3) + this.rand.nextInt(lootingModifier + 1);
@@ -512,42 +447,27 @@ public class EntityGuardian extends EntityMob
         }
     }
 
-    /**
-     * Causes this Entity to drop a random item.
-     */
     protected void addRandomDrop()
     {
-        ItemStack itemstack = WeightedRandom.getRandomItem(this.rand, EntityFishHook.func_174855_j()).getItemStack(this.rand);
+        ItemStack itemstack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, EntityFishHook.func_174855_j())).getItemStack(this.rand);
         this.entityDropItem(itemstack, 1.0F);
     }
 
-    /**
-     * Checks to make sure the light is not too bright where the mob is spawning
-     */
     protected boolean isValidLightLevel()
     {
         return true;
     }
 
-    /**
-     * Checks that the entity is not colliding with any blocks / liquids
-     */
     public boolean isNotColliding()
     {
         return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox(), this) && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty();
     }
 
-    /**
-     * Checks if the entity's current position is a valid location to spawn this entity.
-     */
     public boolean getCanSpawnHere()
     {
         return (this.rand.nextInt(20) == 0 || !this.worldObj.canBlockSeeSky(new BlockPos(this))) && super.getCanSpawnHere();
     }
 
-    /**
-     * Called when the entity is attacked.
-     */
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         if (!this.func_175472_n() && !source.isMagicDamage() && source.getSourceOfDamage() instanceof EntityLivingBase)
@@ -565,18 +485,11 @@ public class EntityGuardian extends EntityMob
         return super.attackEntityFrom(source, amount);
     }
 
-    /**
-     * The speed it takes to move the entityliving's rotationPitch through the faceEntity method. This is only currently
-     * use in wolves.
-     */
     public int getVerticalFaceSpeed()
     {
         return 180;
     }
 
-    /**
-     * Moves the entity based on the specified heading.  Args: strafe, forward
-     */
     public void moveEntityWithHeading(float strafe, float forward)
     {
         if (this.isServerWorld())
@@ -585,9 +498,9 @@ public class EntityGuardian extends EntityMob
             {
                 this.moveFlying(strafe, forward, 0.1F);
                 this.moveEntity(this.motionX, this.motionY, this.motionZ);
-                this.motionX *= (double)0.9F;
-                this.motionY *= (double)0.9F;
-                this.motionZ *= (double)0.9F;
+                this.motionX *= 0.8999999761581421D;
+                this.motionY *= 0.8999999761581421D;
+                this.motionZ *= 0.8999999761581421D;
 
                 if (!this.func_175472_n() && this.getAttackTarget() == null)
                 {
@@ -709,7 +622,7 @@ public class EntityGuardian extends EntityMob
                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
                 d3 = (double)MathHelper.sqrt_double(d3);
                 d1 = d1 / d3;
-                float f = (float)(MathHelper.atan2(d2, d0) * 180.0D / (double)(float)Math.PI) - 90.0F;
+                float f = (float)(MathHelper.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
                 this.entityGuardian.rotationYaw = this.limitAngle(this.entityGuardian.rotationYaw, f, 30.0F);
                 this.entityGuardian.renderYawOffset = this.entityGuardian.rotationYaw;
                 float f1 = (float)(this.speed * this.entityGuardian.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());

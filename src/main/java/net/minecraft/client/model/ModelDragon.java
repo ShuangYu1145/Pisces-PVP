@@ -7,40 +7,17 @@ import net.minecraft.entity.boss.EntityDragon;
 
 public class ModelDragon extends ModelBase
 {
-    /** The head Model renderer of the dragon */
     private ModelRenderer head;
-
-    /** The spine Model renderer of the dragon */
     private ModelRenderer spine;
-
-    /** The jaw Model renderer of the dragon */
     private ModelRenderer jaw;
-
-    /** The body Model renderer of the dragon */
     private ModelRenderer body;
-
-    /** The rear leg Model renderer of the dragon */
     private ModelRenderer rearLeg;
-
-    /** The front leg Model renderer of the dragon */
     private ModelRenderer frontLeg;
-
-    /** The rear leg tip Model renderer of the dragon */
     private ModelRenderer rearLegTip;
-
-    /** The front leg tip Model renderer of the dragon */
     private ModelRenderer frontLegTip;
-
-    /** The rear foot Model renderer of the dragon */
     private ModelRenderer rearFoot;
-
-    /** The front foot Model renderer of the dragon */
     private ModelRenderer frontFoot;
-
-    /** The wing Model renderer of the dragon */
     private ModelRenderer wing;
-
-    /** The wing tip Model renderer of the dragon */
     private ModelRenderer wingTip;
     private float partialTicks;
 
@@ -123,18 +100,11 @@ public class ModelDragon extends ModelBase
         this.rearLegTip.addChild(this.rearFoot);
     }
 
-    /**
-     * Used for easily adding entity-dependent animations. The second and third float params here are the same second
-     * and third as in the setRotationAngles method.
-     */
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime)
     {
         this.partialTicks = partialTickTime;
     }
 
-    /**
-     * Sets the models various rotation angles then renders the model.
-     */
     public void render(Entity entityIn, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale)
     {
         GlStateManager.pushMatrix();
@@ -224,7 +194,7 @@ public class ModelDragon extends ModelBase
         for (int k = 0; k < 12; ++k)
         {
             adouble2 = entitydragon.getMovementOffsets(12 + k, this.partialTicks);
-            f10 = (float)((double)f10 + Math.sin((double)((float)k * 0.45F + f8)) * (double)0.05F);
+            f10 = (float)((double)f10 + Math.sin((double)((float)k * 0.45F + f8)) * 0.05000000074505806D);
             this.spine.rotateAngleY = (this.updateRotations(adouble2[0] - adouble[0]) * f5 + 180.0F) * (float)Math.PI / 180.0F;
             this.spine.rotateAngleX = f10 + (float)(adouble2[1] - adouble[1]) * (float)Math.PI / 180.0F * f5 * 5.0F;
             this.spine.rotateAngleZ = this.updateRotations(adouble2[0] - (double)f7) * (float)Math.PI / 180.0F * f5;
@@ -240,11 +210,6 @@ public class ModelDragon extends ModelBase
         GlStateManager.popMatrix();
     }
 
-    /**
-     * Updates the rotations in the parameters for rotations greater than 180 degrees or less than -180 degrees. It adds
-     * or subtracts 360 degrees, so that the appearance is the same, although the numbers are then simplified to range
-     * -180 to 180
-     */
     private float updateRotations(double p_78214_1_)
     {
         while (p_78214_1_ >= 180.0D)

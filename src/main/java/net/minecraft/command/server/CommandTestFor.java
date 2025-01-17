@@ -15,38 +15,26 @@ import net.minecraft.util.BlockPos;
 
 public class CommandTestFor extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "testfor";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.testfor.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException("commands.testfor.usage");
+            throw new WrongUsageException("commands.testfor.usage", new Object[0]);
         }
         else
         {
@@ -61,7 +49,7 @@ public class CommandTestFor extends CommandBase
                 }
                 catch (NBTException nbtexception)
                 {
-                    throw new CommandException("commands.testfor.tagError", nbtexception.getMessage());
+                    throw new CommandException("commands.testfor.tagError", new Object[] {nbtexception.getMessage()});
                 }
             }
 
@@ -72,7 +60,7 @@ public class CommandTestFor extends CommandBase
 
                 if (!NBTUtil.func_181123_a(nbttagcompound, nbttagcompound1, true))
                 {
-                    throw new CommandException("commands.testfor.failure", entity.getName());
+                    throw new CommandException("commands.testfor.failure", new Object[] {entity.getName()});
                 }
             }
 
@@ -80,9 +68,6 @@ public class CommandTestFor extends CommandBase
         }
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return index == 0;

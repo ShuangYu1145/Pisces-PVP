@@ -11,11 +11,7 @@ public class AttributeModifier
     private final int operation;
     private final String name;
     private final UUID id;
-
-    /**
-     * If false, this modifier is not saved in NBT. Used for "natural" modifiers like speed boost from sprinting
-     */
-    private boolean isSaved = true;
+    private boolean isSaved;
 
     public AttributeModifier(String nameIn, double amountIn, int operationIn)
     {
@@ -24,11 +20,12 @@ public class AttributeModifier
 
     public AttributeModifier(UUID idIn, String nameIn, double amountIn, int operationIn)
     {
+        this.isSaved = true;
         this.id = idIn;
         this.name = nameIn;
         this.amount = amountIn;
         this.operation = operationIn;
-        Validate.notEmpty(nameIn, "Modifier name cannot be empty");
+        Validate.notEmpty(nameIn, "Modifier name cannot be empty", new Object[0]);
         Validate.inclusiveBetween(0L, 2L, (long)operationIn, "Invalid operation");
     }
 
@@ -52,17 +49,11 @@ public class AttributeModifier
         return this.amount;
     }
 
-    /**
-     * @see #isSaved
-     */
     public boolean isSaved()
     {
         return this.isSaved;
     }
 
-    /**
-     * @see #isSaved
-     */
     public AttributeModifier setSaved(boolean saved)
     {
         this.isSaved = saved;
@@ -106,6 +97,6 @@ public class AttributeModifier
 
     public String toString()
     {
-        return "AttributeModifier{amount=" + this.amount + ", operation=" + this.operation + ", name='" + this.name + '\'' + ", id=" + this.id + ", serialize=" + this.isSaved + '}';
+        return "AttributeModifier{amount=" + this.amount + ", operation=" + this.operation + ", name=\'" + this.name + '\'' + ", id=" + this.id + ", serialize=" + this.isSaved + '}';
     }
 }

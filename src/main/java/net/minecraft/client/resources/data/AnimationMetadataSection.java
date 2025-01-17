@@ -48,7 +48,7 @@ public class AnimationMetadataSection implements IMetadataSection
 
     private AnimationFrame getAnimationFrame(int p_130072_1_)
     {
-        return this.animationFrames.get(p_130072_1_);
+        return (AnimationFrame)this.animationFrames.get(p_130072_1_);
     }
 
     public int getFrameTimeSingle(int p_110472_1_)
@@ -59,21 +59,21 @@ public class AnimationMetadataSection implements IMetadataSection
 
     public boolean frameHasTime(int p_110470_1_)
     {
-        return !this.animationFrames.get(p_110470_1_).hasNoTime();
+        return !((AnimationFrame)this.animationFrames.get(p_110470_1_)).hasNoTime();
     }
 
     public int getFrameIndex(int p_110468_1_)
     {
-        return this.animationFrames.get(p_110468_1_).getFrameIndex();
+        return ((AnimationFrame)this.animationFrames.get(p_110468_1_)).getFrameIndex();
     }
 
     public Set<Integer> getFrameIndexSet()
     {
-        Set<Integer> set = Sets.newHashSet();
+        Set<Integer> set = Sets.<Integer>newHashSet();
 
         for (AnimationFrame animationframe : this.animationFrames)
         {
-            set.add(animationframe.getFrameIndex());
+            set.add(Integer.valueOf(animationframe.getFrameIndex()));
         }
 
         return set;

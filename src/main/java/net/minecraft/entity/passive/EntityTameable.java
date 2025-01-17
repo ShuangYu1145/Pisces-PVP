@@ -25,13 +25,10 @@ public abstract class EntityTameable extends EntityAnimal implements IEntityOwna
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(16, (byte)0);
+        this.dataWatcher.addObject(16, Byte.valueOf((byte)0));
         this.dataWatcher.addObject(17, "");
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     public void writeEntityToNBT(NBTTagCompound tagCompound)
     {
         super.writeEntityToNBT(tagCompound);
@@ -48,9 +45,6 @@ public abstract class EntityTameable extends EntityAnimal implements IEntityOwna
         tagCompound.setBoolean("Sitting", this.isSitting());
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     public void readEntityFromNBT(NBTTagCompound tagCompund)
     {
         super.readEntityFromNBT(tagCompund);
@@ -76,9 +70,6 @@ public abstract class EntityTameable extends EntityAnimal implements IEntityOwna
         this.setSitting(tagCompund.getBoolean("Sitting"));
     }
 
-    /**
-     * Play the taming effect, will either be hearts or smoke depending on status
-     */
     protected void playTameEffect(boolean play)
     {
         EnumParticleTypes enumparticletypes = EnumParticleTypes.HEART;
@@ -93,7 +84,7 @@ public abstract class EntityTameable extends EntityAnimal implements IEntityOwna
             double d0 = this.rand.nextGaussian() * 0.02D;
             double d1 = this.rand.nextGaussian() * 0.02D;
             double d2 = this.rand.nextGaussian() * 0.02D;
-            this.worldObj.spawnParticle(enumparticletypes, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + 0.5D + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d0, d1, d2);
+            this.worldObj.spawnParticle(enumparticletypes, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + 0.5D + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d0, d1, d2, new int[0]);
         }
     }
 
@@ -124,11 +115,11 @@ public abstract class EntityTameable extends EntityAnimal implements IEntityOwna
 
         if (tamed)
         {
-            this.dataWatcher.updateObject(16, (byte)(b0 | 4));
+            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 | 4)));
         }
         else
         {
-            this.dataWatcher.updateObject(16, (byte)(b0 & -5));
+            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 & -5)));
         }
 
         this.setupTamedAI();
@@ -149,11 +140,11 @@ public abstract class EntityTameable extends EntityAnimal implements IEntityOwna
 
         if (sitting)
         {
-            this.dataWatcher.updateObject(16, (byte)(b0 | 1));
+            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 | 1)));
         }
         else
         {
-            this.dataWatcher.updateObject(16, (byte)(b0 & -2));
+            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 & -2)));
         }
     }
 
@@ -185,9 +176,6 @@ public abstract class EntityTameable extends EntityAnimal implements IEntityOwna
         return entityIn == this.getOwner();
     }
 
-    /**
-     * Returns the AITask responsible of the sit logic
-     */
     public EntityAISit getAISit()
     {
         return this.aiSit;
@@ -233,9 +221,6 @@ public abstract class EntityTameable extends EntityAnimal implements IEntityOwna
         return super.isOnSameTeam(otherEntity);
     }
 
-    /**
-     * Called when the mob's health reaches 0.
-     */
     public void onDeath(DamageSource cause)
     {
         if (!this.worldObj.isRemote && this.worldObj.getGameRules().getBoolean("showDeathMessages") && this.hasCustomName() && this.getOwner() instanceof EntityPlayerMP)

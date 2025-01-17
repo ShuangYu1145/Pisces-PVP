@@ -10,38 +10,26 @@ import net.minecraft.util.BlockPos;
 
 public class CommandEnchant extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "enchant";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.enchant.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 2)
         {
-            throw new WrongUsageException("commands.enchant.usage");
+            throw new WrongUsageException("commands.enchant.usage", new Object[0]);
         }
         else
         {
@@ -70,7 +58,7 @@ public class CommandEnchant extends CommandBase
 
             if (itemstack == null)
             {
-                throw new CommandException("commands.enchant.noItem");
+                throw new CommandException("commands.enchant.noItem", new Object[0]);
             }
             else
             {
@@ -78,11 +66,11 @@ public class CommandEnchant extends CommandBase
 
                 if (enchantment1 == null)
                 {
-                    throw new NumberInvalidException("commands.enchant.notFound", i);
+                    throw new NumberInvalidException("commands.enchant.notFound", new Object[] {Integer.valueOf(i)});
                 }
                 else if (!enchantment1.canApply(itemstack))
                 {
-                    throw new CommandException("commands.enchant.cantEnchant");
+                    throw new CommandException("commands.enchant.cantEnchant", new Object[0]);
                 }
                 else
                 {
@@ -107,7 +95,7 @@ public class CommandEnchant extends CommandBase
 
                                     if (!enchantment2.canApplyTogether(enchantment1))
                                     {
-                                        throw new CommandException("commands.enchant.cantCombine", enchantment1.getTranslatedName(j), enchantment2.getTranslatedName(nbttaglist.getCompoundTagAt(k).getShort("lvl")));
+                                        throw new CommandException("commands.enchant.cantCombine", new Object[] {enchantment1.getTranslatedName(j), enchantment2.getTranslatedName(nbttaglist.getCompoundTagAt(k).getShort("lvl"))});
                                     }
                                 }
                             }
@@ -124,14 +112,7 @@ public class CommandEnchant extends CommandBase
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, this.getListOfPlayers());
-        }
-        else
-        {
-            return args.length == 2 ? getListOfStringsMatchingLastWord(args, Enchantment.func_181077_c()) : null;
-        }
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, this.getListOfPlayers()) : (args.length == 2 ? getListOfStringsMatchingLastWord(args, Enchantment.func_181077_c()) : null);
     }
 
     protected String[] getListOfPlayers()
@@ -139,9 +120,6 @@ public class CommandEnchant extends CommandBase
         return MinecraftServer.getServer().getAllUsernames();
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return index == 0;

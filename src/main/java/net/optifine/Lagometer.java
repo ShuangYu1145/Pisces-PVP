@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.src.Config;
+import net.optifine.util.MemoryMonitor;
 import org.lwjgl.opengl.GL11;
 
 public class Lagometer
@@ -37,53 +38,6 @@ public class Lagometer
     private static int numRecordedFrameTimes = 0;
     private static long prevFrameTimeNano = -1L;
     private static long renderTimeNano = 0L;
-    private static long memTimeStartMs = System.currentTimeMillis();
-    private static long memStart = getMemoryUsed();
-    private static long memTimeLast = memTimeStartMs;
-    private static long memLast = memStart;
-    private static long memTimeDiffMs = 1L;
-    private static long memDiff = 0L;
-    private static int memMbSec = 0;
-
-    public static boolean updateMemoryAllocation()
-    {
-        long i = System.currentTimeMillis();
-        long j = getMemoryUsed();
-        boolean flag = false;
-
-        if (j < memLast)
-        {
-            double d0 = (double)memDiff / 1000000.0D;
-            double d1 = (double)memTimeDiffMs / 1000.0D;
-            int k = (int)(d0 / d1);
-
-            if (k > 0)
-            {
-                memMbSec = k;
-            }
-
-            memTimeStartMs = i;
-            memStart = j;
-            memTimeDiffMs = 0L;
-            memDiff = 0L;
-            flag = true;
-        }
-        else
-        {
-            memTimeDiffMs = i - memTimeStartMs;
-            memDiff = j - memStart;
-        }
-
-        memTimeLast = i;
-        memLast = j;
-        return flag;
-    }
-
-    private static long getMemoryUsed()
-    {
-        Runtime runtime = Runtime.getRuntime();
-        return runtime.totalMemory() - runtime.freeMemory();
-    }
 
     public static void updateLagometer()
     {
@@ -107,7 +61,7 @@ public class Lagometer
             {
                 int j = numRecordedFrameTimes & timesFrame.length - 1;
                 ++numRecordedFrameTimes;
-                boolean flag = updateMemoryAllocation();
+                boolean flag = MemoryMonitor.isGcEvent();
                 timesFrame[j] = timeNowNano - prevFrameTimeNano - renderTimeNano;
                 timesTick[j] = timerTick.timeNano;
                 timesScheduledExecutables[j] = timerScheduledExecutables.timeNano;
@@ -196,7 +150,7 @@ public class Lagometer
                 GlStateManager.matrixMode(5888);
                 GlStateManager.popMatrix();
                 GlStateManager.enableTexture2D();
-                float f1 = 1.0F - (float)((double)(System.currentTimeMillis() - memTimeStartMs) / 1000.0D);
+                float f1 = 1.0F - (float)((double)(System.currentTimeMillis() - MemoryMonitor.getStartTimeMs()) / 1000.0D);
                 f1 = Config.limit(f1, 0.0F, 1.0F);
                 int l2 = (int)(170.0F + f1 * 85.0F);
                 int i1 = (int)(100.0F + f1 * 55.0F);
@@ -206,7 +160,7 @@ public class Lagometer
                 int i2 = mc.displayHeight / scaledResolution.getScaleFactor() - 8;
                 GuiIngame guiingame = mc.ingameGUI;
                 GuiIngame.drawRect(l1 - 1, i2 - 1, l1 + 50, i2 + 10, -1605349296);
-                mc.fontRendererObj.drawString(" " + memMbSec + " MB/s", l1, i2, k1);
+                mc.fontRendererObj.drawString(" " + MemoryMonitor.getAllocationRateMb() + " MB/s", l1, i2, k1);
                 renderTimeNano = System.nanoTime() - i;
             }
         }

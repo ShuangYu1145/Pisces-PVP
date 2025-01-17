@@ -35,25 +35,16 @@ public class BlockPosM extends BlockPos
         this.level = level;
     }
 
-    /**
-     * Get the X coordinate
-     */
     public int getX()
     {
         return this.mx;
     }
 
-    /**
-     * Get the Y coordinate
-     */
     public int getY()
     {
         return this.my;
     }
 
-    /**
-     * Get the Z coordinate
-     */
     public int getZ()
     {
         return this.mz;
@@ -89,9 +80,6 @@ public class BlockPosM extends BlockPos
         return this.offset(facing);
     }
 
-    /**
-     * Offset this BlockPos 1 block in the given direction
-     */
     public BlockPos offset(EnumFacing facing)
     {
         if (this.level <= 0)
@@ -126,9 +114,6 @@ public class BlockPosM extends BlockPos
         }
     }
 
-    /**
-     * Offsets this BlockPos n blocks in the given direction
-     */
     public BlockPos offset(EnumFacing facing, int n)
     {
         return n == 1 ? this.offset(facing) : super.offset(facing, n);
@@ -178,7 +163,7 @@ public class BlockPosM extends BlockPos
                         }
                         else if (this.theBlockPosM.equals(blockpos1))
                         {
-                            return (BlockPosM) this.endOfData();
+                            return (BlockPosM)this.endOfData();
                         }
                         else
                         {

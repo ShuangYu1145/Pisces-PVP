@@ -30,42 +30,23 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
     private static final int[] slotsTop = new int[] {0};
     private static final int[] slotsBottom = new int[] {2, 1};
     private static final int[] slotsSides = new int[] {1};
-
-    /**
-     * The ItemStacks that hold the items currently being used in the furnace
-     */
     private ItemStack[] furnaceItemStacks = new ItemStack[3];
-
-    /** The number of ticks that the furnace will keep burning */
     private int furnaceBurnTime;
-
-    /**
-     * The number of ticks that a fresh copy of the currently-burning item would keep the furnace burning for
-     */
     private int currentItemBurnTime;
     private int cookTime;
     private int totalCookTime;
     private String furnaceCustomName;
 
-    /**
-     * Returns the number of slots in the inventory.
-     */
     public int getSizeInventory()
     {
         return this.furnaceItemStacks.length;
     }
 
-    /**
-     * Returns the stack in the given slot.
-     */
     public ItemStack getStackInSlot(int index)
     {
         return this.furnaceItemStacks[index];
     }
 
-    /**
-     * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
-     */
     public ItemStack decrStackSize(int index, int count)
     {
         if (this.furnaceItemStacks[index] != null)
@@ -94,9 +75,6 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
         }
     }
 
-    /**
-     * Removes a stack from the given slot and returns it.
-     */
     public ItemStack removeStackFromSlot(int index)
     {
         if (this.furnaceItemStacks[index] != null)
@@ -111,9 +89,6 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
         }
     }
 
-    /**
-     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
-     */
     public void setInventorySlotContents(int index, ItemStack stack)
     {
         boolean flag = stack != null && stack.isItemEqual(this.furnaceItemStacks[index]) && ItemStack.areItemStackTagsEqual(stack, this.furnaceItemStacks[index]);
@@ -132,17 +107,11 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
         }
     }
 
-    /**
-     * Get the name of this object. For players this returns their username
-     */
     public String getName()
     {
         return this.hasCustomName() ? this.furnaceCustomName : "container.furnace";
     }
 
-    /**
-     * Returns true if this thing is named
-     */
     public boolean hasCustomName()
     {
         return this.furnaceCustomName != null && this.furnaceCustomName.length() > 0;
@@ -208,17 +177,11 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
         }
     }
 
-    /**
-     * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended.
-     */
     public int getInventoryStackLimit()
     {
         return 64;
     }
 
-    /**
-     * Furnace isBurning
-     */
     public boolean isBurning()
     {
         return this.furnaceBurnTime > 0;
@@ -229,9 +192,6 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
         return p_174903_0_.getField(0) > 0;
     }
 
-    /**
-     * Like the old updateEntity(), except more generic.
-     */
     public void update()
     {
         boolean flag = this.isBurning();
@@ -307,9 +267,6 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
         return 200;
     }
 
-    /**
-     * Returns true if the furnace can smelt an item, i.e. has a source item, destination stack isn't full, etc.
-     */
     private boolean canSmelt()
     {
         if (this.furnaceItemStacks[0] == null)
@@ -319,33 +276,10 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
         else
         {
             ItemStack itemstack = FurnaceRecipes.instance().getSmeltingResult(this.furnaceItemStacks[0]);
-
-            if (itemstack == null)
-            {
-                return false;
-            }
-            else if (this.furnaceItemStacks[2] == null)
-            {
-                return true;
-            }
-            else if (!this.furnaceItemStacks[2].isItemEqual(itemstack))
-            {
-                return false;
-            }
-            else if (this.furnaceItemStacks[2].stackSize < this.getInventoryStackLimit() && this.furnaceItemStacks[2].stackSize < this.furnaceItemStacks[2].getMaxStackSize())
-            {
-                return true;
-            }
-            else
-            {
-                return this.furnaceItemStacks[2].stackSize < itemstack.getMaxStackSize();
-            }
+            return itemstack == null ? false : (this.furnaceItemStacks[2] == null ? true : (!this.furnaceItemStacks[2].isItemEqual(itemstack) ? false : (this.furnaceItemStacks[2].stackSize < this.getInventoryStackLimit() && this.furnaceItemStacks[2].stackSize < this.furnaceItemStacks[2].getMaxStackSize() ? true : this.furnaceItemStacks[2].stackSize < itemstack.getMaxStackSize())));
         }
     }
 
-    /**
-     * Turn one item from the furnace source stack into the appropriate smelted item in the furnace result stack
-     */
     public void smeltItem()
     {
         if (this.canSmelt())
@@ -375,10 +309,6 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
         }
     }
 
-    /**
-     * Returns the number of ticks that the supplied fuel item will keep the furnace burning, or 0 if the item isn't
-     * fuel
-     */
     public static int getItemBurnTime(ItemStack p_145952_0_)
     {
         if (p_145952_0_ == null)
@@ -409,38 +339,7 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
                 }
             }
 
-            if (item instanceof ItemTool && ((ItemTool)item).getToolMaterialName().equals("WOOD"))
-            {
-                return 200;
-            }
-            else if (item instanceof ItemSword && ((ItemSword)item).getToolMaterialName().equals("WOOD"))
-            {
-                return 200;
-            }
-            else if (item instanceof ItemHoe && ((ItemHoe)item).getMaterialName().equals("WOOD"))
-            {
-                return 200;
-            }
-            else if (item == Items.stick)
-            {
-                return 100;
-            }
-            else if (item == Items.coal)
-            {
-                return 1600;
-            }
-            else if (item == Items.lava_bucket)
-            {
-                return 20000;
-            }
-            else if (item == Item.getItemFromBlock(Blocks.sapling))
-            {
-                return 100;
-            }
-            else
-            {
-                return item == Items.blaze_rod ? 2400 : 0;
-            }
+            return item instanceof ItemTool && ((ItemTool)item).getToolMaterialName().equals("WOOD") ? 200 : (item instanceof ItemSword && ((ItemSword)item).getToolMaterialName().equals("WOOD") ? 200 : (item instanceof ItemHoe && ((ItemHoe)item).getMaterialName().equals("WOOD") ? 200 : (item == Items.stick ? 100 : (item == Items.coal ? 1600 : (item == Items.lava_bucket ? 20000 : (item == Item.getItemFromBlock(Blocks.sapling) ? 100 : (item == Items.blaze_rod ? 2400 : 0)))))));
         }
     }
 
@@ -449,19 +348,9 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
         return getItemBurnTime(p_145954_0_) > 0;
     }
 
-    /**
-     * Do not make give this method the name canInteractWith because it clashes with Container
-     */
     public boolean isUseableByPlayer(EntityPlayer player)
     {
-        if (this.worldObj.getTileEntity(this.pos) != this)
-        {
-            return false;
-        }
-        else
-        {
-            return !(player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) > 64.0D);
-        }
+        return this.worldObj.getTileEntity(this.pos) != this ? false : player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
     public void openInventory(EntityPlayer player)
@@ -472,50 +361,21 @@ public class TileEntityFurnace extends TileEntityLockable implements ITickable, 
     {
     }
 
-    /**
-     * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
-     */
     public boolean isItemValidForSlot(int index, ItemStack stack)
     {
-        if (index == 2)
-        {
-            return false;
-        }
-        else if (index != 1)
-        {
-            return true;
-        }
-        else
-        {
-            return isItemFuel(stack) || SlotFurnaceFuel.isBucket(stack);
-        }
+        return index == 2 ? false : (index != 1 ? true : isItemFuel(stack) || SlotFurnaceFuel.isBucket(stack));
     }
 
     public int[] getSlotsForFace(EnumFacing side)
     {
-        if (side == EnumFacing.DOWN)
-        {
-            return slotsBottom;
-        }
-        else
-        {
-            return side == EnumFacing.UP ? slotsTop : slotsSides;
-        }
+        return side == EnumFacing.DOWN ? slotsBottom : (side == EnumFacing.UP ? slotsTop : slotsSides);
     }
 
-    /**
-     * Returns true if automation can insert the given item in the given slot from the given side. Args: slot, item,
-     * side
-     */
     public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)
     {
         return this.isItemValidForSlot(index, itemStackIn);
     }
 
-    /**
-     * Returns true if automation can extract the given item in the given slot from the given side. Args: slot, item,
-     * side
-     */
     public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
     {
         if (direction == EnumFacing.DOWN && index == 1)

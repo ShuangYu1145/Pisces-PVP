@@ -1,12 +1,5 @@
 package net.minecraft.client.renderer.block.model;
 
-import net.minecraft.client.renderer.EnumFaceDirection;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.ModelRotation;
-import net.minecraft.src.Config;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3i;
 import net.minecraftforge.client.model.ITransformation;
 import net.optifine.model.BlockModelUtils;
 import net.optifine.reflect.Reflector;
@@ -15,14 +8,22 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import net.minecraft.client.renderer.EnumFaceDirection;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.ModelRotation;
+import net.minecraft.src.Config;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3i;
+
 public class FaceBakery
 {
-    private static final float SCALE_ROTATION_22_5 = 1.0F / (float)Math.cos((double)((float)Math.PI / 8F)) - 1.0F;
+    private static final float SCALE_ROTATION_22_5 = 1.0F / (float)Math.cos(0.39269909262657166D) - 1.0F;
     private static final float SCALE_ROTATION_GENERAL = 1.0F / (float)Math.cos((Math.PI / 4D)) - 1.0F;
 
     public BakedQuad makeBakedQuad(Vector3f posFrom, Vector3f posTo, BlockPartFace face, TextureAtlasSprite sprite, EnumFacing facing, ModelRotation modelRotationIn, BlockPartRotation partRotation, boolean uvLocked, boolean shade)
     {
-        return this.makeBakedQuad(posFrom, posTo, face, sprite, facing, (ITransformation)modelRotationIn, partRotation, uvLocked, shade);
+        return this.makeBakedQuad(posFrom, posTo, face, sprite, facing, (ITransformation) modelRotationIn, partRotation, uvLocked, shade);
     }
 
     public BakedQuad makeBakedQuad(Vector3f p_makeBakedQuad_1_, Vector3f p_makeBakedQuad_2_, BlockPartFace p_makeBakedQuad_3_, TextureAtlasSprite p_makeBakedQuad_4_, EnumFacing p_makeBakedQuad_5_, ITransformation p_makeBakedQuad_6_, BlockPartRotation p_makeBakedQuad_7_, boolean p_makeBakedQuad_8_, boolean p_makeBakedQuad_9_)
@@ -42,7 +43,7 @@ public class FaceBakery
 
         if (Reflector.ForgeHooksClient_fillNormal.exists())
         {
-            Reflector.call(Reflector.ForgeHooksClient_fillNormal, aint, enumfacing);
+            Reflector.call(Reflector.ForgeHooksClient_fillNormal, new Object[] {aint, enumfacing});
         }
 
         return new BakedQuad(aint, p_makeBakedQuad_3_.tintIndex, enumfacing);
@@ -158,17 +159,17 @@ public class FaceBakery
             switch (partRotation.axis)
             {
                 case X:
-                    Matrix4f.rotate(partRotation.angle * ((float)Math.PI / 180F), new Vector3f(1.0F, 0.0F, 0.0F), matrix4f, matrix4f);
+                    Matrix4f.rotate(partRotation.angle * 0.017453292F, new Vector3f(1.0F, 0.0F, 0.0F), matrix4f, matrix4f);
                     vector3f.set(0.0F, 1.0F, 1.0F);
                     break;
 
                 case Y:
-                    Matrix4f.rotate(partRotation.angle * ((float)Math.PI / 180F), new Vector3f(0.0F, 1.0F, 0.0F), matrix4f, matrix4f);
+                    Matrix4f.rotate(partRotation.angle * 0.017453292F, new Vector3f(0.0F, 1.0F, 0.0F), matrix4f, matrix4f);
                     vector3f.set(1.0F, 0.0F, 1.0F);
                     break;
 
                 case Z:
-                    Matrix4f.rotate(partRotation.angle * ((float)Math.PI / 180F), new Vector3f(0.0F, 0.0F, 1.0F), matrix4f, matrix4f);
+                    Matrix4f.rotate(partRotation.angle * 0.017453292F, new Vector3f(0.0F, 0.0F, 1.0F), matrix4f, matrix4f);
                     vector3f.set(1.0F, 1.0F, 0.0F);
             }
 
@@ -209,7 +210,7 @@ public class FaceBakery
         {
             if (Reflector.ForgeHooksClient_transform.exists())
             {
-                Reflector.call(Reflector.ForgeHooksClient_transform, p_rotateVertex_1_, p_rotateVertex_4_.getMatrix());
+                Reflector.call(Reflector.ForgeHooksClient_transform, new Object[] {p_rotateVertex_1_, p_rotateVertex_4_.getMatrix()});
             }
             else
             {
@@ -271,7 +272,14 @@ public class FaceBakery
             }
         }
 
-        return enumfacing == null ? EnumFacing.UP : enumfacing;
+        if (enumfacing == null)
+        {
+            return EnumFacing.UP;
+        }
+        else
+        {
+            return enumfacing;
+        }
     }
 
     public void lockUv(int[] p_178409_1_, EnumFacing facing, BlockFaceUV p_178409_3_, TextureAtlasSprite p_178409_4_)

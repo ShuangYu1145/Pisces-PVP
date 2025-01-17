@@ -9,38 +9,26 @@ import net.minecraft.util.Vec3;
 
 public class CommandPlaySound extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "playsound";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.playsound.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 2)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getCommandUsage(sender), new Object[0]);
         }
         else
         {
@@ -73,7 +61,7 @@ public class CommandPlaySound extends CommandBase
 
             if (args.length > i)
             {
-                d3 = parseDouble(args[i++], 0.0D, (double)Float.MAX_VALUE);
+                d3 = parseDouble(args[i++], 0.0D, 3.4028234663852886E38D);
             }
 
             double d4 = 1.0D;
@@ -97,7 +85,7 @@ public class CommandPlaySound extends CommandBase
             {
                 if (d5 <= 0.0D)
                 {
-                    throw new CommandException("commands.playsound.playerTooFar", entityplayermp.getName());
+                    throw new CommandException("commands.playsound.playerTooFar", new Object[] {entityplayermp.getName()});
                 }
 
                 double d8 = d0 - entityplayermp.posX;
@@ -122,19 +110,9 @@ public class CommandPlaySound extends CommandBase
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 2)
-        {
-            return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
-        }
-        else
-        {
-            return args.length > 2 && args.length <= 5 ? func_175771_a(args, 2, pos) : null;
-        }
+        return args.length == 2 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : (args.length > 2 && args.length <= 5 ? func_175771_a(args, 2, pos) : null);
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return index == 1;

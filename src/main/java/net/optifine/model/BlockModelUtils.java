@@ -37,7 +37,7 @@ public class BlockModelUtils
     {
         List list = new ArrayList();
         EnumFacing[] aenumfacing = EnumFacing.VALUES;
-        List<List<BakedQuad>> list1 = new ArrayList<>();
+        List<List<BakedQuad>> list1 = new ArrayList();
 
         for (int i = 0; i < aenumfacing.length; ++i)
         {
@@ -53,7 +53,7 @@ public class BlockModelUtils
 
     public static IBakedModel joinModelsCube(IBakedModel modelBase, IBakedModel modelAdd)
     {
-        List<BakedQuad> list = new ArrayList<>();
+        List<BakedQuad> list = new ArrayList();
         list.addAll(modelBase.getGeneralQuads());
         list.addAll(modelAdd.getGeneralQuads());
         EnumFacing[] aenumfacing = EnumFacing.VALUES;
@@ -144,7 +144,7 @@ public class BlockModelUtils
 
     private static void replaceTexture(List<BakedQuad> quads, TextureAtlasSprite spriteOld, TextureAtlasSprite spriteNew)
     {
-        List<BakedQuad> list = new ArrayList<>();
+        List<BakedQuad> list = new ArrayList();
 
         for (BakedQuad bakedquad : quads)
         {
@@ -169,14 +169,7 @@ public class BlockModelUtils
 
     private static float snapVertexCoord(float x)
     {
-        if (x > -1.0E-6F && x < 1.0E-6F)
-        {
-            return 0.0F;
-        }
-        else
-        {
-            return x > 0.999999F && x < 1.000001F ? 1.0F : x;
-        }
+        return x > -1.0E-6F && x < 1.0E-6F ? 0.0F : (x > 0.999999F && x < 1.000001F ? 1.0F : x);
     }
 
     public static AxisAlignedBB getOffsetBoundingBox(AxisAlignedBB aabb, Block.EnumOffsetType offsetType, BlockPos pos)

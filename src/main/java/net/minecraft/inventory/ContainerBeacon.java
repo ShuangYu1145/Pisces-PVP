@@ -7,10 +7,6 @@ import net.minecraft.item.ItemStack;
 public class ContainerBeacon extends Container
 {
     private IInventory tileBeacon;
-
-    /**
-     * This beacon's slot where you put in Emerald, Diamond, Gold or Iron Ingot.
-     */
     private final ContainerBeacon.BeaconSlot beaconSlot;
 
     public ContainerBeacon(IInventory playerInventory, IInventory tileBeaconIn)
@@ -50,9 +46,6 @@ public class ContainerBeacon extends Container
         return this.tileBeacon;
     }
 
-    /**
-     * Called when the container is closed.
-     */
     public void onContainerClosed(EntityPlayer playerIn)
     {
         super.onContainerClosed(playerIn);
@@ -73,13 +66,10 @@ public class ContainerBeacon extends Container
         return this.tileBeacon.isUseableByPlayer(playerIn);
     }
 
-    /**
-     * Take a stack from the specified inventory slot.
-     */
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = null;
-        Slot slot = this.inventorySlots.get(index);
+        Slot slot = (Slot)this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack())
         {
@@ -150,14 +140,7 @@ public class ContainerBeacon extends Container
 
         public boolean isItemValid(ItemStack stack)
         {
-            if (stack == null)
-            {
-                return false;
-            }
-            else
-            {
-                return stack.getItem() == Items.emerald || stack.getItem() == Items.diamond || stack.getItem() == Items.gold_ingot || stack.getItem() == Items.iron_ingot;
-            }
+            return stack == null ? false : stack.getItem() == Items.emerald || stack.getItem() == Items.diamond || stack.getItem() == Items.gold_ingot || stack.getItem() == Items.iron_ingot;
         }
 
         public int getSlotStackLimit()

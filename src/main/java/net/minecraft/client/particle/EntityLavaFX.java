@@ -13,9 +13,9 @@ public class EntityLavaFX extends EntityFX
     protected EntityLavaFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn)
     {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0.0D, 0.0D, 0.0D);
-        this.motionX *= (double)0.8F;
-        this.motionY *= (double)0.8F;
-        this.motionZ *= (double)0.8F;
+        this.motionX *= 0.800000011920929D;
+        this.motionY *= 0.800000011920929D;
+        this.motionZ *= 0.800000011920929D;
         this.motionY = (double)(this.rand.nextFloat() * 0.4F + 0.05F);
         this.particleRed = this.particleGreen = this.particleBlue = 1.0F;
         this.particleScale *= this.rand.nextFloat() * 2.0F + 0.2F;
@@ -35,17 +35,11 @@ public class EntityLavaFX extends EntityFX
         return j | k << 16;
     }
 
-    /**
-     * Gets how bright this entity is.
-     */
     public float getBrightness(float partialTicks)
     {
         return 1.0F;
     }
 
-    /**
-     * Renders the particle
-     */
     public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
     {
         float f = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge;
@@ -53,9 +47,6 @@ public class EntityLavaFX extends EntityFX
         super.renderParticle(worldRendererIn, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         this.prevPosX = this.posX;
@@ -71,19 +62,19 @@ public class EntityLavaFX extends EntityFX
 
         if (this.rand.nextFloat() > f)
         {
-            this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY, this.posZ, this.motionX, this.motionY, this.motionZ);
+            this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY, this.posZ, this.motionX, this.motionY, this.motionZ, new int[0]);
         }
 
         this.motionY -= 0.03D;
         this.moveEntity(this.motionX, this.motionY, this.motionZ);
-        this.motionX *= (double)0.999F;
-        this.motionY *= (double)0.999F;
-        this.motionZ *= (double)0.999F;
+        this.motionX *= 0.9990000128746033D;
+        this.motionY *= 0.9990000128746033D;
+        this.motionZ *= 0.9990000128746033D;
 
         if (this.onGround)
         {
-            this.motionX *= (double)0.7F;
-            this.motionZ *= (double)0.7F;
+            this.motionX *= 0.699999988079071D;
+            this.motionZ *= 0.699999988079071D;
         }
     }
 

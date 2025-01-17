@@ -23,11 +23,11 @@ public class PropertyInteger extends PropertyHelper<Integer>
         }
         else
         {
-            Set<Integer> set = Sets.newHashSet();
+            Set<Integer> set = Sets.<Integer>newHashSet();
 
             for (int i = min; i <= max; ++i)
             {
-                set.add(i);
+                set.add(Integer.valueOf(i));
             }
 
             this.allowedValues = ImmutableSet.copyOf(set);
@@ -75,9 +75,6 @@ public class PropertyInteger extends PropertyHelper<Integer>
         return new PropertyInteger(name, min, max);
     }
 
-    /**
-     * Get the name for the given value.
-     */
     public String getName(Integer value)
     {
         return value.toString();

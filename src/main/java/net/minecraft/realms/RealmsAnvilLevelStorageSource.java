@@ -63,7 +63,7 @@ public class RealmsAnvilLevelStorageSource
 
     public List<RealmsLevelSummary> getLevelList() throws AnvilConverterException
     {
-        List<RealmsLevelSummary> list = Lists.newArrayList();
+        List<RealmsLevelSummary> list = Lists.<RealmsLevelSummary>newArrayList();
 
         for (SaveFormatComparator saveformatcomparator : this.levelStorageSource.getSaveList())
         {

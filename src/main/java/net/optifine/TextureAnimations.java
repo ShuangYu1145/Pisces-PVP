@@ -91,13 +91,13 @@ public class TextureAnimations
             }
         }
 
-        TextureAnimation[] atextureanimation1 = (TextureAnimation[]) list.toArray(new TextureAnimation[list.size()]);
+        TextureAnimation[] atextureanimation1 = (TextureAnimation[])((TextureAnimation[])list.toArray(new TextureAnimation[list.size()]));
         return atextureanimation1;
     }
 
     private static TextureAnimation[] getTextureAnimations(IResourcePack rp)
     {
-        String[] astring = ResUtils.collectFiles(rp, "mcpatcher/anim/", ".properties", (String[])null);
+        String[] astring = ResUtils.collectFiles(rp, (String)"mcpatcher/anim/", (String)".properties", (String[])null);
 
         if (astring.length <= 0)
         {
@@ -118,6 +118,7 @@ public class TextureAnimations
                     InputStream inputstream = rp.getInputStream(resourcelocation);
                     Properties properties = new PropertiesOrdered();
                     properties.load(inputstream);
+                    inputstream.close();
                     TextureAnimation textureanimation = makeTextureAnimation(properties, resourcelocation);
 
                     if (textureanimation != null)
@@ -144,7 +145,7 @@ public class TextureAnimations
                 }
             }
 
-            TextureAnimation[] atextureanimation = (TextureAnimation[]) list.toArray(new TextureAnimation[list.size()]);
+            TextureAnimation[] atextureanimation = (TextureAnimation[])((TextureAnimation[])list.toArray(new TextureAnimation[list.size()]));
             return atextureanimation;
         }
     }

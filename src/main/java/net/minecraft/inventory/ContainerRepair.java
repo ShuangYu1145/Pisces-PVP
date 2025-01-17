@@ -1,5 +1,6 @@
 package net.minecraft.inventory;
 
+import java.util.Iterator;
 import java.util.Map;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.state.IBlockState;
@@ -19,32 +20,13 @@ import org.apache.logging.log4j.Logger;
 public class ContainerRepair extends Container
 {
     private static final Logger logger = LogManager.getLogger();
-
-    /** Here comes out item you merged and/or renamed. */
-    private IInventory outputSlot = new InventoryCraftResult();
-
-    /**
-     * The 2slots where you put your items in that you want to merge and/or rename.
-     */
-    private IInventory inputSlots = new InventoryBasic("Repair", true, 2)
-    {
-        public void markDirty()
-        {
-            super.markDirty();
-            ContainerRepair.this.onCraftMatrixChanged(this);
-        }
-    };
+    private IInventory outputSlot;
+    private IInventory inputSlots;
     private World theWorld;
     private BlockPos selfPosition;
-
-    /** The maximum cost of repairing/renaming in the anvil. */
     public int maximumCost;
-
-    /** determined by damage of input item and stackSize of repair materials */
     private int materialCost;
     private String repairedItemName;
-
-    /** The player that has this container open. */
     private final EntityPlayer thePlayer;
 
     public ContainerRepair(InventoryPlayer playerInventory, World worldIn, EntityPlayer player)
@@ -54,6 +36,15 @@ public class ContainerRepair extends Container
 
     public ContainerRepair(InventoryPlayer playerInventory, final World worldIn, final BlockPos blockPosIn, EntityPlayer player)
     {
+        this.outputSlot = new InventoryCraftResult();
+        this.inputSlots = new InventoryBasic("Repair", true, 2)
+        {
+            public void markDirty()
+            {
+                super.markDirty();
+                ContainerRepair.this.onCraftMatrixChanged(this);
+            }
+        };
         this.selfPosition = blockPosIn;
         this.theWorld = worldIn;
         this.thePlayer = player;
@@ -102,7 +93,7 @@ public class ContainerRepair extends Container
 
                 if (!playerIn.capabilities.isCreativeMode && !worldIn.isRemote && iblockstate.getBlock() == Blocks.anvil && playerIn.getRNG().nextFloat() < 0.12F)
                 {
-                    int l = iblockstate.getValue(BlockAnvil.DAMAGE);
+                    int l = ((Integer)iblockstate.getValue(BlockAnvil.DAMAGE)).intValue();
                     ++l;
 
                     if (l > 2)
@@ -112,7 +103,7 @@ public class ContainerRepair extends Container
                     }
                     else
                     {
-                        worldIn.setBlockState(blockPosIn, iblockstate.withProperty(BlockAnvil.DAMAGE, l), 2);
+                        worldIn.setBlockState(blockPosIn, iblockstate.withProperty(BlockAnvil.DAMAGE, Integer.valueOf(l)), 2);
                         worldIn.playAuxSFX(1021, blockPosIn, 0);
                     }
                 }
@@ -137,9 +128,6 @@ public class ContainerRepair extends Container
         }
     }
 
-    /**
-     * Callback for when the crafting matrix is changed.
-     */
     public void onCraftMatrixChanged(IInventory inventoryIn)
     {
         super.onCraftMatrixChanged(inventoryIn);
@@ -150,9 +138,6 @@ public class ContainerRepair extends Container
         }
     }
 
-    /**
-     * called when the Anvil Input Slot changes, calculates the new result and puts it in the output slot
-     */
     public void updateRepairOutput()
     {
         int i = 0;
@@ -239,15 +224,17 @@ public class ContainerRepair extends Container
                     }
 
                     Map<Integer, Integer> map1 = EnchantmentHelper.getEnchantments(itemstack2);
+                    Iterator iterator1 = map1.keySet().iterator();
 
-                    for (int i5 : map1.keySet())
+                    while (iterator1.hasNext())
                     {
+                        int i5 = ((Integer)iterator1.next()).intValue();
                         Enchantment enchantment = Enchantment.getEnchantmentById(i5);
 
                         if (enchantment != null)
                         {
-                            int k5 = map.containsKey(i5) ? map.get(i5) : 0;
-                            int l3 = map1.get(i5);
+                            int k5 = map.containsKey(Integer.valueOf(i5)) ? ((Integer)map.get(Integer.valueOf(i5))).intValue() : 0;
+                            int l3 = ((Integer)map1.get(Integer.valueOf(i5))).intValue();
                             int i6;
 
                             if (k5 == l3)
@@ -268,8 +255,12 @@ public class ContainerRepair extends Container
                                 flag1 = true;
                             }
 
-                            for (int i4 : map.keySet())
+                            Iterator iterator = map.keySet().iterator();
+
+                            while (iterator.hasNext())
                             {
+                                int i4 = ((Integer)iterator.next()).intValue();
+
                                 if (i4 != i5 && !enchantment.canApplyTogether(Enchantment.getEnchantmentById(i4)))
                                 {
                                     flag1 = false;
@@ -284,7 +275,7 @@ public class ContainerRepair extends Container
                                     l3 = enchantment.getMaxLevel();
                                 }
 
-                                map.put(i5, l3);
+                                map.put(Integer.valueOf(i5), Integer.valueOf(l3));
                                 int l5 = 0;
 
                                 switch (enchantment.getWeight())
@@ -391,9 +382,6 @@ public class ContainerRepair extends Container
         }
     }
 
-    /**
-     * Called when the container is closed.
-     */
     public void onContainerClosed(EntityPlayer playerIn)
     {
         super.onContainerClosed(playerIn);
@@ -414,23 +402,13 @@ public class ContainerRepair extends Container
 
     public boolean canInteractWith(EntityPlayer playerIn)
     {
-        if (this.theWorld.getBlockState(this.selfPosition).getBlock() != Blocks.anvil)
-        {
-            return false;
-        }
-        else
-        {
-            return !(playerIn.getDistanceSq((double)this.selfPosition.getX() + 0.5D, (double)this.selfPosition.getY() + 0.5D, (double)this.selfPosition.getZ() + 0.5D) > 64.0D);
-        }
+        return this.theWorld.getBlockState(this.selfPosition).getBlock() != Blocks.anvil ? false : playerIn.getDistanceSq((double)this.selfPosition.getX() + 0.5D, (double)this.selfPosition.getY() + 0.5D, (double)this.selfPosition.getZ() + 0.5D) <= 64.0D;
     }
 
-    /**
-     * Take a stack from the specified inventory slot.
-     */
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = null;
-        Slot slot = this.inventorySlots.get(index);
+        Slot slot = (Slot)this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack())
         {
@@ -478,9 +456,6 @@ public class ContainerRepair extends Container
         return itemstack;
     }
 
-    /**
-     * used by the Anvil GUI to update the Item Name being typed by the player
-     */
     public void updateItemName(String newName)
     {
         this.repairedItemName = newName;

@@ -58,7 +58,7 @@ public class EntityAliases
             }
             else
             {
-                List<Integer> list = new ArrayList<>();
+                List<Integer> list = new ArrayList();
                 String s = "/shaders/entity.properties";
                 InputStream inputstream = shaderPack.getResourceAsStream(s);
 
@@ -69,7 +69,7 @@ public class EntityAliases
 
                 loadModEntityAliases(list);
 
-                if (list.size() > 0)
+                if (((List)list).size() > 0)
                 {
                     entityAliases = toArray(list);
                 }
@@ -113,7 +113,7 @@ public class EntityAliases
 
                 for (Object o : properties.keySet())
                 {
-                	String s = (String)o;
+                    String s = (String) o;
                     String s1 = properties.getProperty(s);
                     String s2 = "entity.";
 
@@ -161,10 +161,10 @@ public class EntityAliases
     {
         while (list.size() <= index)
         {
-            list.add(-1);
+            list.add(Integer.valueOf(-1));
         }
 
-        list.set(index, val);
+        list.set(index, Integer.valueOf(val));
     }
 
     private static int[] toArray(List<Integer> list)
@@ -173,7 +173,7 @@ public class EntityAliases
 
         for (int i = 0; i < aint.length; ++i)
         {
-            aint[i] = list.get(i);
+            aint[i] = ((Integer)list.get(i)).intValue();
         }
 
         return aint;

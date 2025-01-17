@@ -36,7 +36,6 @@ import net.minecraft.world.World;
 
 public class EntityIronGolem extends EntityGolem
 {
-    /** deincrements, and a distance-to-home check is done at 0 */
     private int homeCheckTimer;
     Village villageObj;
     private int attackTimer;
@@ -56,14 +55,14 @@ public class EntityIronGolem extends EntityGolem
         this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityAIDefendVillage(this));
-        this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(3, new EntityIronGolem.AINearestAttackableTargetNonCreeper<>(this, EntityLiving.class, 10, false, true, IMob.VISIBLE_MOB_SELECTOR));
+        this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, new Class[0]));
+        this.targetTasks.addTask(3, new EntityIronGolem.AINearestAttackableTargetNonCreeper(this, EntityLiving.class, 10, false, true, IMob.VISIBLE_MOB_SELECTOR));
     }
 
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(16, (byte)0);
+        this.dataWatcher.addObject(16, Byte.valueOf((byte)0));
     }
 
     protected void updateAITasks()
@@ -94,9 +93,6 @@ public class EntityIronGolem extends EntityGolem
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
-    /**
-     * Decrements the entity's air supply when underwater
-     */
     protected int decreaseAirSupply(int p_70682_1_)
     {
         return p_70682_1_;
@@ -112,10 +108,6 @@ public class EntityIronGolem extends EntityGolem
         super.collideWithEntity(entityIn);
     }
 
-    /**
-     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-     * use this to react to sunlight and start to burn.
-     */
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
@@ -130,48 +122,32 @@ public class EntityIronGolem extends EntityGolem
             --this.holdRoseTick;
         }
 
-        if (this.motionX * this.motionX + this.motionZ * this.motionZ > (double)2.5000003E-7F && this.rand.nextInt(5) == 0)
+        if (this.motionX * this.motionX + this.motionZ * this.motionZ > 2.500000277905201E-7D && this.rand.nextInt(5) == 0)
         {
             int i = MathHelper.floor_double(this.posX);
-            int j = MathHelper.floor_double(this.posY - (double)0.2F);
+            int j = MathHelper.floor_double(this.posY - 0.20000000298023224D);
             int k = MathHelper.floor_double(this.posZ);
             IBlockState iblockstate = this.worldObj.getBlockState(new BlockPos(i, j, k));
             Block block = iblockstate.getBlock();
 
             if (block.getMaterial() != Material.air)
             {
-                this.worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, this.posX + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, this.getEntityBoundingBox().minY + 0.1D, this.posZ + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, 4.0D * ((double)this.rand.nextFloat() - 0.5D), 0.5D, ((double)this.rand.nextFloat() - 0.5D) * 4.0D, Block.getStateId(iblockstate));
+                this.worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, this.posX + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, this.getEntityBoundingBox().minY + 0.1D, this.posZ + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, 4.0D * ((double)this.rand.nextFloat() - 0.5D), 0.5D, ((double)this.rand.nextFloat() - 0.5D) * 4.0D, new int[] {Block.getStateId(iblockstate)});
             }
         }
     }
 
-    /**
-     * Returns true if this entity can attack entities of the specified class.
-     */
-    public boolean canAttackClass(Class<? extends EntityLivingBase> cls)
+    public boolean canAttackClass(Class <? extends EntityLivingBase > cls)
     {
-        if (this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(cls))
-        {
-            return false;
-        }
-        else
-        {
-            return cls == EntityCreeper.class ? false : super.canAttackClass(cls);
-        }
+        return this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(cls) ? false : (cls == EntityCreeper.class ? false : super.canAttackClass(cls));
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     public void writeEntityToNBT(NBTTagCompound tagCompound)
     {
         super.writeEntityToNBT(tagCompound);
         tagCompound.setBoolean("PlayerCreated", this.isPlayerCreated());
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     public void readEntityFromNBT(NBTTagCompound tagCompund)
     {
         super.readEntityFromNBT(tagCompund);
@@ -186,7 +162,7 @@ public class EntityIronGolem extends EntityGolem
 
         if (flag)
         {
-            entityIn.motionY += (double)0.4F;
+            entityIn.motionY += 0.4000000059604645D;
             this.applyEnchantments(this, entityIn);
         }
 
@@ -227,17 +203,11 @@ public class EntityIronGolem extends EntityGolem
         this.worldObj.setEntityState(this, (byte)11);
     }
 
-    /**
-     * Returns the sound this mob makes when it is hurt.
-     */
     protected String getHurtSound()
     {
         return "mob.irongolem.hit";
     }
 
-    /**
-     * Returns the sound this mob makes on death.
-     */
     protected String getDeathSound()
     {
         return "mob.irongolem.death";
@@ -248,13 +218,6 @@ public class EntityIronGolem extends EntityGolem
         this.playSound("mob.irongolem.walk", 1.0F, 1.0F);
     }
 
-    /**
-     * Drop 0-2 items of this living's type
-     *  
-     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
-     * or tameable)
-     * @param lootingModifier level of enchanment to be applied to this drop
-     */
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         int i = this.rand.nextInt(3);
@@ -288,17 +251,14 @@ public class EntityIronGolem extends EntityGolem
 
         if (p_70849_1_)
         {
-            this.dataWatcher.updateObject(16, (byte)(b0 | 1));
+            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 | 1)));
         }
         else
         {
-            this.dataWatcher.updateObject(16, (byte)(b0 & -2));
+            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 & -2)));
         }
     }
 
-    /**
-     * Called when the mob's health reaches 0.
-     */
     public void onDeath(DamageSource cause)
     {
         if (!this.isPlayerCreated() && this.attackingPlayer != null && this.villageObj != null)
@@ -311,7 +271,7 @@ public class EntityIronGolem extends EntityGolem
 
     static class AINearestAttackableTargetNonCreeper<T extends EntityLivingBase> extends EntityAINearestAttackableTarget<T>
     {
-        public AINearestAttackableTargetNonCreeper(final EntityCreature creature, Class<T> classTarget, int chance, boolean p_i45858_4_, boolean p_i45858_5_, final Predicate<? super T> p_i45858_6_)
+        public AINearestAttackableTargetNonCreeper(final EntityCreature creature, Class<T> classTarget, int chance, boolean p_i45858_4_, boolean p_i45858_5_, final Predicate <? super T > p_i45858_6_)
         {
             super(creature, classTarget, chance, p_i45858_4_, p_i45858_5_, p_i45858_6_);
             this.targetEntitySelector = new Predicate<T>()
@@ -334,7 +294,7 @@ public class EntityIronGolem extends EntityGolem
 
                             if (p_apply_1_.isSneaking())
                             {
-                                d0 *= (double)0.8F;
+                                d0 *= 0.800000011920929D;
                             }
 
                             if (p_apply_1_.isInvisible())

@@ -10,48 +10,36 @@ import net.minecraft.util.ChatComponentTranslation;
 
 public class CommandEffect extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "effect";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.effect.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 2)
         {
-            throw new WrongUsageException("commands.effect.usage");
+            throw new WrongUsageException("commands.effect.usage", new Object[0]);
         }
         else
         {
-            EntityLivingBase entitylivingbase = getEntity(sender, args[0], EntityLivingBase.class);
+            EntityLivingBase entitylivingbase = (EntityLivingBase)getEntity(sender, args[0], EntityLivingBase.class);
 
             if (args[1].equals("clear"))
             {
                 if (entitylivingbase.getActivePotionEffects().isEmpty())
                 {
-                    throw new CommandException("commands.effect.failure.notActive.all", entitylivingbase.getName());
+                    throw new CommandException("commands.effect.failure.notActive.all", new Object[] {entitylivingbase.getName()});
                 }
                 else
                 {
@@ -121,21 +109,21 @@ public class CommandEffect extends CommandBase
                     {
                         PotionEffect potioneffect = new PotionEffect(i, j, k, false, flag);
                         entitylivingbase.addPotionEffect(potioneffect);
-                        notifyOperators(sender, this, "commands.effect.success", new Object[] {new ChatComponentTranslation(potioneffect.getEffectName()), i, k, entitylivingbase.getName(), l});
+                        notifyOperators(sender, this, "commands.effect.success", new Object[] {new ChatComponentTranslation(potioneffect.getEffectName(), new Object[0]), Integer.valueOf(i), Integer.valueOf(k), entitylivingbase.getName(), Integer.valueOf(l)});
                     }
                     else if (entitylivingbase.isPotionActive(i))
                     {
                         entitylivingbase.removePotionEffect(i);
-                        notifyOperators(sender, this, "commands.effect.success.removed", new Object[] {new ChatComponentTranslation(potion1.getName()), entitylivingbase.getName()});
+                        notifyOperators(sender, this, "commands.effect.success.removed", new Object[] {new ChatComponentTranslation(potion1.getName(), new Object[0]), entitylivingbase.getName()});
                     }
                     else
                     {
-                        throw new CommandException("commands.effect.failure.notActive", new ChatComponentTranslation(potion1.getName()), entitylivingbase.getName());
+                        throw new CommandException("commands.effect.failure.notActive", new Object[] {new ChatComponentTranslation(potion1.getName(), new Object[0]), entitylivingbase.getName()});
                     }
                 }
                 else
                 {
-                    throw new NumberInvalidException("commands.effect.notFound", i);
+                    throw new NumberInvalidException("commands.effect.notFound", new Object[] {Integer.valueOf(i)});
                 }
             }
         }
@@ -143,18 +131,7 @@ public class CommandEffect extends CommandBase
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, this.getAllUsernames());
-        }
-        else if (args.length == 2)
-        {
-            return getListOfStringsMatchingLastWord(args, Potion.getPotionLocations());
-        }
-        else
-        {
-            return args.length == 5 ? getListOfStringsMatchingLastWord(args, new String[] {"true", "false"}) : null;
-        }
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, this.getAllUsernames()) : (args.length == 2 ? getListOfStringsMatchingLastWord(args, Potion.getPotionLocations()) : (args.length == 5 ? getListOfStringsMatchingLastWord(args, new String[] {"true", "false"}): null));
     }
 
     protected String[] getAllUsernames()
@@ -162,9 +139,6 @@ public class CommandEffect extends CommandBase
         return MinecraftServer.getServer().getAllUsernames();
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return index == 0;

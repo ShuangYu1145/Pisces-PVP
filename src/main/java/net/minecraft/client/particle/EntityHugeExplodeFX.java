@@ -8,8 +8,6 @@ import net.minecraft.world.World;
 public class EntityHugeExplodeFX extends EntityFX
 {
     private int timeSinceStart;
-
-    /** the maximum time for the explosion */
     private int maximumTime = 8;
 
     protected EntityHugeExplodeFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double p_i1214_8_, double p_i1214_10_, double p_i1214_12_)
@@ -17,16 +15,10 @@ public class EntityHugeExplodeFX extends EntityFX
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0.0D, 0.0D, 0.0D);
     }
 
-    /**
-     * Renders the particle
-     */
     public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
     {
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         for (int i = 0; i < 6; ++i)
@@ -34,7 +26,7 @@ public class EntityHugeExplodeFX extends EntityFX
             double d0 = this.posX + (this.rand.nextDouble() - this.rand.nextDouble()) * 4.0D;
             double d1 = this.posY + (this.rand.nextDouble() - this.rand.nextDouble()) * 4.0D;
             double d2 = this.posZ + (this.rand.nextDouble() - this.rand.nextDouble()) * 4.0D;
-            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, d0, d1, d2, (double)((float)this.timeSinceStart / (float)this.maximumTime), 0.0D, 0.0D);
+            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, d0, d1, d2, (double)((float)this.timeSinceStart / (float)this.maximumTime), 0.0D, 0.0D, new int[0]);
         }
 
         ++this.timeSinceStart;

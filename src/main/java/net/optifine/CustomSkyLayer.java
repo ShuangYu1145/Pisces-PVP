@@ -86,8 +86,8 @@ public class CustomSkyLayer
 
     private List<String> parseWeatherList(String str)
     {
-        List<String> list = Arrays.asList("clear", "rain", "thunder");
-        List<String> list1 = new ArrayList<>();
+        List<String> list = Arrays.<String>asList(new String[] {"clear", "rain", "thunder"});
+        List<String> list1 = new ArrayList();
         String[] astring = Config.tokenize(str, " ");
 
         for (int i = 0; i < astring.length; ++i)
@@ -328,7 +328,7 @@ public class CustomSkyLayer
         float f3 = f * f1 * f2;
         f3 = Config.limit(f3, 0.0F, 1.0F);
 
-        if (!(f3 < 1.0E-4F))
+        if (f3 >= 1.0E-4F)
         {
             GlStateManager.bindTexture(this.textureId);
             Blender.setupBlend(this.blend, f3);
@@ -523,14 +523,7 @@ public class CustomSkyLayer
 
     private boolean timeBetween(int timeOfDay, int timeStart, int timeEnd)
     {
-        if (timeStart <= timeEnd)
-        {
-            return timeOfDay >= timeStart && timeOfDay <= timeEnd;
-        }
-        else
-        {
-            return timeOfDay >= timeStart || timeOfDay <= timeEnd;
-        }
+        return timeStart <= timeEnd ? timeOfDay >= timeStart && timeOfDay <= timeEnd : timeOfDay >= timeStart || timeOfDay <= timeEnd;
     }
 
     public String toString()

@@ -9,7 +9,6 @@ import net.minecraft.potion.PotionEffect;
 
 public abstract class InventoryEffectRenderer extends GuiContainer
 {
-    /** True if there is some potion effect to display */
     private boolean hasActivePotionEffects;
 
     public InventoryEffectRenderer(Container inventorySlotsIn)
@@ -17,10 +16,6 @@ public abstract class InventoryEffectRenderer extends GuiContainer
         super(inventorySlotsIn);
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
     public void initGui()
     {
         super.initGui();
@@ -41,9 +36,6 @@ public abstract class InventoryEffectRenderer extends GuiContainer
         }
     }
 
-    /**
-     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
-     */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -54,9 +46,6 @@ public abstract class InventoryEffectRenderer extends GuiContainer
         }
     }
 
-    /**
-     * Display the potion effects list
-     */
     private void drawActivePotionEffects()
     {
         int i = this.guiLeft - 124;
@@ -88,19 +77,19 @@ public abstract class InventoryEffectRenderer extends GuiContainer
                     this.drawTexturedModalRect(i + 6, j + 7, 0 + i1 % 8 * 18, 198 + i1 / 8 * 18, 18, 18);
                 }
 
-                String s1 = I18n.format(potion.getName());
+                String s1 = I18n.format(potion.getName(), new Object[0]);
 
                 if (potioneffect.getAmplifier() == 1)
                 {
-                    s1 = s1 + " " + I18n.format("enchantment.level.2");
+                    s1 = s1 + " " + I18n.format("enchantment.level.2", new Object[0]);
                 }
                 else if (potioneffect.getAmplifier() == 2)
                 {
-                    s1 = s1 + " " + I18n.format("enchantment.level.3");
+                    s1 = s1 + " " + I18n.format("enchantment.level.3", new Object[0]);
                 }
                 else if (potioneffect.getAmplifier() == 3)
                 {
-                    s1 = s1 + " " + I18n.format("enchantment.level.4");
+                    s1 = s1 + " " + I18n.format("enchantment.level.4", new Object[0]);
                 }
 
                 this.fontRendererObj.drawStringWithShadow(s1, (float)(i + 10 + 18), (float)(j + 6), 16777215);

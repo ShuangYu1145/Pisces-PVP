@@ -44,7 +44,7 @@ public class CustomBlockLayers
     {
         renderLayers = null;
         active = false;
-        List<EnumWorldBlockLayer> list = new ArrayList<>();
+        List<EnumWorldBlockLayer> list = new ArrayList();
         String s = "optifine/block.properties";
         Properties properties = ResUtils.readProperties(s, "CustomBlockLayers");
 
@@ -64,9 +64,9 @@ public class CustomBlockLayers
             }
         }
 
-        if (!list.isEmpty())
+        if (!((List)list).isEmpty())
         {
-            renderLayers = list.toArray(new EnumWorldBlockLayer[list.size()]);
+            renderLayers = (EnumWorldBlockLayer[])list.toArray(new EnumWorldBlockLayer[list.size()]);
             active = true;
         }
     }
@@ -101,7 +101,7 @@ public class CustomBlockLayers
                     {
                         while (listLayers.size() < j + 1)
                         {
-                            listLayers.add((EnumWorldBlockLayer)null);
+                            listLayers.add(null);
                         }
 
                         if (listLayers.get(j) != null)

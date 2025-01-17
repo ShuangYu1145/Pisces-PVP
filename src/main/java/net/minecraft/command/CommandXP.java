@@ -7,38 +7,26 @@ import net.minecraft.util.BlockPos;
 
 public class CommandXP extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "xp";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.xp.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length <= 0)
         {
-            throw new WrongUsageException("commands.xp.usage");
+            throw new WrongUsageException("commands.xp.usage", new Object[0]);
         }
         else
         {
@@ -67,12 +55,12 @@ public class CommandXP extends CommandBase
                 if (flag1)
                 {
                     entityplayer.addExperienceLevel(-i);
-                    notifyOperators(sender, this, "commands.xp.success.negative.levels", new Object[] {i, entityplayer.getName()});
+                    notifyOperators(sender, this, "commands.xp.success.negative.levels", new Object[] {Integer.valueOf(i), entityplayer.getName()});
                 }
                 else
                 {
                     entityplayer.addExperienceLevel(i);
-                    notifyOperators(sender, this, "commands.xp.success.levels", new Object[] {i, entityplayer.getName()});
+                    notifyOperators(sender, this, "commands.xp.success.levels", new Object[] {Integer.valueOf(i), entityplayer.getName()});
                 }
             }
             else
@@ -81,11 +69,11 @@ public class CommandXP extends CommandBase
 
                 if (flag1)
                 {
-                    throw new CommandException("commands.xp.failure.widthdrawXp");
+                    throw new CommandException("commands.xp.failure.widthdrawXp", new Object[0]);
                 }
 
                 entityplayer.addExperience(i);
-                notifyOperators(sender, this, "commands.xp.success", new Object[] {i, entityplayer.getName()});
+                notifyOperators(sender, this, "commands.xp.success", new Object[] {Integer.valueOf(i), entityplayer.getName()});
             }
         }
     }
@@ -100,9 +88,6 @@ public class CommandXP extends CommandBase
         return MinecraftServer.getServer().getAllUsernames();
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return index == 1;

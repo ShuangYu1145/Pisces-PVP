@@ -37,21 +37,10 @@ public class ItemEditableBook extends Item
         else
         {
             String s = nbt.getString("title");
-
-            if (s != null && s.length() <= 32)
-            {
-                return nbt.hasKey("author", 8);
-            }
-            else
-            {
-                return false;
-            }
+            return s != null && s.length() <= 32 ? nbt.hasKey("author", 8) : false;
         }
     }
 
-    /**
-     * Gets the generation of the book (how many times it has been cloned)
-     */
     public static int getGeneration(ItemStack book)
     {
         return book.getTagCompound().getInteger("generation");
@@ -73,9 +62,6 @@ public class ItemEditableBook extends Item
         return super.getItemStackDisplayName(stack);
     }
 
-    /**
-     * allows items to add custom lines of information to the mouseover description
-     */
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
         if (stack.hasTagCompound())
@@ -85,16 +71,13 @@ public class ItemEditableBook extends Item
 
             if (!StringUtils.isNullOrEmpty(s))
             {
-                tooltip.add(EnumChatFormatting.GRAY + StatCollector.translateToLocalFormatted("book.byAuthor", s));
+                tooltip.add(EnumChatFormatting.GRAY + StatCollector.translateToLocalFormatted("book.byAuthor", new Object[] {s}));
             }
 
             tooltip.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("book.generation." + nbttagcompound.getInteger("generation")));
         }
     }
 
-    /**
-     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
-     */
     public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
     {
         if (!worldIn.isRemote)

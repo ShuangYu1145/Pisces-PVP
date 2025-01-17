@@ -8,9 +8,6 @@ import net.minecraft.world.World;
 
 public class BehaviorDefaultDispenseItem implements IBehaviorDispenseItem
 {
-    /**
-     * Dispenses the specified ItemStack from a dispenser.
-     */
     public final ItemStack dispense(IBlockSource source, ItemStack stack)
     {
         ItemStack itemstack = this.dispenseStack(source, stack);
@@ -19,9 +16,6 @@ public class BehaviorDefaultDispenseItem implements IBehaviorDispenseItem
         return itemstack;
     }
 
-    /**
-     * Dispense the specified stack, play the dispense sound and spawn particles.
-     */
     protected ItemStack dispenseStack(IBlockSource source, ItemStack stack)
     {
         EnumFacing enumfacing = BlockDispenser.getFacing(source.getBlockMetadata());
@@ -49,25 +43,19 @@ public class BehaviorDefaultDispenseItem implements IBehaviorDispenseItem
         EntityItem entityitem = new EntityItem(worldIn, d0, d1, d2, stack);
         double d3 = worldIn.rand.nextDouble() * 0.1D + 0.2D;
         entityitem.motionX = (double)facing.getFrontOffsetX() * d3;
-        entityitem.motionY = (double)0.2F;
+        entityitem.motionY = 0.20000000298023224D;
         entityitem.motionZ = (double)facing.getFrontOffsetZ() * d3;
-        entityitem.motionX += worldIn.rand.nextGaussian() * (double)0.0075F * (double)speed;
-        entityitem.motionY += worldIn.rand.nextGaussian() * (double)0.0075F * (double)speed;
-        entityitem.motionZ += worldIn.rand.nextGaussian() * (double)0.0075F * (double)speed;
+        entityitem.motionX += worldIn.rand.nextGaussian() * 0.007499999832361937D * (double)speed;
+        entityitem.motionY += worldIn.rand.nextGaussian() * 0.007499999832361937D * (double)speed;
+        entityitem.motionZ += worldIn.rand.nextGaussian() * 0.007499999832361937D * (double)speed;
         worldIn.spawnEntityInWorld(entityitem);
     }
 
-    /**
-     * Play the dispense sound from the specified block.
-     */
     protected void playDispenseSound(IBlockSource source)
     {
         source.getWorld().playAuxSFX(1000, source.getBlockPos(), 0);
     }
 
-    /**
-     * Order clients to display dispense particles from the specified block and facing.
-     */
     protected void spawnDispenseParticles(IBlockSource source, EnumFacing facingIn)
     {
         source.getWorld().playAuxSFX(2000, source.getBlockPos(), this.func_82488_a(facingIn));

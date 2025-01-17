@@ -10,41 +10,31 @@ import net.minecraft.world.gen.ChunkProviderSettings;
 
 public abstract class GenLayer
 {
-    /** seed from World#getWorldSeed that is used in the LCG prng */
     private long worldGenSeed;
-
-    /** parent GenLayer that was provided via the constructor */
     protected GenLayer parent;
-
-    /**
-     * final part of the LCG prng that uses the chunk X, Z coords along with the other two seeds to generate
-     * pseudorandom numbers
-     */
     private long chunkSeed;
-
-    /** base seed to the LCG prng provided via the constructor */
     protected long baseSeed;
 
     public static GenLayer[] initializeAllBiomeGenerators(long seed, WorldType p_180781_2_, String p_180781_3_)
     {
         GenLayer genlayer = new GenLayerIsland(1L);
         genlayer = new GenLayerFuzzyZoom(2000L, genlayer);
-        GenLayer genlayeraddisland = new GenLayerAddIsland(1L, genlayer);
-        GenLayer genlayerzoom = new GenLayerZoom(2001L, genlayeraddisland);
-        GenLayer genlayeraddisland1 = new GenLayerAddIsland(2L, genlayerzoom);
+        GenLayerAddIsland genlayeraddisland = new GenLayerAddIsland(1L, genlayer);
+        GenLayerZoom genlayerzoom = new GenLayerZoom(2001L, genlayeraddisland);
+        GenLayerAddIsland genlayeraddisland1 = new GenLayerAddIsland(2L, genlayerzoom);
         genlayeraddisland1 = new GenLayerAddIsland(50L, genlayeraddisland1);
         genlayeraddisland1 = new GenLayerAddIsland(70L, genlayeraddisland1);
-        GenLayer genlayerremovetoomuchocean = new GenLayerRemoveTooMuchOcean(2L, genlayeraddisland1);
-        GenLayer genlayeraddsnow = new GenLayerAddSnow(2L, genlayerremovetoomuchocean);
-        GenLayer genlayeraddisland2 = new GenLayerAddIsland(3L, genlayeraddsnow);
-        GenLayer genlayeredge = new GenLayerEdge(2L, genlayeraddisland2, GenLayerEdge.Mode.COOL_WARM);
+        GenLayerRemoveTooMuchOcean genlayerremovetoomuchocean = new GenLayerRemoveTooMuchOcean(2L, genlayeraddisland1);
+        GenLayerAddSnow genlayeraddsnow = new GenLayerAddSnow(2L, genlayerremovetoomuchocean);
+        GenLayerAddIsland genlayeraddisland2 = new GenLayerAddIsland(3L, genlayeraddsnow);
+        GenLayerEdge genlayeredge = new GenLayerEdge(2L, genlayeraddisland2, GenLayerEdge.Mode.COOL_WARM);
         genlayeredge = new GenLayerEdge(2L, genlayeredge, GenLayerEdge.Mode.HEAT_ICE);
         genlayeredge = new GenLayerEdge(3L, genlayeredge, GenLayerEdge.Mode.SPECIAL);
-        GenLayer genlayerzoom1 = new GenLayerZoom(2002L, genlayeredge);
+        GenLayerZoom genlayerzoom1 = new GenLayerZoom(2002L, genlayeredge);
         genlayerzoom1 = new GenLayerZoom(2003L, genlayerzoom1);
-        GenLayer genlayeraddisland3 = new GenLayerAddIsland(4L, genlayerzoom1);
-        GenLayer genlayeraddmushroomisland = new GenLayerAddMushroomIsland(5L, genlayeraddisland3);
-        GenLayer genlayerdeepocean = new GenLayerDeepOcean(4L, genlayeraddmushroomisland);
+        GenLayerAddIsland genlayeraddisland3 = new GenLayerAddIsland(4L, genlayerzoom1);
+        GenLayerAddMushroomIsland genlayeraddmushroomisland = new GenLayerAddMushroomIsland(5L, genlayeraddisland3);
+        GenLayerDeepOcean genlayerdeepocean = new GenLayerDeepOcean(4L, genlayeraddmushroomisland);
         GenLayer genlayer4 = GenLayerZoom.magnify(1000L, genlayerdeepocean, 0);
         ChunkProviderSettings chunkprovidersettings = null;
         int i = 4;
@@ -63,16 +53,16 @@ public abstract class GenLayer
         }
 
         GenLayer lvt_8_1_ = GenLayerZoom.magnify(1000L, genlayer4, 0);
-        GenLayer genlayerriverinit = new GenLayerRiverInit(100L, lvt_8_1_);
-        GenLayer lvt_9_1_ = new GenLayerBiome(200L, genlayer4, p_180781_2_, p_180781_3_);
+        GenLayerRiverInit genlayerriverinit = new GenLayerRiverInit(100L, lvt_8_1_);
+        GenLayerBiome lvt_9_1_ = new GenLayerBiome(200L, genlayer4, p_180781_2_, p_180781_3_);
         GenLayer genlayer6 = GenLayerZoom.magnify(1000L, lvt_9_1_, 2);
-        GenLayer genlayerbiomeedge = new GenLayerBiomeEdge(1000L, genlayer6);
+        GenLayerBiomeEdge genlayerbiomeedge = new GenLayerBiomeEdge(1000L, genlayer6);
         GenLayer lvt_10_1_ = GenLayerZoom.magnify(1000L, genlayerriverinit, 2);
         GenLayer genlayerhills = new GenLayerHills(1000L, genlayerbiomeedge, lvt_10_1_);
         GenLayer genlayer5 = GenLayerZoom.magnify(1000L, genlayerriverinit, 2);
         genlayer5 = GenLayerZoom.magnify(1000L, genlayer5, j);
-        GenLayer genlayerriver = new GenLayerRiver(1L, genlayer5);
-        GenLayer genlayersmooth = new GenLayerSmooth(1000L, genlayerriver);
+        GenLayerRiver genlayerriver = new GenLayerRiver(1L, genlayer5);
+        GenLayerSmooth genlayersmooth = new GenLayerSmooth(1000L, genlayerriver);
         genlayerhills = new GenLayerRareBiome(1001L, genlayerhills);
 
         for (int k = 0; k < i; ++k)
@@ -90,8 +80,8 @@ public abstract class GenLayer
             }
         }
 
-        GenLayer genlayersmooth1 = new GenLayerSmooth(1000L, genlayerhills);
-        GenLayer genlayerrivermix = new GenLayerRiverMix(100L, genlayersmooth1, genlayersmooth);
+        GenLayerSmooth genlayersmooth1 = new GenLayerSmooth(1000L, genlayerhills);
+        GenLayerRiverMix genlayerrivermix = new GenLayerRiverMix(100L, genlayersmooth1, genlayersmooth);
         GenLayer genlayer3 = new GenLayerVoronoiZoom(10L, genlayerrivermix);
         genlayerrivermix.initWorldGenSeed(seed);
         genlayer3.initWorldGenSeed(seed);
@@ -109,10 +99,6 @@ public abstract class GenLayer
         this.baseSeed += p_i2125_1_;
     }
 
-    /**
-     * Initialize layer's local worldGenSeed based on its own baseSeed and the world's global seed (passed in as an
-     * argument).
-     */
     public void initWorldGenSeed(long seed)
     {
         this.worldGenSeed = seed;
@@ -130,9 +116,6 @@ public abstract class GenLayer
         this.worldGenSeed += this.baseSeed;
     }
 
-    /**
-     * Initialize layer's current chunkSeed based on the local worldGenSeed and the (x,z) chunk coordinates.
-     */
     public void initChunkSeed(long p_75903_1_, long p_75903_3_)
     {
         this.chunkSeed = this.worldGenSeed;
@@ -146,9 +129,6 @@ public abstract class GenLayer
         this.chunkSeed += p_75903_3_;
     }
 
-    /**
-     * returns a LCG pseudo random number from [0, x). Args: int x
-     */
     protected int nextInt(int p_75902_1_)
     {
         int i = (int)((this.chunkSeed >> 24) % (long)p_75902_1_);
@@ -163,10 +143,6 @@ public abstract class GenLayer
         return i;
     }
 
-    /**
-     * Returns a list of integer values generated by this layer. These may be interpreted as temperatures, rainfall
-     * amounts, or biomeList[] indices based on the particular GenLayer subclass.
-     */
     public abstract int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight);
 
     protected static boolean biomesEqualOrMesaPlateau(int biomeIDA, int biomeIDB)
@@ -188,8 +164,8 @@ public abstract class GenLayer
             {
                 CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Comparing biomes");
                 CrashReportCategory crashreportcategory = crashreport.makeCategory("Biomes being compared");
-                crashreportcategory.addCrashSection("Biome A ID", biomeIDA);
-                crashreportcategory.addCrashSection("Biome B ID", biomeIDB);
+                crashreportcategory.addCrashSection("Biome A ID", Integer.valueOf(biomeIDA));
+                crashreportcategory.addCrashSection("Biome B ID", Integer.valueOf(biomeIDB));
                 crashreportcategory.addCrashSectionCallable("Biome A", new Callable<String>()
                 {
                     public String call() throws Exception
@@ -213,66 +189,18 @@ public abstract class GenLayer
         }
     }
 
-    /**
-     * returns true if the biomeId is one of the various ocean biomes.
-     */
     protected static boolean isBiomeOceanic(int p_151618_0_)
     {
         return p_151618_0_ == BiomeGenBase.ocean.biomeID || p_151618_0_ == BiomeGenBase.deepOcean.biomeID || p_151618_0_ == BiomeGenBase.frozenOcean.biomeID;
     }
 
-    /**
-     * selects a random integer from a set of provided integers
-     */
     protected int selectRandom(int... p_151619_1_)
     {
         return p_151619_1_[this.nextInt(p_151619_1_.length)];
     }
 
-    /**
-     * returns the most frequently occurring number of the set, or a random number from those provided
-     */
     protected int selectModeOrRandom(int p_151617_1_, int p_151617_2_, int p_151617_3_, int p_151617_4_)
     {
-        if (p_151617_2_ == p_151617_3_ && p_151617_3_ == p_151617_4_)
-        {
-            return p_151617_2_;
-        }
-        else if (p_151617_1_ == p_151617_2_ && p_151617_1_ == p_151617_3_)
-        {
-            return p_151617_1_;
-        }
-        else if (p_151617_1_ == p_151617_2_ && p_151617_1_ == p_151617_4_)
-        {
-            return p_151617_1_;
-        }
-        else if (p_151617_1_ == p_151617_3_ && p_151617_1_ == p_151617_4_)
-        {
-            return p_151617_1_;
-        }
-        else if (p_151617_1_ == p_151617_2_ && p_151617_3_ != p_151617_4_)
-        {
-            return p_151617_1_;
-        }
-        else if (p_151617_1_ == p_151617_3_ && p_151617_2_ != p_151617_4_)
-        {
-            return p_151617_1_;
-        }
-        else if (p_151617_1_ == p_151617_4_ && p_151617_2_ != p_151617_3_)
-        {
-            return p_151617_1_;
-        }
-        else if (p_151617_2_ == p_151617_3_ && p_151617_1_ != p_151617_4_)
-        {
-            return p_151617_2_;
-        }
-        else if (p_151617_2_ == p_151617_4_ && p_151617_1_ != p_151617_3_)
-        {
-            return p_151617_2_;
-        }
-        else
-        {
-            return p_151617_3_ == p_151617_4_ && p_151617_1_ != p_151617_2_ ? p_151617_3_ : this.selectRandom(p_151617_1_, p_151617_2_, p_151617_3_, p_151617_4_);
-        }
+        return p_151617_2_ == p_151617_3_ && p_151617_3_ == p_151617_4_ ? p_151617_2_ : (p_151617_1_ == p_151617_2_ && p_151617_1_ == p_151617_3_ ? p_151617_1_ : (p_151617_1_ == p_151617_2_ && p_151617_1_ == p_151617_4_ ? p_151617_1_ : (p_151617_1_ == p_151617_3_ && p_151617_1_ == p_151617_4_ ? p_151617_1_ : (p_151617_1_ == p_151617_2_ && p_151617_3_ != p_151617_4_ ? p_151617_1_ : (p_151617_1_ == p_151617_3_ && p_151617_2_ != p_151617_4_ ? p_151617_1_ : (p_151617_1_ == p_151617_4_ && p_151617_2_ != p_151617_3_ ? p_151617_1_ : (p_151617_2_ == p_151617_3_ && p_151617_1_ != p_151617_4_ ? p_151617_2_ : (p_151617_2_ == p_151617_4_ && p_151617_1_ != p_151617_3_ ? p_151617_2_ : (p_151617_3_ == p_151617_4_ && p_151617_1_ != p_151617_2_ ? p_151617_3_ : this.selectRandom(new int[] {p_151617_1_, p_151617_2_, p_151617_3_, p_151617_4_}))))))))));
     }
 }

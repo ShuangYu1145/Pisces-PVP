@@ -64,12 +64,12 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
                     catch (UnknownHostException var2)
                     {
                         ServerListEntryNormal.this.server.pingToServer = -1L;
-                        ServerListEntryNormal.this.server.serverMOTD = EnumChatFormatting.DARK_RED + "Can't resolve hostname";
+                        ServerListEntryNormal.this.server.serverMOTD = EnumChatFormatting.DARK_RED + "Can\'t resolve hostname";
                     }
                     catch (Exception var3)
                     {
                         ServerListEntryNormal.this.server.pingToServer = -1L;
-                        ServerListEntryNormal.this.server.serverMOTD = EnumChatFormatting.DARK_RED + "Can't connect to server.";
+                        ServerListEntryNormal.this.server.serverMOTD = EnumChatFormatting.DARK_RED + "Can\'t connect to server.";
                     }
                 }
             });
@@ -83,7 +83,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
 
         for (int i = 0; i < Math.min(list.size(), 2); ++i)
         {
-            this.mc.fontRendererObj.drawString(list.get(i), x + 32 + 3, y + 12 + this.mc.fontRendererObj.FONT_HEIGHT * i, 8421504);
+            this.mc.fontRendererObj.drawString((String)list.get(i), x + 32 + 3, y + 12 + this.mc.fontRendererObj.FONT_HEIGHT * i, 8421504);
         }
 
         String s2 = flag2 ? EnumChatFormatting.DARK_RED + this.server.gameVersion : this.server.populationInfo;
@@ -253,14 +253,14 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
             ByteBuf bytebuf = Unpooled.copiedBuffer((CharSequence)this.server.getBase64EncodedIconData(), Charsets.UTF_8);
             ByteBuf bytebuf1 = Base64.decode(bytebuf);
             BufferedImage bufferedimage;
-            label79:
+            label101:
             {
                 try
                 {
                     bufferedimage = TextureUtil.readBufferedImage(new ByteBufInputStream(bytebuf1));
-                    Validate.validState(bufferedimage.getWidth() == 64, "Must be 64 pixels wide");
-                    Validate.validState(bufferedimage.getHeight() == 64, "Must be 64 pixels high");
-                    break label79;
+                    Validate.validState(bufferedimage.getWidth() == 64, "Must be 64 pixels wide", new Object[0]);
+                    Validate.validState(bufferedimage.getHeight() == 64, "Must be 64 pixels high", new Object[0]);
+                    break label101;
                 }
                 catch (Throwable throwable)
                 {
@@ -287,9 +287,6 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
         }
     }
 
-    /**
-     * Returns true if the mouse has been pressed on this control.
-     */
     public boolean mousePressed(int slotIndex, int p_148278_2_, int p_148278_3_, int p_148278_4_, int p_148278_5_, int p_148278_6_)
     {
         if (p_148278_5_ <= 32)
@@ -329,9 +326,6 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
     {
     }
 
-    /**
-     * Fired when the mouse button is released. Arguments: index, x, y, mouseEvent, relativeX, relativeY
-     */
     public void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY)
     {
     }

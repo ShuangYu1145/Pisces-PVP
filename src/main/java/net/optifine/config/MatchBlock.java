@@ -41,26 +41,12 @@ public class MatchBlock
 
     public boolean matches(BlockStateBase blockState)
     {
-        if (blockState.getBlockId() != this.blockId)
-        {
-            return false;
-        }
-        else
-        {
-            return Matches.metadata(blockState.getMetadata(), this.metadatas);
-        }
+        return blockState.getBlockId() != this.blockId ? false : Matches.metadata(blockState.getMetadata(), this.metadatas);
     }
 
     public boolean matches(int id, int metadata)
     {
-        if (id != this.blockId)
-        {
-            return false;
-        }
-        else
-        {
-            return Matches.metadata(metadata, this.metadatas);
-        }
+        return id != this.blockId ? false : Matches.metadata(metadata, this.metadatas);
     }
 
     public void addMetadata(int metadata)

@@ -42,13 +42,10 @@ public class S3CPacketUpdateScore implements Packet<INetHandlerPlayClient>
         this.action = S3CPacketUpdateScore.Action.REMOVE;
     }
 
-    /**
-     * Reads the raw packet data from the data stream.
-     */
     public void readPacketData(PacketBuffer buf) throws IOException
     {
         this.name = buf.readStringFromBuffer(40);
-        this.action = buf.readEnumValue(S3CPacketUpdateScore.Action.class);
+        this.action = (S3CPacketUpdateScore.Action)buf.readEnumValue(S3CPacketUpdateScore.Action.class);
         this.objective = buf.readStringFromBuffer(16);
 
         if (this.action != S3CPacketUpdateScore.Action.REMOVE)
@@ -57,9 +54,6 @@ public class S3CPacketUpdateScore implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Writes the raw packet data to the data stream.
-     */
     public void writePacketData(PacketBuffer buf) throws IOException
     {
         buf.writeString(this.name);
@@ -72,9 +66,6 @@ public class S3CPacketUpdateScore implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Passes this Packet on to the NetHandler for processing.
-     */
     public void processPacket(INetHandlerPlayClient handler)
     {
         handler.handleUpdateScore(this);

@@ -35,6 +35,7 @@ public class FontUtils
 
                 Config.log("Loading " + s2);
                 properties.load(inputstream);
+                inputstream.close();
             }
             catch (FileNotFoundException var7)
             {
@@ -53,7 +54,7 @@ public class FontUtils
     {
         for (Object o : props.keySet())
         {
-        	String s = (String)o;
+            String s = (String) o;
             String s1 = "width.";
 
             if (s.startsWith(s1))

@@ -22,8 +22,6 @@ public class GuiVideoSettings extends GuiScreenOF
     private GuiScreen parentGuiScreen;
     protected String screenTitle = "Video Settings";
     private GameSettings guiGameSettings;
-
-    /** An array of all of GameSettings.Options's video options. */
     private static GameSettings.Options[] videoOptions = new GameSettings.Options[] {GameSettings.Options.GRAPHICS, GameSettings.Options.RENDER_DISTANCE, GameSettings.Options.AMBIENT_OCCLUSION, GameSettings.Options.FRAMERATE_LIMIT, GameSettings.Options.AO_LEVEL, GameSettings.Options.VIEW_BOBBING, GameSettings.Options.GUI_SCALE, GameSettings.Options.USE_VBO, GameSettings.Options.GAMMA, GameSettings.Options.BLOCK_ALTERNATIVES, GameSettings.Options.DYNAMIC_LIGHTS, GameSettings.Options.DYNAMIC_FOV};
     private TooltipManager tooltipManager = new TooltipManager(this, new TooltipProviderOptions());
 
@@ -33,13 +31,9 @@ public class GuiVideoSettings extends GuiScreenOF
         this.guiGameSettings = gameSettingsIn;
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
     public void initGui()
     {
-        this.screenTitle = I18n.format("options.videoTitle");
+        this.screenTitle = I18n.format("options.videoTitle", new Object[0]);
         this.buttonList.clear();
 
         for (int i = 0; i < videoOptions.length; ++i)
@@ -79,12 +73,9 @@ public class GuiVideoSettings extends GuiScreenOF
         i1 = this.width / 2 - 155 + 160;
         this.buttonList.add(new GuiOptionButton(222, i1, l, Lang.get("of.options.other")));
         l = l + 21;
-        this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168 + 11, I18n.format("gui.done")));
+        this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168 + 11, I18n.format("gui.done", new Object[0])));
     }
 
-    /**
-     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-     */
     protected void actionPerformed(GuiButton button) throws IOException
     {
         this.actionPerformed(button, 1);
@@ -192,9 +183,6 @@ public class GuiVideoSettings extends GuiScreenOF
         }
     }
 
-    /**
-     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
-     */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();
@@ -204,17 +192,17 @@ public class GuiVideoSettings extends GuiScreenOF
 
         if (s1.equals("HD"))
         {
-            s = "OptiFine HD L5";
+            s = "OptiFine HD M6_pre2";
         }
 
         if (s1.equals("HD_U"))
         {
-            s = "OptiFine HD L5 Ultra";
+            s = "OptiFine HD M6_pre2 Ultra";
         }
 
         if (s1.equals("L"))
         {
-            s = "OptiFine L5 Light";
+            s = "OptiFine M6_pre2 Light";
         }
 
         this.drawString(this.fontRendererObj, s, 2, this.height - 10, 8421504);

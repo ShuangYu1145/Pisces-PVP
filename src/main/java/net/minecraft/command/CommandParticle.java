@@ -9,38 +9,26 @@ import net.minecraft.world.WorldServer;
 
 public class CommandParticle extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "particle";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.particle.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 8)
         {
-            throw new WrongUsageException("commands.particle.usage");
+            throw new WrongUsageException("commands.particle.usage", new Object[0]);
         }
         else
         {
@@ -68,7 +56,7 @@ public class CommandParticle extends CommandBase
 
             if (!flag)
             {
-                throw new CommandException("commands.particle.notFound", args[0]);
+                throw new CommandException("commands.particle.notFound", new Object[] {args[0]});
             }
             else
             {
@@ -114,13 +102,13 @@ public class CommandParticle extends CommandBase
                             }
                             catch (NumberFormatException var29)
                             {
-                                throw new CommandException("commands.particle.notFound", args[0]);
+                                throw new CommandException("commands.particle.notFound", new Object[] {args[0]});
                             }
                         }
                     }
 
                     worldserver.spawnParticle(enumparticletypes, flag1, d6, d0, d1, i, d2, d3, d4, d5, aint);
-                    notifyOperators(sender, this, "commands.particle.success", new Object[] {s, Math.max(i, 1)});
+                    notifyOperators(sender, this, "commands.particle.success", new Object[] {s, Integer.valueOf(Math.max(i, 1))});
                 }
             }
         }
@@ -128,17 +116,6 @@ public class CommandParticle extends CommandBase
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, EnumParticleTypes.getParticleNames());
-        }
-        else if (args.length > 1 && args.length <= 4)
-        {
-            return func_175771_a(args, 1, pos);
-        }
-        else
-        {
-            return args.length == 10 ? getListOfStringsMatchingLastWord(args, new String[] {"normal", "force"}) : null;
-        }
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, EnumParticleTypes.getParticleNames()) : (args.length > 1 && args.length <= 4 ? func_175771_a(args, 1, pos) : (args.length == 10 ? getListOfStringsMatchingLastWord(args, new String[] {"normal", "force"}): null));
     }
 }

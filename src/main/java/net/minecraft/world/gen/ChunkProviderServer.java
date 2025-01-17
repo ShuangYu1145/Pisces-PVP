@@ -28,24 +28,13 @@ import org.apache.logging.log4j.Logger;
 public class ChunkProviderServer implements IChunkProvider
 {
     private static final Logger logger = LogManager.getLogger();
-    private Set<Long> droppedChunksSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
-
-    /** a dummy chunk, returned in place of an actual chunk. */
+    private Set<Long> droppedChunksSet = Collections.<Long>newSetFromMap(new ConcurrentHashMap());
     private Chunk dummyChunk;
-
-    /**
-     * chunk generator object. Calls to load nonexistent chunks are forwarded to this object.
-     */
     private IChunkProvider serverChunkGenerator;
     private IChunkLoader chunkLoader;
-
-    /**
-     * if set, this flag forces a request to load a chunk to load the chunk rather than defaulting to the dummy if
-     * possible
-     */
     public boolean chunkLoadOverride = true;
-    private LongHashMap<Chunk> id2ChunkMap = new LongHashMap<>();
-    private List<Chunk> loadedChunks = Lists.newArrayList();
+    private LongHashMap<Chunk> id2ChunkMap = new LongHashMap();
+    private List<Chunk> loadedChunks = Lists.<Chunk>newArrayList();
     private WorldServer worldObj;
 
     public ChunkProviderServer(WorldServer p_i1520_1_, IChunkLoader p_i1520_2_, IChunkProvider p_i1520_3_)
@@ -56,9 +45,6 @@ public class ChunkProviderServer implements IChunkProvider
         this.serverChunkGenerator = p_i1520_3_;
     }
 
-    /**
-     * Checks to see if a chunk exists at x, z
-     */
     public boolean chunkExists(int x, int z)
     {
         return this.id2ChunkMap.containsItem(ChunkCoordIntPair.chunkXZ2Int(x, z));
@@ -75,18 +61,15 @@ public class ChunkProviderServer implements IChunkProvider
         {
             if (!this.worldObj.isSpawnChunk(x, z))
             {
-                this.droppedChunksSet.add(ChunkCoordIntPair.chunkXZ2Int(x, z));
+                this.droppedChunksSet.add(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(x, z)));
             }
         }
         else
         {
-            this.droppedChunksSet.add(ChunkCoordIntPair.chunkXZ2Int(x, z));
+            this.droppedChunksSet.add(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(x, z)));
         }
     }
 
-    /**
-     * marks all chunks for unload, ignoring those near the spawn
-     */
     public void unloadAllChunks()
     {
         for (Chunk chunk : this.loadedChunks)
@@ -95,17 +78,11 @@ public class ChunkProviderServer implements IChunkProvider
         }
     }
 
-    /**
-     * loads or generates the chunk at the chunk location specified
-     *  
-     * @param chunkX x coord of the chunk to load (block coord >> 4)
-     * @param chunkZ z coord of the chunk to load (block coord >> 4)
-     */
     public Chunk loadChunk(int chunkX, int chunkZ)
     {
         long i = ChunkCoordIntPair.chunkXZ2Int(chunkX, chunkZ);
-        this.droppedChunksSet.remove(i);
-        Chunk chunk = this.id2ChunkMap.getValueByKey(i);
+        this.droppedChunksSet.remove(Long.valueOf(i));
+        Chunk chunk = (Chunk)this.id2ChunkMap.getValueByKey(i);
 
         if (chunk == null)
         {
@@ -127,8 +104,8 @@ public class ChunkProviderServer implements IChunkProvider
                     {
                         CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Exception generating new chunk");
                         CrashReportCategory crashreportcategory = crashreport.makeCategory("Chunk to be generated");
-                        crashreportcategory.addCrashSection("Location", String.format("%d,%d", chunkX, chunkZ));
-                        crashreportcategory.addCrashSection("Position hash", i);
+                        crashreportcategory.addCrashSection("Location", String.format("%d,%d", new Object[] {Integer.valueOf(chunkX), Integer.valueOf(chunkZ)}));
+                        crashreportcategory.addCrashSection("Position hash", Long.valueOf(i));
                         crashreportcategory.addCrashSection("Generator", this.serverChunkGenerator.makeString());
                         throw new ReportedException(crashreport);
                     }
@@ -144,22 +121,10 @@ public class ChunkProviderServer implements IChunkProvider
         return chunk;
     }
 
-    /**
-     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
-     * specified chunk from the map seed and chunk seed
-     */
     public Chunk provideChunk(int x, int z)
     {
-        Chunk chunk = this.id2ChunkMap.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(x, z));
-
-        if (chunk == null)
-        {
-            return !this.worldObj.isFindingSpawnPoint() && !this.chunkLoadOverride ? this.dummyChunk : this.loadChunk(x, z);
-        }
-        else
-        {
-            return chunk;
-        }
+        Chunk chunk = (Chunk)this.id2ChunkMap.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(x, z));
+        return chunk == null ? (!this.worldObj.isFindingSpawnPoint() && !this.chunkLoadOverride ? this.dummyChunk : this.loadChunk(x, z)) : chunk;
     }
 
     private Chunk loadChunkFromFile(int x, int z)
@@ -188,7 +153,7 @@ public class ChunkProviderServer implements IChunkProvider
             }
             catch (Exception exception)
             {
-                logger.error("Couldn't load chunk", (Throwable)exception);
+                logger.error((String)"Couldn\'t load chunk", (Throwable)exception);
                 return null;
             }
         }
@@ -204,7 +169,7 @@ public class ChunkProviderServer implements IChunkProvider
             }
             catch (Exception exception)
             {
-                logger.error("Couldn't save entities", (Throwable)exception);
+                logger.error((String)"Couldn\'t save entities", (Throwable)exception);
             }
         }
     }
@@ -220,18 +185,15 @@ public class ChunkProviderServer implements IChunkProvider
             }
             catch (IOException ioexception)
             {
-                logger.error("Couldn't save chunk", (Throwable)ioexception);
+                logger.error((String)"Couldn\'t save chunk", (Throwable)ioexception);
             }
             catch (MinecraftException minecraftexception)
             {
-                logger.error("Couldn't save chunk; already in use by another instance of Minecraft?", (Throwable)minecraftexception);
+                logger.error((String)"Couldn\'t save chunk; already in use by another instance of Minecraft?", (Throwable)minecraftexception);
             }
         }
     }
 
-    /**
-     * Populates chunk with ores etc etc
-     */
     public void populate(IChunkProvider chunkProvider, int x, int z)
     {
         Chunk chunk = this.provideChunk(x, z);
@@ -262,18 +224,14 @@ public class ChunkProviderServer implements IChunkProvider
         }
     }
 
-    /**
-     * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
-     * Return true if all chunks have been saved.
-     */
     public boolean saveChunks(boolean saveAllChunks, IProgressUpdate progressCallback)
     {
         int i = 0;
         List<Chunk> list = Lists.newArrayList(this.loadedChunks);
 
-        for (int j = 0; j < list.size(); ++j)
+        for (int j = 0; j < ((List)list).size(); ++j)
         {
-            Chunk chunk = list.get(j);
+            Chunk chunk = (Chunk)list.get(j);
 
             if (saveAllChunks)
             {
@@ -296,10 +254,6 @@ public class ChunkProviderServer implements IChunkProvider
         return true;
     }
 
-    /**
-     * Save extra data not associated with any Chunk.  Not saved during autosave, only during world unload.  Currently
-     * unimplemented.
-     */
     public void saveExtraData()
     {
         if (this.chunkLoader != null)
@@ -308,9 +262,6 @@ public class ChunkProviderServer implements IChunkProvider
         }
     }
 
-    /**
-     * Unloads chunks that are marked to be unloaded. This is not guaranteed to unload every such chunk.
-     */
     public boolean unloadQueuedChunks()
     {
         if (!this.worldObj.disableLevelSaving)
@@ -319,15 +270,15 @@ public class ChunkProviderServer implements IChunkProvider
             {
                 if (!this.droppedChunksSet.isEmpty())
                 {
-                    Long olong = this.droppedChunksSet.iterator().next();
-                    Chunk chunk = this.id2ChunkMap.getValueByKey(olong);
+                    Long olong = (Long)this.droppedChunksSet.iterator().next();
+                    Chunk chunk = (Chunk)this.id2ChunkMap.getValueByKey(olong.longValue());
 
                     if (chunk != null)
                     {
                         chunk.onChunkUnload();
                         this.saveChunkData(chunk);
                         this.saveChunkExtraData(chunk);
-                        this.id2ChunkMap.remove(olong);
+                        this.id2ChunkMap.remove(olong.longValue());
                         this.loadedChunks.remove(chunk);
                     }
 
@@ -344,17 +295,11 @@ public class ChunkProviderServer implements IChunkProvider
         return this.serverChunkGenerator.unloadQueuedChunks();
     }
 
-    /**
-     * Returns if the IChunkProvider supports saving.
-     */
     public boolean canSave()
     {
         return !this.worldObj.disableLevelSaving;
     }
 
-    /**
-     * Converts the instance data to a readable string.
-     */
     public String makeString()
     {
         return "ServerChunkCache: " + this.id2ChunkMap.getNumHashElements() + " Drop: " + this.droppedChunksSet.size();

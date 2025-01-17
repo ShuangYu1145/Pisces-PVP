@@ -10,14 +10,7 @@ public class Score
     {
         public int compare(Score p_compare_1_, Score p_compare_2_)
         {
-            if (p_compare_1_.getScorePoints() > p_compare_2_.getScorePoints())
-            {
-                return 1;
-            }
-            else
-            {
-                return p_compare_1_.getScorePoints() < p_compare_2_.getScorePoints() ? -1 : p_compare_2_.getPlayerName().compareToIgnoreCase(p_compare_1_.getPlayerName());
-            }
+            return p_compare_1_.getScorePoints() > p_compare_2_.getScorePoints() ? 1 : (p_compare_1_.getScorePoints() < p_compare_2_.getScorePoints() ? -1 : p_compare_2_.getPlayerName().compareToIgnoreCase(p_compare_1_.getPlayerName()));
         }
     };
     private final Scoreboard theScoreboard;
@@ -93,9 +86,6 @@ public class Score
         return this.theScoreObjective;
     }
 
-    /**
-     * Returns the name of the player this score belongs to
-     */
     public String getPlayerName()
     {
         return this.scorePlayerName;

@@ -14,7 +14,7 @@ import net.minecraft.network.play.INetHandlerPlayClient;
 public class S20PacketEntityProperties implements Packet<INetHandlerPlayClient>
 {
     private int entityId;
-    private final List<S20PacketEntityProperties.Snapshot> field_149444_b = Lists.newArrayList();
+    private final List<S20PacketEntityProperties.Snapshot> field_149444_b = Lists.<S20PacketEntityProperties.Snapshot>newArrayList();
 
     public S20PacketEntityProperties()
     {
@@ -30,9 +30,6 @@ public class S20PacketEntityProperties implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Reads the raw packet data from the data stream.
-     */
     public void readPacketData(PacketBuffer buf) throws IOException
     {
         this.entityId = buf.readVarIntFromBuffer();
@@ -42,7 +39,7 @@ public class S20PacketEntityProperties implements Packet<INetHandlerPlayClient>
         {
             String s = buf.readStringFromBuffer(64);
             double d0 = buf.readDouble();
-            List<AttributeModifier> list = Lists.newArrayList();
+            List<AttributeModifier> list = Lists.<AttributeModifier>newArrayList();
             int k = buf.readVarIntFromBuffer();
 
             for (int l = 0; l < k; ++l)
@@ -55,9 +52,6 @@ public class S20PacketEntityProperties implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Writes the raw packet data to the data stream.
-     */
     public void writePacketData(PacketBuffer buf) throws IOException
     {
         buf.writeVarIntToBuffer(this.entityId);
@@ -78,9 +72,6 @@ public class S20PacketEntityProperties implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Passes this Packet on to the NetHandler for processing.
-     */
     public void processPacket(INetHandlerPlayClient handler)
     {
         handler.handleEntityProperties(this);

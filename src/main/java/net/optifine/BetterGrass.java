@@ -58,17 +58,17 @@ public class BetterGrass
     {
         if (spritesLoaded)
         {
-            modelCubeGrass = BlockModelUtils.makeModelCube(spriteGrass, 0);
+            modelCubeGrass = BlockModelUtils.makeModelCube((TextureAtlasSprite)spriteGrass, 0);
 
             if (grassMultilayer)
             {
-                IBakedModel ibakedmodel = BlockModelUtils.makeModelCube(spriteGrassSide, -1);
+                IBakedModel ibakedmodel = BlockModelUtils.makeModelCube((TextureAtlasSprite)spriteGrassSide, -1);
                 modelCubeGrass = BlockModelUtils.joinModelsCube(ibakedmodel, modelCubeGrass);
             }
 
-            modelCubeMycelium = BlockModelUtils.makeModelCube(spriteMycelium, -1);
-            modelCubePodzol = BlockModelUtils.makeModelCube(spritePodzol, 0);
-            modelCubeSnow = BlockModelUtils.makeModelCube(spriteSnow, -1);
+            modelCubeMycelium = BlockModelUtils.makeModelCube((TextureAtlasSprite)spriteMycelium, -1);
+            modelCubePodzol = BlockModelUtils.makeModelCube((TextureAtlasSprite)spritePodzol, 0);
+            modelCubeSnow = BlockModelUtils.makeModelCube((TextureAtlasSprite)spriteSnow, -1);
             modelsLoaded = true;
         }
     }
@@ -118,6 +118,7 @@ public class BetterGrass
 
             Properties properties = new PropertiesOrdered();
             properties.load(inputstream);
+            inputstream.close();
             betterGrass = getBoolean(properties, "grass", true);
             betterMycelium = getBoolean(properties, "mycelium", true);
             betterPodzol = getBoolean(properties, "podzol", true);
@@ -170,19 +171,7 @@ public class BetterGrass
             else
             {
                 Block block = blockState.getBlock();
-
-                if (block instanceof BlockMycelium)
-                {
-                    return getFaceQuadsMycelium(blockAccess, blockState, blockPos, facing, quads);
-                }
-                else if (block instanceof BlockDirt)
-                {
-                    return getFaceQuadsDirt(blockAccess, blockState, blockPos, facing, quads);
-                }
-                else
-                {
-                    return block instanceof BlockGrass ? getFaceQuadsGrass(blockAccess, blockState, blockPos, facing, quads) : quads;
-                }
+                return block instanceof BlockMycelium ? getFaceQuadsMycelium(blockAccess, blockState, blockPos, facing, quads) : (block instanceof BlockDirt ? getFaceQuadsDirt(blockAccess, blockState, blockPos, facing, quads) : (block instanceof BlockGrass ? getFaceQuadsGrass(blockAccess, blockState, blockPos, facing, quads) : quads));
             }
         }
         else

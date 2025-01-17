@@ -15,7 +15,7 @@ public class ChatComponentTranslation extends ChatComponentStyle
     private final Object[] formatArgs;
     private final Object syncLock = new Object();
     private long lastTranslationUpdateTimeInMilliseconds = -1L;
-    List<IChatComponent> children = Lists.newArrayList();
+    List<IChatComponent> children = Lists.<IChatComponent>newArrayList();
     public static final Pattern stringVariablePattern = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
     public ChatComponentTranslation(String translationKey, Object... args)
@@ -32,9 +32,6 @@ public class ChatComponentTranslation extends ChatComponentStyle
         }
     }
 
-    /**
-     * ensures that our children are initialized from the most recent string translation mapping.
-     */
     synchronized void ensureInitialized()
     {
         synchronized (this.syncLock)
@@ -69,9 +66,6 @@ public class ChatComponentTranslation extends ChatComponentStyle
         }
     }
 
-    /**
-     * initializes our children from a format string, using the format args to fill in the placeholder variables.
-     */
     protected void initializeFromFormat(String format)
     {
         boolean flag = false;
@@ -90,7 +84,7 @@ public class ChatComponentTranslation extends ChatComponentStyle
 
                 if (k > j)
                 {
-                    ChatComponentText chatcomponenttext = new ChatComponentText(String.format(format.substring(j, k)));
+                    ChatComponentText chatcomponenttext = new ChatComponentText(String.format(format.substring(j, k), new Object[0]));
                     chatcomponenttext.getChatStyle().setParentStyle(this.getChatStyle());
                     this.children.add(chatcomponenttext);
                 }
@@ -108,7 +102,7 @@ public class ChatComponentTranslation extends ChatComponentStyle
                 {
                     if (!"s".equals(s2))
                     {
-                        throw new ChatComponentTranslationFormatException(this, "Unsupported format: '" + s + "'");
+                        throw new ChatComponentTranslationFormatException(this, "Unsupported format: \'" + s + "\'");
                     }
 
                     String s1 = matcher.group(1);
@@ -123,7 +117,7 @@ public class ChatComponentTranslation extends ChatComponentStyle
 
             if (j < format.length())
             {
-                ChatComponentText chatcomponenttext1 = new ChatComponentText(String.format(format.substring(j)));
+                ChatComponentText chatcomponenttext1 = new ChatComponentText(String.format(format.substring(j), new Object[0]));
                 chatcomponenttext1.getChatStyle().setParentStyle(this.getChatStyle());
                 this.children.add(chatcomponenttext1);
             }
@@ -185,13 +179,9 @@ public class ChatComponentTranslation extends ChatComponentStyle
     public Iterator<IChatComponent> iterator()
     {
         this.ensureInitialized();
-        return Iterators.concat(createDeepCopyIterator(this.children), createDeepCopyIterator(this.siblings));
+        return Iterators.<IChatComponent>concat(createDeepCopyIterator(this.children), createDeepCopyIterator(this.siblings));
     }
 
-    /**
-     * Gets the text of this component, without any special formatting codes added, for chat.  TODO: why is this two
-     * different methods?
-     */
     public String getUnformattedTextForChat()
     {
         this.ensureInitialized();
@@ -205,9 +195,6 @@ public class ChatComponentTranslation extends ChatComponentStyle
         return stringbuilder.toString();
     }
 
-    /**
-     * Creates a copy of this component.  Almost a deep copy, except the style is shallow-copied.
-     */
     public ChatComponentTranslation createCopy()
     {
         Object[] aobject = new Object[this.formatArgs.length];
@@ -262,7 +249,7 @@ public class ChatComponentTranslation extends ChatComponentStyle
 
     public String toString()
     {
-        return "TranslatableComponent{key='" + this.key + '\'' + ", args=" + Arrays.toString(this.formatArgs) + ", siblings=" + this.siblings + ", style=" + this.getChatStyle() + '}';
+        return "TranslatableComponent{key=\'" + this.key + '\'' + ", args=" + Arrays.toString(this.formatArgs) + ", siblings=" + this.siblings + ", style=" + this.getChatStyle() + '}';
     }
 
     public String getKey()

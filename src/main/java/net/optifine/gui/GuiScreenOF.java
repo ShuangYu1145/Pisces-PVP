@@ -12,9 +12,6 @@ public class GuiScreenOF extends GuiScreen
     {
     }
 
-    /**
-     * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
-     */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -35,7 +32,7 @@ public class GuiScreenOF extends GuiScreen
     {
         for (int i = 0; i < listButtons.size(); ++i)
         {
-            GuiButton guibutton = listButtons.get(i);
+            GuiButton guibutton = (GuiButton)listButtons.get(i);
 
             if (guibutton.visible)
             {

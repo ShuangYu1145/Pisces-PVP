@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class JsonSerializableSet extends ForwardingSet<String> implements IJsonSerializable
 {
-    private final Set<String> underlyingSet = Sets.newHashSet();
+    private final Set<String> underlyingSet = Sets.<String>newHashSet();
 
     public void fromJson(JsonElement json)
     {
@@ -22,9 +22,6 @@ public class JsonSerializableSet extends ForwardingSet<String> implements IJsonS
         }
     }
 
-    /**
-     * Gets the JsonElement that can be serialized.
-     */
     public JsonElement getSerializableElement()
     {
         JsonArray jsonarray = new JsonArray();

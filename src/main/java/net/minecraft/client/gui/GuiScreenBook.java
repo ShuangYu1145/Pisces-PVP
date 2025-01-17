@@ -31,23 +31,11 @@ public class GuiScreenBook extends GuiScreen
 {
     private static final Logger logger = LogManager.getLogger();
     private static final ResourceLocation bookGuiTextures = new ResourceLocation("textures/gui/book.png");
-
-    /** The player editing the book */
     private final EntityPlayer editingPlayer;
     private final ItemStack bookObj;
-
-    /** Whether the book is signed or can still be edited */
     private final boolean bookIsUnsigned;
-
-    /**
-     * Whether the book's title or contents has been modified since being opened
-     */
     private boolean bookIsModified;
-
-    /** Determines if the signing screen is open */
     private boolean bookGettingSigned;
-
-    /** Update ticks since the gui was opened */
     private int updateCount;
     private int bookImageWidth = 192;
     private int bookImageHeight = 192;
@@ -60,8 +48,6 @@ public class GuiScreenBook extends GuiScreen
     private GuiScreenBook.NextPageButton buttonNextPage;
     private GuiScreenBook.NextPageButton buttonPreviousPage;
     private GuiButton buttonDone;
-
-    /** The GuiButton to sign this book. */
     private GuiButton buttonSign;
     private GuiButton buttonFinalize;
     private GuiButton buttonCancel;
@@ -97,19 +83,12 @@ public class GuiScreenBook extends GuiScreen
         }
     }
 
-    /**
-     * Called from the main game loop to update the screen.
-     */
     public void updateScreen()
     {
         super.updateScreen();
         ++this.updateCount;
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
     public void initGui()
     {
         this.buttonList.clear();
@@ -117,14 +96,14 @@ public class GuiScreenBook extends GuiScreen
 
         if (this.bookIsUnsigned)
         {
-            this.buttonList.add(this.buttonSign = new GuiButton(3, this.width / 2 - 100, 4 + this.bookImageHeight, 98, 20, I18n.format("book.signButton")));
-            this.buttonList.add(this.buttonDone = new GuiButton(0, this.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.format("gui.done")));
-            this.buttonList.add(this.buttonFinalize = new GuiButton(5, this.width / 2 - 100, 4 + this.bookImageHeight, 98, 20, I18n.format("book.finalizeButton")));
-            this.buttonList.add(this.buttonCancel = new GuiButton(4, this.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.format("gui.cancel")));
+            this.buttonList.add(this.buttonSign = new GuiButton(3, this.width / 2 - 100, 4 + this.bookImageHeight, 98, 20, I18n.format("book.signButton", new Object[0])));
+            this.buttonList.add(this.buttonDone = new GuiButton(0, this.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.format("gui.done", new Object[0])));
+            this.buttonList.add(this.buttonFinalize = new GuiButton(5, this.width / 2 - 100, 4 + this.bookImageHeight, 98, 20, I18n.format("book.finalizeButton", new Object[0])));
+            this.buttonList.add(this.buttonCancel = new GuiButton(4, this.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.format("gui.cancel", new Object[0])));
         }
         else
         {
-            this.buttonList.add(this.buttonDone = new GuiButton(0, this.width / 2 - 100, 4 + this.bookImageHeight, 200, 20, I18n.format("gui.done")));
+            this.buttonList.add(this.buttonDone = new GuiButton(0, this.width / 2 - 100, 4 + this.bookImageHeight, 200, 20, I18n.format("gui.done", new Object[0])));
         }
 
         int i = (this.width - this.bookImageWidth) / 2;
@@ -134,9 +113,6 @@ public class GuiScreenBook extends GuiScreen
         this.updateButtons();
     }
 
-    /**
-     * Called when the screen is unloaded. Used to disable keyboard repeat events
-     */
     public void onGuiClosed()
     {
         Keyboard.enableRepeatEvents(false);
@@ -211,9 +187,6 @@ public class GuiScreenBook extends GuiScreen
         }
     }
 
-    /**
-     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-     */
     protected void actionPerformed(GuiButton button) throws IOException
     {
         if (button.enabled)
@@ -274,10 +247,6 @@ public class GuiScreenBook extends GuiScreen
         }
     }
 
-    /**
-     * Fired when a key is typed (except F11 which toggles full screen). This is the equivalent of
-     * KeyListener.keyTyped(KeyEvent e). Args : character (character on the key), keyCode (lwjgl Keyboard key code)
-     */
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
         super.keyTyped(typedChar, keyCode);
@@ -295,9 +264,6 @@ public class GuiScreenBook extends GuiScreen
         }
     }
 
-    /**
-     * Processes keystrokes when editing the text of a book
-     */
     private void keyTypedInBook(char typedChar, int keyCode)
     {
         if (GuiScreen.isKeyComboCtrlV(keyCode))
@@ -332,9 +298,6 @@ public class GuiScreenBook extends GuiScreen
         }
     }
 
-    /**
-     * Processes keystrokes when editing the title of a book
-     */
     private void keyTypedInTitle(char p_146460_1_, int p_146460_2_) throws IOException
     {
         switch (p_146460_2_)
@@ -368,17 +331,11 @@ public class GuiScreenBook extends GuiScreen
         }
     }
 
-    /**
-     * Returns the entire text of the current page as determined by currPage
-     */
     private String pageGetCurrent()
     {
         return this.bookPages != null && this.currPage >= 0 && this.currPage < this.bookPages.tagCount() ? this.bookPages.getStringTagAt(this.currPage) : "";
     }
 
-    /**
-     * Sets the text of the current page as determined by currPage
-     */
     private void pageSetCurrent(String p_146457_1_)
     {
         if (this.bookPages != null && this.currPage >= 0 && this.currPage < this.bookPages.tagCount())
@@ -388,9 +345,6 @@ public class GuiScreenBook extends GuiScreen
         }
     }
 
-    /**
-     * Processes any text getting inserted into the current page, enforcing the page size limit
-     */
     private void pageInsertIntoCurrent(String p_146459_1_)
     {
         String s = this.pageGetCurrent();
@@ -403,9 +357,6 @@ public class GuiScreenBook extends GuiScreen
         }
     }
 
-    /**
-     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
-     */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -430,20 +381,20 @@ public class GuiScreenBook extends GuiScreen
                 }
             }
 
-            String s1 = I18n.format("book.editTitle");
+            String s1 = I18n.format("book.editTitle", new Object[0]);
             int k = this.fontRendererObj.getStringWidth(s1);
             this.fontRendererObj.drawString(s1, i + 36 + (116 - k) / 2, j + 16 + 16, 0);
             int l = this.fontRendererObj.getStringWidth(s);
             this.fontRendererObj.drawString(s, i + 36 + (116 - l) / 2, j + 48, 0);
-            String s2 = I18n.format("book.byAuthor", this.editingPlayer.getName());
+            String s2 = I18n.format("book.byAuthor", new Object[] {this.editingPlayer.getName()});
             int i1 = this.fontRendererObj.getStringWidth(s2);
             this.fontRendererObj.drawString(EnumChatFormatting.DARK_GRAY + s2, i + 36 + (116 - i1) / 2, j + 48 + 10, 0);
-            String s3 = I18n.format("book.finalizeWarning");
+            String s3 = I18n.format("book.finalizeWarning", new Object[0]);
             this.fontRendererObj.drawSplitString(s3, i + 36, j + 80, 116, 0);
         }
         else
         {
-            String s4 = I18n.format("book.pageIndicator", this.currPage + 1, this.bookTotalPages);
+            String s4 = I18n.format("book.pageIndicator", new Object[] {Integer.valueOf(this.currPage + 1), Integer.valueOf(this.bookTotalPages)});
             String s5 = "";
 
             if (this.bookPages != null && this.currPage >= 0 && this.currPage < this.bookPages.tagCount())
@@ -502,7 +453,7 @@ public class GuiScreenBook extends GuiScreen
 
                 for (int l1 = 0; l1 < k1; ++l1)
                 {
-                    IChatComponent ichatcomponent2 = this.field_175386_A.get(l1);
+                    IChatComponent ichatcomponent2 = (IChatComponent)this.field_175386_A.get(l1);
                     this.fontRendererObj.drawString(ichatcomponent2.getUnformattedText(), i + 36, j + 16 + 16 + l1 * this.fontRendererObj.FONT_HEIGHT, 0);
                 }
 
@@ -518,9 +469,6 @@ public class GuiScreenBook extends GuiScreen
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
-    /**
-     * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
-     */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         if (mouseButton == 0)
@@ -536,11 +484,6 @@ public class GuiScreenBook extends GuiScreen
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
-    /**
-     * Executes the click event specified by the given chat component
-     *  
-     * @param component The ChatComponent to check for click
-     */
     protected boolean handleComponentClick(IChatComponent component)
     {
         ClickEvent clickevent = component == null ? null : component.getChatStyle().getChatClickEvent();
@@ -605,7 +548,7 @@ public class GuiScreenBook extends GuiScreen
 
                     if (l >= 0 && l < this.field_175386_A.size())
                     {
-                        IChatComponent ichatcomponent = this.field_175386_A.get(l);
+                        IChatComponent ichatcomponent = (IChatComponent)this.field_175386_A.get(l);
                         int i1 = 0;
 
                         for (IChatComponent ichatcomponent1 : ichatcomponent)

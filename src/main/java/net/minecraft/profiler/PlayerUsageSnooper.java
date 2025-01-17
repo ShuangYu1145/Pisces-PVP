@@ -15,21 +15,15 @@ import net.minecraft.util.HttpUtil;
 
 public class PlayerUsageSnooper
 {
-    private final Map<String, Object> snooperStats = Maps.newHashMap();
-    private final Map<String, Object> clientStats = Maps.newHashMap();
+    private final Map<String, Object> snooperStats = Maps.<String, Object>newHashMap();
+    private final Map<String, Object> clientStats = Maps.<String, Object>newHashMap();
     private final String uniqueID = UUID.randomUUID().toString();
-
-    /** URL of the server to send the report to */
     private final URL serverUrl;
     private final IPlayerUsage playerStatsCollector;
-
-    /** set to fire the snooperThread every 15 mins */
     private final Timer threadTrigger = new Timer("Snooper Timer", true);
     private final Object syncLock = new Object();
     private final long minecraftStartTimeMilis;
     private boolean isRunning;
-
-    /** incremented on every getSelfCounterFor */
     private int selfCounter;
 
     public PlayerUsageSnooper(String side, IPlayerUsage playerStatCollector, long startTime)
@@ -47,9 +41,6 @@ public class PlayerUsageSnooper
         this.minecraftStartTimeMilis = startTime;
     }
 
-    /**
-     * Note issuing start multiple times is not an error.
-     */
     public void startSnooper()
     {
         if (!this.isRunning)
@@ -66,14 +57,14 @@ public class PlayerUsageSnooper
 
                         synchronized (PlayerUsageSnooper.this.syncLock)
                         {
-                            map = Maps.newHashMap(PlayerUsageSnooper.this.clientStats);
+                            map = Maps.<String, Object>newHashMap(PlayerUsageSnooper.this.clientStats);
 
                             if (PlayerUsageSnooper.this.selfCounter == 0)
                             {
                                 map.putAll(PlayerUsageSnooper.this.snooperStats);
                             }
 
-                            map.put("snooper_count", PlayerUsageSnooper.this.selfCounter++);
+                            map.put("snooper_count", Integer.valueOf(PlayerUsageSnooper.this.selfCounter++));
                             map.put("snooper_token", PlayerUsageSnooper.this.uniqueID);
                         }
 
@@ -84,9 +75,6 @@ public class PlayerUsageSnooper
         }
     }
 
-    /**
-     * Add OS data into the snooper
-     */
     private void addOSData()
     {
         this.addJvmArgsToSnooper();
@@ -114,15 +102,15 @@ public class PlayerUsageSnooper
             }
         }
 
-        this.addClientStat("jvm_args", i);
+        this.addClientStat("jvm_args", Integer.valueOf(i));
     }
 
     public void addMemoryStatsToSnooper()
     {
-        this.addStatToSnooper("memory_total", Runtime.getRuntime().totalMemory());
-        this.addStatToSnooper("memory_max", Runtime.getRuntime().maxMemory());
-        this.addStatToSnooper("memory_free", Runtime.getRuntime().freeMemory());
-        this.addStatToSnooper("cpu_cores", Runtime.getRuntime().availableProcessors());
+        this.addStatToSnooper("memory_total", Long.valueOf(Runtime.getRuntime().totalMemory()));
+        this.addStatToSnooper("memory_max", Long.valueOf(Runtime.getRuntime().maxMemory()));
+        this.addStatToSnooper("memory_free", Long.valueOf(Runtime.getRuntime().freeMemory()));
+        this.addStatToSnooper("cpu_cores", Integer.valueOf(Runtime.getRuntime().availableProcessors()));
         this.playerStatsCollector.addServerStatsToSnooper(this);
     }
 
@@ -144,7 +132,7 @@ public class PlayerUsageSnooper
 
     public Map<String, String> getCurrentStats()
     {
-        Map<String, String> map = Maps.newLinkedHashMap();
+        Map<String, String> map = Maps.<String, String>newLinkedHashMap();
 
         synchronized (this.syncLock)
         {
@@ -179,9 +167,6 @@ public class PlayerUsageSnooper
         return this.uniqueID;
     }
 
-    /**
-     * Returns the saved value of System#currentTimeMillis when the game started
-     */
     public long getMinecraftStartTimeMillis()
     {
         return this.minecraftStartTimeMilis;

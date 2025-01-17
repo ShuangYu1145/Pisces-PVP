@@ -13,38 +13,26 @@ import net.minecraft.util.ChatComponentTranslation;
 
 public class CommandWhitelist extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "whitelist";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 3;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.whitelist.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException("commands.whitelist.usage");
+            throw new WrongUsageException("commands.whitelist.usage", new Object[0]);
         }
         else
         {
@@ -62,7 +50,7 @@ public class CommandWhitelist extends CommandBase
             }
             else if (args[0].equals("list"))
             {
-                sender.addChatMessage(new ChatComponentTranslation("commands.whitelist.list", minecraftserver.getConfigurationManager().getWhitelistedPlayerNames().length, minecraftserver.getConfigurationManager().getAvailablePlayerDat().length));
+                sender.addChatMessage(new ChatComponentTranslation("commands.whitelist.list", new Object[] {Integer.valueOf(minecraftserver.getConfigurationManager().getWhitelistedPlayerNames().length), Integer.valueOf(minecraftserver.getConfigurationManager().getAvailablePlayerDat().length)}));
                 String[] astring = minecraftserver.getConfigurationManager().getWhitelistedPlayerNames();
                 sender.addChatMessage(new ChatComponentText(joinNiceString(astring)));
             }
@@ -70,14 +58,14 @@ public class CommandWhitelist extends CommandBase
             {
                 if (args.length < 2)
                 {
-                    throw new WrongUsageException("commands.whitelist.add.usage");
+                    throw new WrongUsageException("commands.whitelist.add.usage", new Object[0]);
                 }
 
                 GameProfile gameprofile = minecraftserver.getPlayerProfileCache().getGameProfileForUsername(args[1]);
 
                 if (gameprofile == null)
                 {
-                    throw new CommandException("commands.whitelist.add.failed", args[1]);
+                    throw new CommandException("commands.whitelist.add.failed", new Object[] {args[1]});
                 }
 
                 minecraftserver.getConfigurationManager().addWhitelistedPlayer(gameprofile);
@@ -87,14 +75,14 @@ public class CommandWhitelist extends CommandBase
             {
                 if (args.length < 2)
                 {
-                    throw new WrongUsageException("commands.whitelist.remove.usage");
+                    throw new WrongUsageException("commands.whitelist.remove.usage", new Object[0]);
                 }
 
                 GameProfile gameprofile1 = minecraftserver.getConfigurationManager().getWhitelistedPlayers().getBannedProfile(args[1]);
 
                 if (gameprofile1 == null)
                 {
-                    throw new CommandException("commands.whitelist.remove.failed", args[1]);
+                    throw new CommandException("commands.whitelist.remove.failed", new Object[] {args[1]});
                 }
 
                 minecraftserver.getConfigurationManager().removePlayerFromWhitelist(gameprofile1);

@@ -7,7 +7,7 @@ import net.minecraft.util.MathHelper;
 
 public class GuiOptionSlider extends GuiButton
 {
-    private float sliderValue = 1.0F;
+    private float sliderValue;
     public boolean dragging;
     private GameSettings.Options options;
     private final float field_146132_r;
@@ -21,6 +21,7 @@ public class GuiOptionSlider extends GuiButton
     public GuiOptionSlider(int p_i45017_1_, int p_i45017_2_, int p_i45017_3_, GameSettings.Options p_i45017_4_, float p_i45017_5_, float p_i45017_6_)
     {
         super(p_i45017_1_, p_i45017_2_, p_i45017_3_, 150, 20, "");
+        this.sliderValue = 1.0F;
         this.options = p_i45017_4_;
         this.field_146132_r = p_i45017_5_;
         this.field_146131_s = p_i45017_6_;
@@ -29,18 +30,11 @@ public class GuiOptionSlider extends GuiButton
         this.displayString = minecraft.gameSettings.getKeyBinding(p_i45017_4_);
     }
 
-    /**
-     * Returns 0 if the button is disabled, 1 if the mouse is NOT hovering over this button and 2 if it IS hovering over
-     * this button.
-     */
     protected int getHoverState(boolean mouseOver)
     {
         return 0;
     }
 
-    /**
-     * Fired when the mouse button is dragged. Equivalent of MouseListener.mouseDragged(MouseEvent e).
-     */
     protected void mouseDragged(Minecraft mc, int mouseX, int mouseY)
     {
         if (this.visible)
@@ -62,10 +56,6 @@ public class GuiOptionSlider extends GuiButton
         }
     }
 
-    /**
-     * Returns true if the mouse has been pressed on this control. Equivalent of MouseListener.mousePressed(MouseEvent
-     * e).
-     */
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
     {
         if (super.mousePressed(mc, mouseX, mouseY))
@@ -83,9 +73,6 @@ public class GuiOptionSlider extends GuiButton
         }
     }
 
-    /**
-     * Fired when the mouse button is released. Equivalent of MouseListener.mouseReleased(MouseEvent e).
-     */
     public void mouseReleased(int mouseX, int mouseY)
     {
         this.dragging = false;

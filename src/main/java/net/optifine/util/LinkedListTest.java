@@ -9,9 +9,9 @@ public class LinkedListTest
 {
     public static void main(String[] args) throws Exception
     {
-        LinkedList<VboRange> linkedlist = new LinkedList<VboRange>();
-        List<VboRange> list = new ArrayList<VboRange>();
-        List<VboRange> list1 = new ArrayList<VboRange>();
+        LinkedList<VboRange> linkedlist = new LinkedList();
+        List<VboRange> list = new ArrayList();
+        List<VboRange> list1 = new ArrayList();
         Random random = new Random();
         int i = 100;
 
@@ -36,7 +36,7 @@ public class LinkedListTest
             {
                 if (!list.isEmpty())
                 {
-                    VboRange vborange3 = list.get(random.nextInt(list.size()));
+                    VboRange vborange3 = (VboRange)list.get(random.nextInt(list.size()));
                     LinkedList.Node<VboRange> node2 = vborange3.getNode();
 
                     if (random.nextBoolean())
@@ -56,7 +56,7 @@ public class LinkedListTest
                             continue;
                         }
 
-                        VboRange vborange1 = list1.get(random.nextInt(list1.size()));
+                        VboRange vborange1 = (VboRange)list1.get(random.nextInt(list1.size()));
                         LinkedList.Node<VboRange> node1 = vborange1.getNode();
                         linkedlist.addAfter(node1, node2);
                         dbg("Add after: " + vborange1.getPosition() + ", " + vborange3.getPosition());
@@ -68,7 +68,7 @@ public class LinkedListTest
             }
             else if (!list1.isEmpty())
             {
-                VboRange vborange2 = list1.get(random.nextInt(list1.size()));
+                VboRange vborange2 = (VboRange)list1.get(random.nextInt(list1.size()));
                 LinkedList.Node<VboRange> node = vborange2.getNode();
                 linkedlist.remove(node);
                 dbg("Remove: " + vborange2.getPosition());
@@ -82,9 +82,11 @@ public class LinkedListTest
     {
         StringBuffer stringbuffer = new StringBuffer();
 
-        for (Object x : (List)linkedList)
-        {
-        	LinkedList.Node<VboRange> node = (LinkedList.Node<VboRange>)x;
+        linkedList.iterator().forEachRemaining(vboRangeNode -> {
+            LinkedList.Node<VboRange> node = vboRangeNode;
+            if (node.getItem() == null) {
+                return;
+            }
             VboRange vborange = node.getItem();
 
             if (stringbuffer.length() > 0)
@@ -93,7 +95,7 @@ public class LinkedListTest
             }
 
             stringbuffer.append(vborange.getPosition());
-        }
+        });
 
         dbg("List: " + stringbuffer);
     }

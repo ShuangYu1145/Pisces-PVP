@@ -11,41 +11,26 @@ import net.minecraft.util.BlockPos;
 
 public class CommandPardonPlayer extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "pardon";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 3;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.unban.usage";
     }
 
-    /**
-     * Returns true if the given command sender is allowed to use this command.
-     */
     public boolean canCommandSenderUseCommand(ICommandSender sender)
     {
         return MinecraftServer.getServer().getConfigurationManager().getBannedPlayers().isLanServer() && super.canCommandSenderUseCommand(sender);
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length == 1 && args[0].length() > 0)
@@ -55,7 +40,7 @@ public class CommandPardonPlayer extends CommandBase
 
             if (gameprofile == null)
             {
-                throw new CommandException("commands.unban.failed", args[0]);
+                throw new CommandException("commands.unban.failed", new Object[] {args[0]});
             }
             else
             {
@@ -65,7 +50,7 @@ public class CommandPardonPlayer extends CommandBase
         }
         else
         {
-            throw new WrongUsageException("commands.unban.usage");
+            throw new WrongUsageException("commands.unban.usage", new Object[0]);
         }
     }
 

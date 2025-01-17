@@ -38,19 +38,7 @@ public class ItemTransformVec3f
         else
         {
             ItemTransformVec3f itemtransformvec3f = (ItemTransformVec3f)p_equals_1_;
-
-            if (!this.rotation.equals(itemtransformvec3f.rotation))
-            {
-                return false;
-            }
-            else if (!this.scale.equals(itemtransformvec3f.scale))
-            {
-                return false;
-            }
-            else
-            {
-                return this.translation.equals(itemtransformvec3f.translation);
-            }
+            return !this.rotation.equals(itemtransformvec3f.rotation) ? false : (!this.scale.equals(itemtransformvec3f.scale) ? false : this.translation.equals(itemtransformvec3f.translation));
         }
     }
 

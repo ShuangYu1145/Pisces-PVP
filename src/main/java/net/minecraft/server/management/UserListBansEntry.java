@@ -26,16 +26,12 @@ public class UserListBansEntry extends BanEntry<GameProfile>
     {
         if (this.getValue() != null)
         {
-            data.addProperty("uuid", this.getValue().getId() == null ? "" : this.getValue().getId().toString());
-            data.addProperty("name", this.getValue().getName());
+            data.addProperty("uuid", ((GameProfile)this.getValue()).getId() == null ? "" : ((GameProfile)this.getValue()).getId().toString());
+            data.addProperty("name", ((GameProfile)this.getValue()).getName());
             super.onSerialization(data);
         }
     }
 
-    /**
-     * Convert a {@linkplain com.google.gson.JsonObject JsonObject} into a {@linkplain com.mojang.authlib.GameProfile}.
-     * The json object must have {@code uuid} and {@code name} attributes or {@code null} will be returned.
-     */
     private static GameProfile toGameProfile(JsonObject json)
     {
         if (json.has("uuid") && json.has("name"))

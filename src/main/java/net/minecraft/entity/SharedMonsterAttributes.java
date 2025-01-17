@@ -18,12 +18,9 @@ public class SharedMonsterAttributes
     public static final IAttribute maxHealth = (new RangedAttribute((IAttribute)null, "generic.maxHealth", 20.0D, 0.0D, 1024.0D)).setDescription("Max Health").setShouldWatch(true);
     public static final IAttribute followRange = (new RangedAttribute((IAttribute)null, "generic.followRange", 32.0D, 0.0D, 2048.0D)).setDescription("Follow Range");
     public static final IAttribute knockbackResistance = (new RangedAttribute((IAttribute)null, "generic.knockbackResistance", 0.0D, 0.0D, 1.0D)).setDescription("Knockback Resistance");
-    public static final IAttribute movementSpeed = (new RangedAttribute((IAttribute)null, "generic.movementSpeed", (double)0.7F, 0.0D, 1024.0D)).setDescription("Movement Speed").setShouldWatch(true);
+    public static final IAttribute movementSpeed = (new RangedAttribute((IAttribute)null, "generic.movementSpeed", 0.699999988079071D, 0.0D, 1024.0D)).setDescription("Movement Speed").setShouldWatch(true);
     public static final IAttribute attackDamage = new RangedAttribute((IAttribute)null, "generic.attackDamage", 2.0D, 0.0D, 2048.0D);
 
-    /**
-     * Creates an NBTTagList from a BaseAttributeMap, including all its AttributeInstances
-     */
     public static NBTTagList writeBaseAttributeMapToNBT(BaseAttributeMap map)
     {
         NBTTagList nbttaglist = new NBTTagList();
@@ -36,9 +33,6 @@ public class SharedMonsterAttributes
         return nbttaglist;
     }
 
-    /**
-     * Creates an NBTTagCompound from an AttributeInstance, including its AttributeModifiers
-     */
     private static NBTTagCompound writeAttributeInstanceToNBT(IAttributeInstance instance)
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
@@ -65,9 +59,6 @@ public class SharedMonsterAttributes
         return nbttagcompound;
     }
 
-    /**
-     * Creates an NBTTagCompound from an AttributeModifier
-     */
     private static NBTTagCompound writeAttributeModifierToNBT(AttributeModifier modifier)
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
@@ -92,7 +83,7 @@ public class SharedMonsterAttributes
             }
             else
             {
-                logger.warn("Ignoring unknown attribute '" + nbttagcompound.getString("Name") + "'");
+                logger.warn("Ignoring unknown attribute \'" + nbttagcompound.getString("Name") + "\'");
             }
         }
     }
@@ -124,9 +115,6 @@ public class SharedMonsterAttributes
         }
     }
 
-    /**
-     * Creates an AttributeModifier from an NBTTagCompound
-     */
     public static AttributeModifier readAttributeModifierFromNBT(NBTTagCompound compound)
     {
         UUID uuid = new UUID(compound.getLong("UUIDMost"), compound.getLong("UUIDLeast"));

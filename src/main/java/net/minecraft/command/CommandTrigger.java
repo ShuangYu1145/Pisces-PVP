@@ -13,38 +13,26 @@ import net.minecraft.util.BlockPos;
 
 public class CommandTrigger extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "trigger";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 0;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.trigger.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 3)
         {
-            throw new WrongUsageException("commands.trigger.usage");
+            throw new WrongUsageException("commands.trigger.usage", new Object[0]);
         }
         else
         {
@@ -60,7 +48,7 @@ public class CommandTrigger extends CommandBase
 
                 if (!(entity instanceof EntityPlayerMP))
                 {
-                    throw new CommandException("commands.trigger.invalidPlayer");
+                    throw new CommandException("commands.trigger.invalidPlayer", new Object[0]);
                 }
 
                 entityplayermp = (EntityPlayerMP)entity;
@@ -75,7 +63,7 @@ public class CommandTrigger extends CommandBase
 
                 if (!scoreboard.entityHasObjective(entityplayermp.getName(), scoreobjective))
                 {
-                    throw new CommandException("commands.trigger.invalidObjective", args[0]);
+                    throw new CommandException("commands.trigger.invalidObjective", new Object[] {args[0]});
                 }
                 else
                 {
@@ -83,7 +71,7 @@ public class CommandTrigger extends CommandBase
 
                     if (score.isLocked())
                     {
-                        throw new CommandException("commands.trigger.disabled", args[0]);
+                        throw new CommandException("commands.trigger.disabled", new Object[] {args[0]});
                     }
                     else
                     {
@@ -95,7 +83,7 @@ public class CommandTrigger extends CommandBase
                         {
                             if (!"add".equals(args[1]))
                             {
-                                throw new CommandException("commands.trigger.invalidMode", args[1]);
+                                throw new CommandException("commands.trigger.invalidMode", new Object[] {args[1]});
                             }
 
                             score.increseScore(i);
@@ -112,7 +100,7 @@ public class CommandTrigger extends CommandBase
             }
             else
             {
-                throw new CommandException("commands.trigger.invalidObjective", args[0]);
+                throw new CommandException("commands.trigger.invalidObjective", new Object[] {args[0]});
             }
         }
     }
@@ -122,7 +110,7 @@ public class CommandTrigger extends CommandBase
         if (args.length == 1)
         {
             Scoreboard scoreboard = MinecraftServer.getServer().worldServerForDimension(0).getScoreboard();
-            List<String> list = Lists.newArrayList();
+            List<String> list = Lists.<String>newArrayList();
 
             for (ScoreObjective scoreobjective : scoreboard.getScoreObjectives())
             {
@@ -132,11 +120,11 @@ public class CommandTrigger extends CommandBase
                 }
             }
 
-            return getListOfStringsMatchingLastWord(args, list.toArray(new String[list.size()]));
+            return getListOfStringsMatchingLastWord(args, (String[])list.toArray(new String[list.size()]));
         }
         else
         {
-            return args.length == 2 ? getListOfStringsMatchingLastWord(args, new String[] {"add", "set"}) : null;
+            return args.length == 2 ? getListOfStringsMatchingLastWord(args, new String[] {"add", "set"}): null;
         }
     }
 }

@@ -8,38 +8,26 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class CommandEntityData extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "entitydata";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.entitydata.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 2)
         {
-            throw new WrongUsageException("commands.entitydata.usage");
+            throw new WrongUsageException("commands.entitydata.usage", new Object[0]);
         }
         else
         {
@@ -47,7 +35,7 @@ public class CommandEntityData extends CommandBase
 
             if (entity instanceof EntityPlayer)
             {
-                throw new CommandException("commands.entitydata.noPlayers", entity.getDisplayName());
+                throw new CommandException("commands.entitydata.noPlayers", new Object[] {entity.getDisplayName()});
             }
             else
             {
@@ -62,7 +50,7 @@ public class CommandEntityData extends CommandBase
                 }
                 catch (NBTException nbtexception)
                 {
-                    throw new CommandException("commands.entitydata.tagError", nbtexception.getMessage());
+                    throw new CommandException("commands.entitydata.tagError", new Object[] {nbtexception.getMessage()});
                 }
 
                 nbttagcompound2.removeTag("UUIDMost");
@@ -71,7 +59,7 @@ public class CommandEntityData extends CommandBase
 
                 if (nbttagcompound.equals(nbttagcompound1))
                 {
-                    throw new CommandException("commands.entitydata.failed", nbttagcompound.toString());
+                    throw new CommandException("commands.entitydata.failed", new Object[] {nbttagcompound.toString()});
                 }
                 else
                 {
@@ -82,9 +70,6 @@ public class CommandEntityData extends CommandBase
         }
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return index == 0;

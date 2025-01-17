@@ -24,7 +24,7 @@ public class TileEntityFlowerPot extends TileEntity
     public void writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
-        ResourceLocation resourcelocation = Item.itemRegistry.getNameForObject(this.flowerPotItem);
+        ResourceLocation resourcelocation = (ResourceLocation)Item.itemRegistry.getNameForObject(this.flowerPotItem);
         compound.setString("Item", resourcelocation == null ? "" : resourcelocation.toString());
         compound.setInteger("Data", this.flowerPotData);
     }
@@ -45,10 +45,6 @@ public class TileEntityFlowerPot extends TileEntity
         this.flowerPotData = compound.getInteger("Data");
     }
 
-    /**
-     * Allows for a specialized description packet to be created. This is often used to sync tile entity data from the
-     * server to the client easily. For example this is used by signs to synchronise the text to be displayed.
-     */
     public Packet getDescriptionPacket()
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();

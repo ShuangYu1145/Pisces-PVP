@@ -46,14 +46,7 @@ public class NaturalProperties
 
     public boolean isValid()
     {
-        if (this.rotation != 2 && this.rotation != 4)
-        {
-            return this.flip;
-        }
-        else
-        {
-            return true;
-        }
+        return this.rotation != 2 && this.rotation != 4 ? this.flip : true;
     }
 
     public synchronized BakedQuad getQuad(BakedQuad quadIn, int rotate, boolean flipU)

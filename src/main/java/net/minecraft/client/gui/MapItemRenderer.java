@@ -17,16 +17,13 @@ public class MapItemRenderer
 {
     private static final ResourceLocation mapIcons = new ResourceLocation("textures/map/map_icons.png");
     private final TextureManager textureManager;
-    private final Map<String, MapItemRenderer.Instance> loadedMaps = Maps.newHashMap();
+    private final Map<String, MapItemRenderer.Instance> loadedMaps = Maps.<String, MapItemRenderer.Instance>newHashMap();
 
     public MapItemRenderer(TextureManager textureManagerIn)
     {
         this.textureManager = textureManagerIn;
     }
 
-    /**
-     * Updates a map texture
-     */
     public void updateMapTexture(MapData mapdataIn)
     {
         this.getMapRendererInstance(mapdataIn).updateMapTexture();
@@ -37,12 +34,9 @@ public class MapItemRenderer
         this.getMapRendererInstance(mapdataIn).render(p_148250_2_);
     }
 
-    /**
-     * Returns {@link net.minecraft.client.gui.MapItemRenderer.Instance MapItemRenderer.Instance} with given map data
-     */
     private MapItemRenderer.Instance getMapRendererInstance(MapData mapdataIn)
     {
-        MapItemRenderer.Instance mapitemrenderer$instance = this.loadedMaps.get(mapdataIn.mapName);
+        MapItemRenderer.Instance mapitemrenderer$instance = (MapItemRenderer.Instance)this.loadedMaps.get(mapdataIn.mapName);
 
         if (mapitemrenderer$instance == null)
         {
@@ -53,9 +47,6 @@ public class MapItemRenderer
         return mapitemrenderer$instance;
     }
 
-    /**
-     * Clears the currently loaded maps and removes their corresponding textures
-     */
     public void clearLoadedMaps()
     {
         for (MapItemRenderer.Instance mapitemrenderer$instance : this.loadedMaps.values())
@@ -117,10 +108,10 @@ public class MapItemRenderer
             GlStateManager.tryBlendFuncSeparate(1, 771, 0, 1);
             GlStateManager.disableAlpha();
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-            worldrenderer.pos((double)((float)(i + 0) + f), (double)((float)(j + 128) - f), (double) -0.01F).tex(0.0D, 1.0D).endVertex();
-            worldrenderer.pos((double)((float)(i + 128) - f), (double)((float)(j + 128) - f), (double) -0.01F).tex(1.0D, 1.0D).endVertex();
-            worldrenderer.pos((double)((float)(i + 128) - f), (double)((float)(j + 0) + f), (double) -0.01F).tex(1.0D, 0.0D).endVertex();
-            worldrenderer.pos((double)((float)(i + 0) + f), (double)((float)(j + 0) + f), (double) -0.01F).tex(0.0D, 0.0D).endVertex();
+            worldrenderer.pos((double)((float)(i + 0) + f), (double)((float)(j + 128) - f), -0.009999999776482582D).tex(0.0D, 1.0D).endVertex();
+            worldrenderer.pos((double)((float)(i + 128) - f), (double)((float)(j + 128) - f), -0.009999999776482582D).tex(1.0D, 1.0D).endVertex();
+            worldrenderer.pos((double)((float)(i + 128) - f), (double)((float)(j + 0) + f), -0.009999999776482582D).tex(1.0D, 0.0D).endVertex();
+            worldrenderer.pos((double)((float)(i + 0) + f), (double)((float)(j + 0) + f), -0.009999999776482582D).tex(0.0D, 0.0D).endVertex();
             tessellator.draw();
             GlStateManager.enableAlpha();
             GlStateManager.disableBlend();

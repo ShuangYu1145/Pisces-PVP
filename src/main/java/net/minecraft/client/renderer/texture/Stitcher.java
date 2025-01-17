@@ -11,15 +11,13 @@ import net.minecraft.util.MathHelper;
 public class Stitcher
 {
     private final int mipmapLevelStitcher;
-    private final Set<Stitcher.Holder> setStitchHolders = Sets.newHashSetWithExpectedSize(256);
-    private final List<Stitcher.Slot> stitchSlots = Lists.newArrayListWithCapacity(256);
+    private final Set<Stitcher.Holder> setStitchHolders = Sets.<Stitcher.Holder>newHashSetWithExpectedSize(256);
+    private final List<Stitcher.Slot> stitchSlots = Lists.<Stitcher.Slot>newArrayListWithCapacity(256);
     private int currentWidth;
     private int currentHeight;
     private final int maxWidth;
     private final int maxHeight;
     private final boolean forcePowerOf2;
-
-    /** Max size (width or height) of a single tile */
     private final int maxTileDimension;
 
     public Stitcher(int maxTextureWidth, int maxTextureHeight, boolean p_i45095_3_, int p_i45095_4_, int mipmapLevel)
@@ -55,14 +53,14 @@ public class Stitcher
 
     public void doStitch()
     {
-        Stitcher.Holder[] astitcher$holder = this.setStitchHolders.toArray(new Stitcher.Holder[this.setStitchHolders.size()]);
-        Arrays.sort(astitcher$holder);
+        Stitcher.Holder[] astitcher$holder = (Stitcher.Holder[])((Stitcher.Holder[])this.setStitchHolders.toArray(new Stitcher.Holder[this.setStitchHolders.size()]));
+        Arrays.sort((Object[])astitcher$holder);
 
         for (Stitcher.Holder stitcher$holder : astitcher$holder)
         {
             if (!this.allocateSlot(stitcher$holder))
             {
-                String s = String.format("Unable to fit: %s, size: %dx%d, atlas: %dx%d, atlasMax: %dx%d - Maybe try a lower resolution resourcepack?", stitcher$holder.getAtlasSprite().getIconName(), stitcher$holder.getAtlasSprite().getIconWidth(), stitcher$holder.getAtlasSprite().getIconHeight(), this.currentWidth, this.currentHeight, this.maxWidth, this.maxHeight);
+                String s = String.format("Unable to fit: %s, size: %dx%d, atlas: %dx%d, atlasMax: %dx%d - Maybe try a lower resolution resourcepack?", new Object[] {stitcher$holder.getAtlasSprite().getIconName(), Integer.valueOf(stitcher$holder.getAtlasSprite().getIconWidth()), Integer.valueOf(stitcher$holder.getAtlasSprite().getIconHeight()), Integer.valueOf(this.currentWidth), Integer.valueOf(this.currentHeight), Integer.valueOf(this.maxWidth), Integer.valueOf(this.maxHeight)});
                 throw new StitcherException(stitcher$holder, s);
             }
         }
@@ -76,14 +74,14 @@ public class Stitcher
 
     public List<TextureAtlasSprite> getStichSlots()
     {
-        List<Stitcher.Slot> list = Lists.newArrayList();
+        List<Stitcher.Slot> list = Lists.<Stitcher.Slot>newArrayList();
 
         for (Stitcher.Slot stitcher$slot : this.stitchSlots)
         {
             stitcher$slot.getAllStitchSlots(list);
         }
 
-        List<TextureAtlasSprite> list1 = Lists.newArrayList();
+        List<TextureAtlasSprite> list1 = Lists.<TextureAtlasSprite>newArrayList();
 
         for (Stitcher.Slot stitcher$slot1 : list)
         {
@@ -101,21 +99,18 @@ public class Stitcher
         return (p_147969_0_ >> p_147969_1_) + ((p_147969_0_ & (1 << p_147969_1_) - 1) == 0 ? 0 : 1) << p_147969_1_;
     }
 
-    /**
-     * Attempts to find space for specified tile
-     */
     private boolean allocateSlot(Stitcher.Holder p_94310_1_)
     {
         for (int i = 0; i < this.stitchSlots.size(); ++i)
         {
-            if (this.stitchSlots.get(i).addSlot(p_94310_1_))
+            if (((Stitcher.Slot)this.stitchSlots.get(i)).addSlot(p_94310_1_))
             {
                 return true;
             }
 
             p_94310_1_.rotate();
 
-            if (this.stitchSlots.get(i).addSlot(p_94310_1_))
+            if (((Stitcher.Slot)this.stitchSlots.get(i)).addSlot(p_94310_1_))
             {
                 return true;
             }
@@ -126,9 +121,6 @@ public class Stitcher
         return this.expandAndAllocateSlot(p_94310_1_);
     }
 
-    /**
-     * Expand stitched texture in order to make space for specified tile
-     */
     private boolean expandAndAllocateSlot(Stitcher.Holder p_94311_1_)
     {
         int i = Math.min(p_94311_1_.getWidth(), p_94311_1_.getHeight());
@@ -348,7 +340,7 @@ public class Stitcher
                     {
                         if (this.subSlots == null)
                         {
-                            this.subSlots = Lists.newArrayListWithCapacity(1);
+                            this.subSlots = Lists.<Stitcher.Slot>newArrayListWithCapacity(1);
                             this.subSlots.add(new Stitcher.Slot(this.originX, this.originY, i, j));
                             int k = this.width - i;
                             int l = this.height - j;

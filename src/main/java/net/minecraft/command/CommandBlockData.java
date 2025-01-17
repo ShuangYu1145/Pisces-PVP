@@ -10,38 +10,26 @@ import net.minecraft.world.World;
 
 public class CommandBlockData extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "blockdata";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.blockdata.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 4)
         {
-            throw new WrongUsageException("commands.blockdata.usage");
+            throw new WrongUsageException("commands.blockdata.usage", new Object[0]);
         }
         else
         {
@@ -51,7 +39,7 @@ public class CommandBlockData extends CommandBase
 
             if (!world.isBlockLoaded(blockpos))
             {
-                throw new CommandException("commands.blockdata.outOfWorld");
+                throw new CommandException("commands.blockdata.outOfWorld", new Object[0]);
             }
             else
             {
@@ -59,7 +47,7 @@ public class CommandBlockData extends CommandBase
 
                 if (tileentity == null)
                 {
-                    throw new CommandException("commands.blockdata.notValid");
+                    throw new CommandException("commands.blockdata.notValid", new Object[0]);
                 }
                 else
                 {
@@ -74,7 +62,7 @@ public class CommandBlockData extends CommandBase
                     }
                     catch (NBTException nbtexception)
                     {
-                        throw new CommandException("commands.blockdata.tagError", nbtexception.getMessage());
+                        throw new CommandException("commands.blockdata.tagError", new Object[] {nbtexception.getMessage()});
                     }
 
                     nbttagcompound.merge(nbttagcompound2);
@@ -84,7 +72,7 @@ public class CommandBlockData extends CommandBase
 
                     if (nbttagcompound.equals(nbttagcompound1))
                     {
-                        throw new CommandException("commands.blockdata.failed", nbttagcompound.toString());
+                        throw new CommandException("commands.blockdata.failed", new Object[] {nbttagcompound.toString()});
                     }
                     else
                     {

@@ -35,7 +35,7 @@ public class CapeUtils
 
                 if (threaddownloadimagedata.imageFound != null)
                 {
-                    if (threaddownloadimagedata.imageFound)
+                    if (threaddownloadimagedata.imageFound.booleanValue())
                     {
                         player.setLocationOfCape(resourcelocation);
 

@@ -23,9 +23,7 @@ public class ItemHoe extends Item
         this.setCreativeTab(CreativeTabs.tabTools);
     }
 
-    /**
-     * Called when a Block is right-clicked with this Item
-     */
+    @SuppressWarnings("incomplete-switch")
     public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (!playerIn.canPlayerEdit(pos.offset(side), side, stack))
@@ -77,18 +75,11 @@ public class ItemHoe extends Item
         }
     }
 
-    /**
-     * Returns True is the item is renderer in full 3D when hold.
-     */
     public boolean isFull3D()
     {
         return true;
     }
 
-    /**
-     * Returns the name of the material this tool is made from as it is declared in EnumToolMaterial (meaning diamond
-     * would return "EMERALD")
-     */
     public String getMaterialName()
     {
         return this.theToolMaterial.toString();

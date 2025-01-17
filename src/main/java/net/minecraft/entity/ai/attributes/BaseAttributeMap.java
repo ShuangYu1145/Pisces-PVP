@@ -10,23 +10,20 @@ import net.minecraft.server.management.LowerStringMap;
 
 public abstract class BaseAttributeMap
 {
-    protected final Map<IAttribute, IAttributeInstance> attributes = Maps.newHashMap();
-    protected final Map<String, IAttributeInstance> attributesByName = new LowerStringMap<>();
-    protected final Multimap<IAttribute, IAttribute> field_180377_c = HashMultimap.create();
+    protected final Map<IAttribute, IAttributeInstance> attributes = Maps.<IAttribute, IAttributeInstance>newHashMap();
+    protected final Map<String, IAttributeInstance> attributesByName = new LowerStringMap();
+    protected final Multimap<IAttribute, IAttribute> field_180377_c = HashMultimap.<IAttribute, IAttribute>create();
 
     public IAttributeInstance getAttributeInstance(IAttribute attribute)
     {
-        return this.attributes.get(attribute);
+        return (IAttributeInstance)this.attributes.get(attribute);
     }
 
     public IAttributeInstance getAttributeInstanceByName(String attributeName)
     {
-        return this.attributesByName.get(attributeName);
+        return (IAttributeInstance)this.attributesByName.get(attributeName);
     }
 
-    /**
-     * Registers an attribute with this AttributeMap, returns a modifiable AttributeInstance associated with this map
-     */
     public IAttributeInstance registerAttribute(IAttribute attribute)
     {
         if (this.attributesByName.containsKey(attribute.getAttributeUnlocalizedName()))
@@ -63,11 +60,11 @@ public abstract class BaseAttributeMap
     {
         for (Entry<String, AttributeModifier> entry : modifiers.entries())
         {
-            IAttributeInstance iattributeinstance = this.getAttributeInstanceByName(entry.getKey());
+            IAttributeInstance iattributeinstance = this.getAttributeInstanceByName((String)entry.getKey());
 
             if (iattributeinstance != null)
             {
-                iattributeinstance.removeModifier(entry.getValue());
+                iattributeinstance.removeModifier((AttributeModifier)entry.getValue());
             }
         }
     }
@@ -76,12 +73,12 @@ public abstract class BaseAttributeMap
     {
         for (Entry<String, AttributeModifier> entry : modifiers.entries())
         {
-            IAttributeInstance iattributeinstance = this.getAttributeInstanceByName(entry.getKey());
+            IAttributeInstance iattributeinstance = this.getAttributeInstanceByName((String)entry.getKey());
 
             if (iattributeinstance != null)
             {
-                iattributeinstance.removeModifier(entry.getValue());
-                iattributeinstance.applyModifier(entry.getValue());
+                iattributeinstance.removeModifier((AttributeModifier)entry.getValue());
+                iattributeinstance.applyModifier((AttributeModifier)entry.getValue());
             }
         }
     }

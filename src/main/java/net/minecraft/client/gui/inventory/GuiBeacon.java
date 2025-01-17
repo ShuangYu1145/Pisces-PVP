@@ -37,10 +37,6 @@ public class GuiBeacon extends GuiContainer
         this.ySize = 219;
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
     public void initGui()
     {
         super.initGui();
@@ -50,9 +46,6 @@ public class GuiBeacon extends GuiContainer
         this.beaconConfirmButton.enabled = false;
     }
 
-    /**
-     * Called from the main game loop to update the screen.
-     */
     public void updateScreen()
     {
         super.updateScreen();
@@ -125,9 +118,6 @@ public class GuiBeacon extends GuiContainer
         this.beaconConfirmButton.enabled = this.tileBeacon.getStackInSlot(0) != null && j > 0;
     }
 
-    /**
-     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-     */
     protected void actionPerformed(GuiButton button) throws IOException
     {
         if (button.id == -2)
@@ -169,14 +159,11 @@ public class GuiBeacon extends GuiContainer
         }
     }
 
-    /**
-     * Draw the foreground layer for the GuiContainer (everything in front of the items). Args : mouseX, mouseY
-     */
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         RenderHelper.disableStandardItemLighting();
-        this.drawCenteredString(this.fontRendererObj, I18n.format("tile.beacon.primary"), 62, 10, 14737632);
-        this.drawCenteredString(this.fontRendererObj, I18n.format("tile.beacon.secondary"), 169, 10, 14737632);
+        this.drawCenteredString(this.fontRendererObj, I18n.format("tile.beacon.primary", new Object[0]), 62, 10, 14737632);
+        this.drawCenteredString(this.fontRendererObj, I18n.format("tile.beacon.secondary", new Object[0]), 169, 10, 14737632);
 
         for (GuiButton guibutton : this.buttonList)
         {
@@ -190,9 +177,6 @@ public class GuiBeacon extends GuiContainer
         RenderHelper.enableGUIStandardItemLighting();
     }
 
-    /**
-     * Args : renderPartialTicks, mouseX, mouseY
-     */
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
     {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -277,7 +261,7 @@ public class GuiBeacon extends GuiContainer
 
         public void drawButtonForegroundLayer(int mouseX, int mouseY)
         {
-            GuiBeacon.this.drawCreativeTabHoveringText(I18n.format("gui.cancel"), mouseX, mouseY);
+            GuiBeacon.this.drawCreativeTabHoveringText(I18n.format("gui.cancel", new Object[0]), mouseX, mouseY);
         }
     }
 
@@ -290,7 +274,7 @@ public class GuiBeacon extends GuiContainer
 
         public void drawButtonForegroundLayer(int mouseX, int mouseY)
         {
-            GuiBeacon.this.drawCreativeTabHoveringText(I18n.format("gui.done"), mouseX, mouseY);
+            GuiBeacon.this.drawCreativeTabHoveringText(I18n.format("gui.done", new Object[0]), mouseX, mouseY);
         }
     }
 
@@ -308,7 +292,7 @@ public class GuiBeacon extends GuiContainer
 
         public void drawButtonForegroundLayer(int mouseX, int mouseY)
         {
-            String s = I18n.format(Potion.potionTypes[this.field_146149_p].getName());
+            String s = I18n.format(Potion.potionTypes[this.field_146149_p].getName(), new Object[0]);
 
             if (this.field_146148_q >= 3 && this.field_146149_p != Potion.regeneration.id)
             {

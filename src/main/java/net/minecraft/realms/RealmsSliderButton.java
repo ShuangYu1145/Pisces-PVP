@@ -6,7 +6,7 @@ import net.minecraft.util.MathHelper;
 
 public class RealmsSliderButton extends RealmsButton
 {
-    public float value = 1.0F;
+    public float value;
     public boolean sliding;
     private final float minValue;
     private final float maxValue;
@@ -20,6 +20,7 @@ public class RealmsSliderButton extends RealmsButton
     public RealmsSliderButton(int p_i1057_1_, int p_i1057_2_, int p_i1057_3_, int p_i1057_4_, int p_i1057_5_, int p_i1057_6_, float p_i1057_7_, float p_i1057_8_)
     {
         super(p_i1057_1_, p_i1057_2_, p_i1057_3_, p_i1057_4_, 20, "");
+        this.value = 1.0F;
         this.minValue = p_i1057_7_;
         this.maxValue = p_i1057_8_;
         this.value = this.toPct((float)p_i1057_6_);

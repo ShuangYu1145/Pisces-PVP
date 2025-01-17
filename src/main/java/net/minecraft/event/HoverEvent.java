@@ -15,18 +15,11 @@ public class HoverEvent
         this.value = valueIn;
     }
 
-    /**
-     * Gets the action to perform when this event is raised.
-     */
     public HoverEvent.Action getAction()
     {
         return this.action;
     }
 
-    /**
-     * Gets the value to perform the action on when this event is raised.  For example, if the action is "show item",
-     * this would be the item to show.
-     */
     public IChatComponent getValue()
     {
         return this.value;
@@ -71,7 +64,7 @@ public class HoverEvent
 
     public String toString()
     {
-        return "HoverEvent{action=" + this.action + ", value='" + this.value + '\'' + '}';
+        return "HoverEvent{action=" + this.action + ", value=\'" + this.value + '\'' + '}';
     }
 
     public int hashCode()
@@ -88,7 +81,7 @@ public class HoverEvent
         SHOW_ITEM("show_item", true),
         SHOW_ENTITY("show_entity", true);
 
-        private static final Map<String, HoverEvent.Action> nameMapping = Maps.newHashMap();
+        private static final Map<String, HoverEvent.Action> nameMapping = Maps.<String, HoverEvent.Action>newHashMap();
         private final boolean allowedInChat;
         private final String canonicalName;
 
@@ -110,7 +103,7 @@ public class HoverEvent
 
         public static HoverEvent.Action getValueByCanonicalName(String canonicalNameIn)
         {
-            return nameMapping.get(canonicalNameIn);
+            return (HoverEvent.Action)nameMapping.get(canonicalNameIn);
         }
 
         static {

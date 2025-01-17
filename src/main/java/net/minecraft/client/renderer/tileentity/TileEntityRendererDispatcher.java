@@ -36,14 +36,8 @@ public class TileEntityRendererDispatcher
     public Map<Class, TileEntitySpecialRenderer> mapSpecialRenderers = Maps.newHashMap();
     public static TileEntityRendererDispatcher instance = new TileEntityRendererDispatcher();
     public FontRenderer fontRenderer;
-
-    /** The player's current X position (same as playerX) */
     public static double staticPlayerX;
-
-    /** The player's current Y position (same as playerY) */
     public static double staticPlayerY;
-
-    /** The player's current Z position (same as playerZ) */
     public static double staticPlayerZ;
     public TextureManager renderEngine;
     public World worldObj;
@@ -76,13 +70,13 @@ public class TileEntityRendererDispatcher
         }
     }
 
-    public <T extends TileEntity> TileEntitySpecialRenderer<T> getSpecialRendererByClass(Class<? extends TileEntity> teClass)
+    public <T extends TileEntity> TileEntitySpecialRenderer<T> getSpecialRendererByClass(Class <? extends TileEntity > teClass)
     {
-        TileEntitySpecialRenderer<? extends TileEntity> tileentityspecialrenderer = this.mapSpecialRenderers.get(teClass);
+        TileEntitySpecialRenderer <? extends TileEntity > tileentityspecialrenderer = (TileEntitySpecialRenderer)this.mapSpecialRenderers.get(teClass);
 
         if (tileentityspecialrenderer == null && teClass != TileEntity.class)
         {
-            tileentityspecialrenderer = this.getSpecialRendererByClass((Class<? extends TileEntity>) teClass.getSuperclass());
+            tileentityspecialrenderer = this.<TileEntity>getSpecialRendererByClass((Class<? extends TileEntity>) teClass.getSuperclass());
             this.mapSpecialRenderers.put(teClass, tileentityspecialrenderer);
         }
 
@@ -119,7 +113,7 @@ public class TileEntityRendererDispatcher
 
             if (Reflector.ForgeTileEntity_hasFastRenderer.exists())
             {
-                flag = !this.drawingBatch || !Reflector.callBoolean(tileentityIn, Reflector.ForgeTileEntity_hasFastRenderer);
+                flag = !this.drawingBatch || !Reflector.callBoolean(tileentityIn, Reflector.ForgeTileEntity_hasFastRenderer, new Object[0]);
             }
 
             if (flag)
@@ -160,9 +154,6 @@ public class TileEntityRendererDispatcher
         }
     }
 
-    /**
-     * Render this TileEntity at a given set of coordinates
-     */
     public void renderTileEntityAt(TileEntity tileEntityIn, double x, double y, double z, float partialTicks)
     {
         this.renderTileEntityAt(tileEntityIn, x, y, z, partialTicks, -1);
@@ -170,7 +161,7 @@ public class TileEntityRendererDispatcher
 
     public void renderTileEntityAt(TileEntity tileEntityIn, double x, double y, double z, float partialTicks, int destroyStage)
     {
-        TileEntitySpecialRenderer<TileEntity> tileentityspecialrenderer = this.getSpecialRenderer(tileEntityIn);
+        TileEntitySpecialRenderer<TileEntity> tileentityspecialrenderer = this.<TileEntity>getSpecialRenderer(tileEntityIn);
 
         if (tileentityspecialrenderer != null)
         {
@@ -178,7 +169,7 @@ public class TileEntityRendererDispatcher
             {
                 this.tileEntityRendered = tileEntityIn;
 
-                if (this.drawingBatch && Reflector.callBoolean(tileEntityIn, Reflector.ForgeTileEntity_hasFastRenderer))
+                if (this.drawingBatch && Reflector.callBoolean(tileEntityIn, Reflector.ForgeTileEntity_hasFastRenderer, new Object[0]))
                 {
                     tileentityspecialrenderer.renderTileEntityFast(tileEntityIn, x, y, z, partialTicks, destroyStage, this.batchBuffer.getWorldRenderer());
                 }

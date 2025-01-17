@@ -55,7 +55,7 @@ public class RenderChunk
     private final ReentrantLock lockCompileTask = new ReentrantLock();
     private final ReentrantLock lockCompiledChunk = new ReentrantLock();
     private ChunkCompileTaskGenerator compileTask = null;
-    private final Set<TileEntity> setTileEntities = Sets.newHashSet();
+    private final Set<TileEntity> setTileEntities = Sets.<TileEntity>newHashSet();
     private final int index;
     private final FloatBuffer modelviewMatrix = GLAllocation.createDirectFloatBuffer(16);
     private final VertexBuffer[] vertexBuffers = new VertexBuffer[EnumWorldBlockLayer.values().length];
@@ -198,9 +198,9 @@ public class RenderChunk
             boolean flag = Reflector.ForgeBlock_canRenderInLayer.exists();
             boolean flag1 = Reflector.ForgeHooksClient_setRenderLayer.exists();
 
-            for (Object ff_Object : BlockPosM.getAllInBoxMutable(blockpos, blockpos1))
+            for (Object o : BlockPosM.getAllInBoxMutable(blockpos, blockpos1))
             {
-            	BlockPosM blockposm = (BlockPosM)ff_Object;
+                BlockPosM blockposm = (BlockPosM) o;
                 IBlockState iblockstate = chunkcacheof.getBlockState(blockposm);
                 Block block = iblockstate.getBlock();
 
@@ -212,7 +212,7 @@ public class RenderChunk
                 if (ReflectorForge.blockHasTileEntity(iblockstate))
                 {
                     TileEntity tileentity = chunkcacheof.getTileEntity(new BlockPos(blockposm));
-                    TileEntitySpecialRenderer<TileEntity> tileentityspecialrenderer = TileEntityRendererDispatcher.instance.getSpecialRenderer(tileentity);
+                    TileEntitySpecialRenderer<TileEntity> tileentityspecialrenderer = TileEntityRendererDispatcher.instance.<TileEntity>getSpecialRenderer(tileentity);
 
                     if (tileentity != null && tileentityspecialrenderer != null)
                     {
@@ -243,7 +243,7 @@ public class RenderChunk
 
                     if (flag)
                     {
-                        boolean flag2 = Reflector.callBoolean(block, Reflector.ForgeBlock_canRenderInLayer, enumworldblocklayer);
+                        boolean flag2 = Reflector.callBoolean(block, Reflector.ForgeBlock_canRenderInLayer, new Object[] {enumworldblocklayer});
 
                         if (!flag2)
                         {
@@ -253,7 +253,7 @@ public class RenderChunk
 
                     if (flag1)
                     {
-                        Reflector.callVoid(Reflector.ForgeHooksClient_setRenderLayer, enumworldblocklayer);
+                        Reflector.callVoid(Reflector.ForgeHooksClient_setRenderLayer, new Object[] {enumworldblocklayer});
                     }
 
                     enumworldblocklayer = this.fixBlockLayer(iblockstate, enumworldblocklayer);
@@ -284,7 +284,7 @@ public class RenderChunk
 
                 if (flag1)
                 {
-                    Reflector.callVoid(Reflector.ForgeHooksClient_setRenderLayer, (Object)null);
+                    Reflector.callVoid(Reflector.ForgeHooksClient_setRenderLayer, new Object[] {(Object)null});
                 }
             }
 
@@ -639,7 +639,7 @@ public class RenderChunk
 
         if (Reflector.MinecraftForgeClient_onRebuildChunk.exists())
         {
-            Reflector.call(Reflector.MinecraftForgeClient_onRebuildChunk, this.world, p_makeChunkCacheOF_1_, chunkcache);
+            Reflector.call(Reflector.MinecraftForgeClient_onRebuildChunk, new Object[] {this.world, p_makeChunkCacheOF_1_, chunkcache});
         }
 
         ChunkCacheOF chunkcacheof = new ChunkCacheOF(chunkcache, blockpos, blockpos1, 1);

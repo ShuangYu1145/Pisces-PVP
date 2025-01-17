@@ -23,14 +23,11 @@ public class S30PacketWindowItems implements Packet<INetHandlerPlayClient>
 
         for (int i = 0; i < this.itemStacks.length; ++i)
         {
-            ItemStack itemstack = p_i45186_2_.get(i);
+            ItemStack itemstack = (ItemStack)p_i45186_2_.get(i);
             this.itemStacks[i] = itemstack == null ? null : itemstack.copy();
         }
     }
 
-    /**
-     * Reads the raw packet data from the data stream.
-     */
     public void readPacketData(PacketBuffer buf) throws IOException
     {
         this.windowId = buf.readUnsignedByte();
@@ -43,9 +40,6 @@ public class S30PacketWindowItems implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Writes the raw packet data to the data stream.
-     */
     public void writePacketData(PacketBuffer buf) throws IOException
     {
         buf.writeByte(this.windowId);
@@ -57,9 +51,6 @@ public class S30PacketWindowItems implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Passes this Packet on to the NetHandler for processing.
-     */
     public void processPacket(INetHandlerPlayClient handler)
     {
         handler.handleWindowItems(this);

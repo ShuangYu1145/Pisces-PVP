@@ -19,38 +19,26 @@ import net.minecraft.world.World;
 
 public class CommandSpreadPlayers extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "spreadplayers";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.spreadplayers.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 6)
         {
-            throw new WrongUsageException("commands.spreadplayers.usage");
+            throw new WrongUsageException("commands.spreadplayers.usage", new Object[0]);
         }
         else
         {
@@ -61,7 +49,7 @@ public class CommandSpreadPlayers extends CommandBase
             double d2 = parseDouble(args[i++], 0.0D);
             double d3 = parseDouble(args[i++], d2 + 1.0D);
             boolean flag = parseBoolean(args[i++]);
-            List<Entity> list = Lists.newArrayList();
+            List<Entity> list = Lists.<Entity>newArrayList();
 
             while (i < args.length)
             {
@@ -69,7 +57,7 @@ public class CommandSpreadPlayers extends CommandBase
 
                 if (PlayerSelector.hasArguments(s))
                 {
-                    List<Entity> list1 = PlayerSelector.matchEntities(sender, s, Entity.class);
+                    List<Entity> list1 = PlayerSelector.<Entity>matchEntities(sender, s, Entity.class);
 
                     if (list1.size() == 0)
                     {
@@ -99,8 +87,8 @@ public class CommandSpreadPlayers extends CommandBase
             }
             else
             {
-                sender.addChatMessage(new ChatComponentTranslation("commands.spreadplayers.spreading." + (flag ? "teams" : "players"), list.size(), d3, d0, d1, d2));
-                this.func_110669_a(sender, list, new CommandSpreadPlayers.Position(d0, d1), d2, d3, (list.get(0)).worldObj, flag);
+                sender.addChatMessage(new ChatComponentTranslation("commands.spreadplayers.spreading." + (flag ? "teams" : "players"), new Object[] {Integer.valueOf(list.size()), Double.valueOf(d3), Double.valueOf(d0), Double.valueOf(d1), Double.valueOf(d2)}));
+                this.func_110669_a(sender, list, new CommandSpreadPlayers.Position(d0, d1), d2, d3, ((Entity)list.get(0)).worldObj, flag);
             }
         }
     }
@@ -115,17 +103,17 @@ public class CommandSpreadPlayers extends CommandBase
         CommandSpreadPlayers.Position[] acommandspreadplayers$position = this.func_110670_a(random, p_110669_9_ ? this.func_110667_a(p_110669_2_) : p_110669_2_.size(), d0, d1, d2, d3);
         int i = this.func_110668_a(p_110669_3_, p_110669_4_, worldIn, random, d0, d1, d2, d3, acommandspreadplayers$position, p_110669_9_);
         double d4 = this.func_110671_a(p_110669_2_, worldIn, acommandspreadplayers$position, p_110669_9_);
-        notifyOperators(p_110669_1_, this, "commands.spreadplayers.success." + (p_110669_9_ ? "teams" : "players"), new Object[] {acommandspreadplayers$position.length, p_110669_3_.field_111101_a, p_110669_3_.field_111100_b});
+        notifyOperators(p_110669_1_, this, "commands.spreadplayers.success." + (p_110669_9_ ? "teams" : "players"), new Object[] {Integer.valueOf(acommandspreadplayers$position.length), Double.valueOf(p_110669_3_.field_111101_a), Double.valueOf(p_110669_3_.field_111100_b)});
 
         if (acommandspreadplayers$position.length > 1)
         {
-            p_110669_1_.addChatMessage(new ChatComponentTranslation("commands.spreadplayers.info." + (p_110669_9_ ? "teams" : "players"), String.format("%.2f", d4), i));
+            p_110669_1_.addChatMessage(new ChatComponentTranslation("commands.spreadplayers.info." + (p_110669_9_ ? "teams" : "players"), new Object[] {String.format("%.2f", new Object[]{Double.valueOf(d4)}), Integer.valueOf(i)}));
         }
     }
 
     private int func_110667_a(List<Entity> p_110667_1_)
     {
-        Set<Team> set = Sets.newHashSet();
+        Set<Team> set = Sets.<Team>newHashSet();
 
         for (Entity entity : p_110667_1_)
         {
@@ -145,13 +133,13 @@ public class CommandSpreadPlayers extends CommandBase
     private int func_110668_a(CommandSpreadPlayers.Position p_110668_1_, double p_110668_2_, World worldIn, Random p_110668_5_, double p_110668_6_, double p_110668_8_, double p_110668_10_, double p_110668_12_, CommandSpreadPlayers.Position[] p_110668_14_, boolean p_110668_15_) throws CommandException
     {
         boolean flag = true;
-        double d0 = (double)Float.MAX_VALUE;
+        double d0 = 3.4028234663852886E38D;
         int i;
 
         for (i = 0; i < 10000 && flag; ++i)
         {
             flag = false;
-            d0 = (double)Float.MAX_VALUE;
+            d0 = 3.4028234663852886E38D;
 
             for (int j = 0; j < p_110668_14_.length; ++j)
             {
@@ -216,7 +204,7 @@ public class CommandSpreadPlayers extends CommandBase
 
         if (i >= 10000)
         {
-            throw new CommandException("commands.spreadplayers.failure." + (p_110668_15_ ? "teams" : "players"), p_110668_14_.length, p_110668_1_.field_111101_a, p_110668_1_.field_111100_b, String.format("%.2f", d0));
+            throw new CommandException("commands.spreadplayers.failure." + (p_110668_15_ ? "teams" : "players"), new Object[] {Integer.valueOf(p_110668_14_.length), Double.valueOf(p_110668_1_.field_111101_a), Double.valueOf(p_110668_1_.field_111100_b), String.format("%.2f", new Object[]{Double.valueOf(d0)})});
         }
         else
         {
@@ -228,11 +216,11 @@ public class CommandSpreadPlayers extends CommandBase
     {
         double d0 = 0.0D;
         int i = 0;
-        Map<Team, CommandSpreadPlayers.Position> map = Maps.newHashMap();
+        Map<Team, CommandSpreadPlayers.Position> map = Maps.<Team, CommandSpreadPlayers.Position>newHashMap();
 
         for (int j = 0; j < p_110671_1_.size(); ++j)
         {
-            Entity entity = p_110671_1_.get(j);
+            Entity entity = (Entity)p_110671_1_.get(j);
             CommandSpreadPlayers.Position commandspreadplayers$position;
 
             if (p_110671_4_)
@@ -244,7 +232,7 @@ public class CommandSpreadPlayers extends CommandBase
                     map.put(team, p_110671_3_[i++]);
                 }
 
-                commandspreadplayers$position = map.get(team);
+                commandspreadplayers$position = (CommandSpreadPlayers.Position)map.get(team);
             }
             else
             {

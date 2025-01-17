@@ -19,9 +19,9 @@ public class EntityAIFindEntityNearest extends EntityAIBase
     private final Predicate<EntityLivingBase> field_179443_c;
     private final EntityAINearestAttackableTarget.Sorter field_179440_d;
     private EntityLivingBase target;
-    private Class<? extends EntityLivingBase> field_179439_f;
+    private Class <? extends EntityLivingBase > field_179439_f;
 
-    public EntityAIFindEntityNearest(EntityLiving mobIn, Class<? extends EntityLivingBase> p_i45884_2_)
+    public EntityAIFindEntityNearest(EntityLiving mobIn, Class <? extends EntityLivingBase > p_i45884_2_)
     {
         this.mob = mobIn;
         this.field_179439_f = p_i45884_2_;
@@ -39,29 +39,19 @@ public class EntityAIFindEntityNearest extends EntityAIBase
 
                 if (p_apply_1_.isSneaking())
                 {
-                    d0 *= (double)0.8F;
+                    d0 *= 0.800000011920929D;
                 }
 
-                if (p_apply_1_.isInvisible())
-                {
-                    return false;
-                }
-                else
-                {
-                    return (double)p_apply_1_.getDistanceToEntity(EntityAIFindEntityNearest.this.mob) > d0 ? false : EntityAITarget.isSuitableTarget(EntityAIFindEntityNearest.this.mob, p_apply_1_, false, true);
-                }
+                return p_apply_1_.isInvisible() ? false : ((double)p_apply_1_.getDistanceToEntity(EntityAIFindEntityNearest.this.mob) > d0 ? false : EntityAITarget.isSuitableTarget(EntityAIFindEntityNearest.this.mob, p_apply_1_, false, true));
             }
         };
         this.field_179440_d = new EntityAINearestAttackableTarget.Sorter(mobIn);
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     public boolean shouldExecute()
     {
         double d0 = this.getFollowRange();
-        List<EntityLivingBase> list = this.mob.worldObj.getEntitiesWithinAABB(this.field_179439_f, this.mob.getEntityBoundingBox().expand(d0, 4.0D, d0), this.field_179443_c);
+        List<EntityLivingBase> list = this.mob.worldObj.<EntityLivingBase>getEntitiesWithinAABB(this.field_179439_f, this.mob.getEntityBoundingBox().expand(d0, 4.0D, d0), this.field_179443_c);
         Collections.sort(list, this.field_179440_d);
 
         if (list.isEmpty())
@@ -70,14 +60,11 @@ public class EntityAIFindEntityNearest extends EntityAIBase
         }
         else
         {
-            this.target = list.get(0);
+            this.target = (EntityLivingBase)list.get(0);
             return true;
         }
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
     public boolean continueExecuting()
     {
         EntityLivingBase entitylivingbase = this.mob.getAttackTarget();
@@ -93,30 +80,16 @@ public class EntityAIFindEntityNearest extends EntityAIBase
         else
         {
             double d0 = this.getFollowRange();
-
-            if (this.mob.getDistanceSqToEntity(entitylivingbase) > d0 * d0)
-            {
-                return false;
-            }
-            else
-            {
-                return !(entitylivingbase instanceof EntityPlayerMP) || !((EntityPlayerMP)entitylivingbase).theItemInWorldManager.isCreative();
-            }
+            return this.mob.getDistanceSqToEntity(entitylivingbase) > d0 * d0 ? false : !(entitylivingbase instanceof EntityPlayerMP) || !((EntityPlayerMP)entitylivingbase).theItemInWorldManager.isCreative();
         }
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
     public void startExecuting()
     {
         this.mob.setAttackTarget(this.target);
         super.startExecuting();
     }
 
-    /**
-     * Resets the task
-     */
     public void resetTask()
     {
         this.mob.setAttackTarget((EntityLivingBase)null);

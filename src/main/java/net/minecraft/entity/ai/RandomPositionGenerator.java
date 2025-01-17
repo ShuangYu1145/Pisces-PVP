@@ -8,42 +8,25 @@ import net.minecraft.util.Vec3;
 
 public class RandomPositionGenerator
 {
-    /**
-     * used to store a driection when the user passes a point to move towards or away from. WARNING: NEVER THREAD SAFE.
-     * MULTIPLE findTowards and findAway calls, will share this var
-     */
     private static Vec3 staticVector = new Vec3(0.0D, 0.0D, 0.0D);
 
-    /**
-     * finds a random target within par1(x,z) and par2 (y) blocks
-     */
     public static Vec3 findRandomTarget(EntityCreature entitycreatureIn, int xz, int y)
     {
         return findRandomTargetBlock(entitycreatureIn, xz, y, (Vec3)null);
     }
 
-    /**
-     * finds a random target within par1(x,z) and par2 (y) blocks in the direction of the point par3
-     */
     public static Vec3 findRandomTargetBlockTowards(EntityCreature entitycreatureIn, int xz, int y, Vec3 targetVec3)
     {
         staticVector = targetVec3.subtract(entitycreatureIn.posX, entitycreatureIn.posY, entitycreatureIn.posZ);
         return findRandomTargetBlock(entitycreatureIn, xz, y, staticVector);
     }
 
-    /**
-     * finds a random target within par1(x,z) and par2 (y) blocks in the reverse direction of the point par3
-     */
     public static Vec3 findRandomTargetBlockAwayFrom(EntityCreature entitycreatureIn, int xz, int y, Vec3 targetVec3)
     {
         staticVector = (new Vec3(entitycreatureIn.posX, entitycreatureIn.posY, entitycreatureIn.posZ)).subtract(targetVec3);
         return findRandomTargetBlock(entitycreatureIn, xz, y, staticVector);
     }
 
-    /**
-     * searches 10 blocks at random in a within par1(x,z) and par2 (y) distance, ignores those not in the direction of
-     * par3Vec3, then points to the tile for which creature.getBlockPathWeight returns the highest number
-     */
     private static Vec3 findRandomTargetBlock(EntityCreature entitycreatureIn, int xz, int y, Vec3 targetVec3)
     {
         Random random = entitycreatureIn.getRNG();
@@ -71,7 +54,7 @@ public class RandomPositionGenerator
             int k1 = random.nextInt(2 * y + 1) - y;
             int i1 = random.nextInt(2 * xz + 1) - xz;
 
-            if (targetVec3 == null || !((double)l * targetVec3.xCoord + (double)i1 * targetVec3.zCoord < 0.0D))
+            if (targetVec3 == null || (double)l * targetVec3.xCoord + (double)i1 * targetVec3.zCoord >= 0.0D)
             {
                 if (entitycreatureIn.hasHome() && xz > 1)
                 {
@@ -117,6 +100,13 @@ public class RandomPositionGenerator
             }
         }
 
-        return flag ? new Vec3((double)i, (double)j, (double)k) : null;
+        if (flag)
+        {
+            return new Vec3((double)i, (double)j, (double)k);
+        }
+        else
+        {
+            return null;
+        }
     }
 }

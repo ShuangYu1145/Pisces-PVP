@@ -20,14 +20,7 @@ public class DifficultyInstance
 
     public float getClampedAdditionalDifficulty()
     {
-        if (this.additionalDifficulty < 2.0F)
-        {
-            return 0.0F;
-        }
-        else
-        {
-            return this.additionalDifficulty > 4.0F ? 1.0F : (this.additionalDifficulty - 2.0F) / 2.0F;
-        }
+        return this.additionalDifficulty < 2.0F ? 0.0F : (this.additionalDifficulty > 4.0F ? 1.0F : (this.additionalDifficulty - 2.0F) / 2.0F);
     }
 
     private float calculateAdditionalDifficulty(EnumDifficulty difficulty, long worldTime, long chunkInhabitedTime, float moonPhaseFactor)

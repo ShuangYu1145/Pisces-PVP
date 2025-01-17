@@ -2,6 +2,7 @@ package net.minecraft.block;
 
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -24,16 +25,16 @@ public class BlockJukebox extends BlockContainer
     protected BlockJukebox()
     {
         super(Material.wood, MapColor.dirtColor);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(HAS_RECORD, false));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(HAS_RECORD, Boolean.valueOf(false)));
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
 
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        if (state.getValue(HAS_RECORD))
+        if (((Boolean)state.getValue(HAS_RECORD)).booleanValue())
         {
             this.dropRecord(worldIn, pos, state);
-            state = state.withProperty(HAS_RECORD, false);
+            state = state.withProperty(HAS_RECORD, Boolean.valueOf(false));
             worldIn.setBlockState(pos, state, 2);
             return true;
         }
@@ -52,7 +53,7 @@ public class BlockJukebox extends BlockContainer
             if (tileentity instanceof BlockJukebox.TileEntityJukebox)
             {
                 ((BlockJukebox.TileEntityJukebox)tileentity).setRecord(new ItemStack(recordStack.getItem(), 1, recordStack.getMetadata()));
-                worldIn.setBlockState(pos, state.withProperty(HAS_RECORD, true), 2);
+                worldIn.setBlockState(pos, state.withProperty(HAS_RECORD, Boolean.valueOf(true)), 2);
             }
         }
     }
@@ -92,9 +93,6 @@ public class BlockJukebox extends BlockContainer
         super.breakBlock(worldIn, pos, state);
     }
 
-    /**
-     * Spawns this Block's drops into the World as EntityItems.
-     */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
         if (!worldIn.isRemote)
@@ -103,9 +101,6 @@ public class BlockJukebox extends BlockContainer
         }
     }
 
-    /**
-     * Returns a new instance of a block's tile entity class. Called on placing the block.
-     */
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
         return new BlockJukebox.TileEntityJukebox();
@@ -133,33 +128,24 @@ public class BlockJukebox extends BlockContainer
         return 0;
     }
 
-    /**
-     * The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
-     */
     public int getRenderType()
     {
         return 3;
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(HAS_RECORD, meta > 0);
+        return this.getDefaultState().withProperty(HAS_RECORD, Boolean.valueOf(meta > 0));
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(HAS_RECORD) ? 1 : 0;
+        return ((Boolean)state.getValue(HAS_RECORD)).booleanValue() ? 1 : 0;
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, HAS_RECORD);
+        return new BlockState(this, new IProperty[] {HAS_RECORD});
     }
 
     public static class TileEntityJukebox extends TileEntity

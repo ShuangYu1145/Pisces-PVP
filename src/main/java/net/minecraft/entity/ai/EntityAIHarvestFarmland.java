@@ -13,7 +13,6 @@ import net.minecraft.world.World;
 
 public class EntityAIHarvestFarmland extends EntityAIMoveToBlock
 {
-    /** Villager that is harvesting */
     private final EntityVillager theVillager;
     private boolean hasFarmItem;
     private boolean field_179503_e;
@@ -25,9 +24,6 @@ public class EntityAIHarvestFarmland extends EntityAIMoveToBlock
         this.theVillager = theVillagerIn;
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     public boolean shouldExecute()
     {
         if (this.runDelay <= 0)
@@ -45,33 +41,21 @@ public class EntityAIHarvestFarmland extends EntityAIMoveToBlock
         return super.shouldExecute();
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
     public boolean continueExecuting()
     {
         return this.field_179501_f >= 0 && super.continueExecuting();
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
     public void startExecuting()
     {
         super.startExecuting();
     }
 
-    /**
-     * Resets the task
-     */
     public void resetTask()
     {
         super.resetTask();
     }
 
-    /**
-     * Updates the task
-     */
     public void updateTask()
     {
         super.updateTask();
@@ -84,7 +68,7 @@ public class EntityAIHarvestFarmland extends EntityAIMoveToBlock
             IBlockState iblockstate = world.getBlockState(blockpos);
             Block block = iblockstate.getBlock();
 
-            if (this.field_179501_f == 0 && block instanceof BlockCrops && iblockstate.getValue(BlockCrops.AGE) == 7)
+            if (this.field_179501_f == 0 && block instanceof BlockCrops && ((Integer)iblockstate.getValue(BlockCrops.AGE)).intValue() == 7)
             {
                 world.destroyBlock(blockpos, true);
             }
@@ -135,9 +119,6 @@ public class EntityAIHarvestFarmland extends EntityAIMoveToBlock
         }
     }
 
-    /**
-     * Return true to set given position as destination
-     */
     protected boolean shouldMoveTo(World worldIn, BlockPos pos)
     {
         Block block = worldIn.getBlockState(pos).getBlock();
@@ -148,7 +129,7 @@ public class EntityAIHarvestFarmland extends EntityAIMoveToBlock
             IBlockState iblockstate = worldIn.getBlockState(pos);
             block = iblockstate.getBlock();
 
-            if (block instanceof BlockCrops && iblockstate.getValue(BlockCrops.AGE) == 7 && this.field_179503_e && (this.field_179501_f == 0 || this.field_179501_f < 0))
+            if (block instanceof BlockCrops && ((Integer)iblockstate.getValue(BlockCrops.AGE)).intValue() == 7 && this.field_179503_e && (this.field_179501_f == 0 || this.field_179501_f < 0))
             {
                 this.field_179501_f = 0;
                 return true;

@@ -18,9 +18,6 @@ public class ItemSnow extends ItemBlock
         this.setHasSubtypes(true);
     }
 
-    /**
-     * Called when a Block is right-clicked with this Item
-     */
     public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (stack.stackSize == 0)
@@ -46,11 +43,11 @@ public class ItemSnow extends ItemBlock
 
             if (block == this.block)
             {
-                int i = iblockstate.getValue(BlockSnow.LAYERS);
+                int i = ((Integer)iblockstate.getValue(BlockSnow.LAYERS)).intValue();
 
                 if (i <= 7)
                 {
-                    IBlockState iblockstate1 = iblockstate.withProperty(BlockSnow.LAYERS, i + 1);
+                    IBlockState iblockstate1 = iblockstate.withProperty(BlockSnow.LAYERS, Integer.valueOf(i + 1));
                     AxisAlignedBB axisalignedbb = this.block.getCollisionBoundingBox(worldIn, blockpos, iblockstate1);
 
                     if (axisalignedbb != null && worldIn.checkNoEntityCollision(axisalignedbb) && worldIn.setBlockState(blockpos, iblockstate1, 2))
@@ -66,10 +63,6 @@ public class ItemSnow extends ItemBlock
         }
     }
 
-    /**
-     * Converts the given ItemStack damage value into a metadata value to be placed in the world when this Item is
-     * placed as a Block (mostly used with ItemBlocks).
-     */
     public int getMetadata(int damage)
     {
         return damage;

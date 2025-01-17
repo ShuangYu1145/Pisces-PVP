@@ -15,15 +15,12 @@ public class EntityBubbleFX extends EntityFX
         this.setParticleTextureIndex(32);
         this.setSize(0.02F, 0.02F);
         this.particleScale *= this.rand.nextFloat() * 0.6F + 0.2F;
-        this.motionX = xSpeedIn * (double)0.2F + (Math.random() * 2.0D - 1.0D) * (double)0.02F;
-        this.motionY = ySpeedIn * (double)0.2F + (Math.random() * 2.0D - 1.0D) * (double)0.02F;
-        this.motionZ = zSpeedIn * (double)0.2F + (Math.random() * 2.0D - 1.0D) * (double)0.02F;
+        this.motionX = xSpeedIn * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
+        this.motionY = ySpeedIn * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
+        this.motionZ = zSpeedIn * 0.20000000298023224D + (Math.random() * 2.0D - 1.0D) * 0.019999999552965164D;
         this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D));
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         this.prevPosX = this.posX;
@@ -31,9 +28,9 @@ public class EntityBubbleFX extends EntityFX
         this.prevPosZ = this.posZ;
         this.motionY += 0.002D;
         this.moveEntity(this.motionX, this.motionY, this.motionZ);
-        this.motionX *= (double)0.85F;
-        this.motionY *= (double)0.85F;
-        this.motionZ *= (double)0.85F;
+        this.motionX *= 0.8500000238418579D;
+        this.motionY *= 0.8500000238418579D;
+        this.motionZ *= 0.8500000238418579D;
 
         if (this.worldObj.getBlockState(new BlockPos(this)).getBlock().getMaterial() != Material.water)
         {

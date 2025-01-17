@@ -3,6 +3,7 @@ package net.minecraft.client.shader;
 import com.google.common.collect.Maps;
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -51,7 +52,7 @@ public class ShaderLoader
 
     public static ShaderLoader loadShader(IResourceManager resourceManager, ShaderLoader.ShaderType type, String filename) throws IOException
     {
-        ShaderLoader shaderloader = type.getLoadedShaders().get(filename);
+        ShaderLoader shaderloader = (ShaderLoader)type.getLoadedShaders().get(filename);
 
         if (shaderloader == null)
         {
@@ -68,7 +69,7 @@ public class ShaderLoader
             if (OpenGlHelper.glGetShaderi(i, OpenGlHelper.GL_COMPILE_STATUS) == 0)
             {
                 String s = StringUtils.trim(OpenGlHelper.glGetShaderInfoLog(i, 32768));
-                JsonException jsonexception = new JsonException("Couldn't compile " + type.getShaderName() + " program: " + s);
+                JsonException jsonexception = new JsonException("Couldn\'t compile " + type.getShaderName() + " program: " + s);
                 jsonexception.func_151381_b(resourcelocation.getResourcePath());
                 throw jsonexception;
             }
@@ -86,7 +87,7 @@ public class ShaderLoader
 
         try
         {
-            abyte = IOUtils.toByteArray(p_177064_0_);
+            abyte = IOUtils.toByteArray((InputStream)p_177064_0_);
         }
         finally
         {
@@ -104,7 +105,7 @@ public class ShaderLoader
         private final String shaderName;
         private final String shaderExtension;
         private final int shaderMode;
-        private final Map<String, ShaderLoader> loadedShaders = Maps.newHashMap();
+        private final Map<String, ShaderLoader> loadedShaders = Maps.<String, ShaderLoader>newHashMap();
 
         private ShaderType(String p_i45090_3_, String p_i45090_4_, int p_i45090_5_)
         {

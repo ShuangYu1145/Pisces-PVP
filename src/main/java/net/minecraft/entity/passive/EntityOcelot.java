@@ -34,10 +34,6 @@ import net.minecraft.world.World;
 public class EntityOcelot extends EntityTameable
 {
     private EntityAIAvoidEntity<EntityPlayer> avoidEntity;
-
-    /**
-     * The tempt AI task for this mob, used to prevent taming while it is fleeing.
-     */
     private EntityAITempt aiTempt;
 
     public EntityOcelot(World worldIn)
@@ -55,13 +51,13 @@ public class EntityOcelot extends EntityTameable
         this.tasks.addTask(9, new EntityAIMate(this, 0.8D));
         this.tasks.addTask(10, new EntityAIWander(this, 0.8D));
         this.tasks.addTask(11, new EntityAIWatchClosest(this, EntityPlayer.class, 10.0F));
-        this.targetTasks.addTask(1, new EntityAITargetNonTamed<>(this, EntityChicken.class, false, (Predicate<EntityChicken>)null));
+        this.targetTasks.addTask(1, new EntityAITargetNonTamed(this, EntityChicken.class, false, (Predicate)null));
     }
 
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(18, (byte)0);
+        this.dataWatcher.addObject(18, Byte.valueOf((byte)0));
     }
 
     public void updateAITasks()
@@ -93,9 +89,6 @@ public class EntityOcelot extends EntityTameable
         }
     }
 
-    /**
-     * Determines if an entity can be despawned, used on idle far away entities
-     */
     protected boolean canDespawn()
     {
         return !this.isTamed() && this.ticksExisted > 2400;
@@ -105,72 +98,40 @@ public class EntityOcelot extends EntityTameable
     {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double)0.3F);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.30000001192092896D);
     }
 
     public void fall(float distance, float damageMultiplier)
     {
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     public void writeEntityToNBT(NBTTagCompound tagCompound)
     {
         super.writeEntityToNBT(tagCompound);
         tagCompound.setInteger("CatType", this.getTameSkin());
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     public void readEntityFromNBT(NBTTagCompound tagCompund)
     {
         super.readEntityFromNBT(tagCompund);
         this.setTameSkin(tagCompund.getInteger("CatType"));
     }
 
-    /**
-     * Returns the sound this mob makes while it's alive.
-     */
     protected String getLivingSound()
     {
-        if (this.isTamed())
-        {
-            if (this.isInLove())
-            {
-                return "mob.cat.purr";
-            }
-            else
-            {
-                return this.rand.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
-            }
-        }
-        else
-        {
-            return "";
-        }
+        return this.isTamed() ? (this.isInLove() ? "mob.cat.purr" : (this.rand.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow")) : "";
     }
 
-    /**
-     * Returns the sound this mob makes when it is hurt.
-     */
     protected String getHurtSound()
     {
         return "mob.cat.hitt";
     }
 
-    /**
-     * Returns the sound this mob makes on death.
-     */
     protected String getDeathSound()
     {
         return "mob.cat.hitt";
     }
 
-    /**
-     * Returns the volume for the sounds this mob makes.
-     */
     protected float getSoundVolume()
     {
         return 0.4F;
@@ -186,9 +147,6 @@ public class EntityOcelot extends EntityTameable
         return entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), 3.0F);
     }
 
-    /**
-     * Called when the entity is attacked.
-     */
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         if (this.isEntityInvulnerable(source))
@@ -202,20 +160,10 @@ public class EntityOcelot extends EntityTameable
         }
     }
 
-    /**
-     * Drop 0-2 items of this living's type
-     *  
-     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
-     * or tameable)
-     * @param lootingModifier level of enchanment to be applied to this drop
-     */
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
     }
 
-    /**
-     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
-     */
     public boolean interact(EntityPlayer player)
     {
         ItemStack itemstack = player.inventory.getCurrentItem();
@@ -277,18 +225,11 @@ public class EntityOcelot extends EntityTameable
         return entityocelot;
     }
 
-    /**
-     * Checks if the parameter is an item which this animal can be fed to breed it (wheat, carrots or seeds depending on
-     * the animal type)
-     */
     public boolean isBreedingItem(ItemStack stack)
     {
         return stack != null && stack.getItem() == Items.fish;
     }
 
-    /**
-     * Returns true if the mob is currently able to mate with the specified mob.
-     */
     public boolean canMateWith(EntityAnimal otherAnimal)
     {
         if (otherAnimal == this)
@@ -306,15 +247,7 @@ public class EntityOcelot extends EntityTameable
         else
         {
             EntityOcelot entityocelot = (EntityOcelot)otherAnimal;
-
-            if (!entityocelot.isTamed())
-            {
-                return false;
-            }
-            else
-            {
-                return this.isInLove() && entityocelot.isInLove();
-            }
+            return !entityocelot.isTamed() ? false : this.isInLove() && entityocelot.isInLove();
         }
     }
 
@@ -325,20 +258,14 @@ public class EntityOcelot extends EntityTameable
 
     public void setTameSkin(int skinId)
     {
-        this.dataWatcher.updateObject(18, (byte)skinId);
+        this.dataWatcher.updateObject(18, Byte.valueOf((byte)skinId));
     }
 
-    /**
-     * Checks if the entity's current position is a valid location to spawn this entity.
-     */
     public boolean getCanSpawnHere()
     {
         return this.worldObj.rand.nextInt(3) != 0;
     }
 
-    /**
-     * Checks that the entity is not colliding with any blocks / liquids
-     */
     public boolean isNotColliding()
     {
         if (this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox(), this) && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty() && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox()))
@@ -361,19 +288,9 @@ public class EntityOcelot extends EntityTameable
         return false;
     }
 
-    /**
-     * Get the name of this object. For players this returns their username
-     */
     public String getName()
     {
-        if (this.hasCustomName())
-        {
-            return this.getCustomNameTag();
-        }
-        else
-        {
-            return this.isTamed() ? StatCollector.translateToLocal("entity.Cat.name") : super.getName();
-        }
+        return this.hasCustomName() ? this.getCustomNameTag() : (this.isTamed() ? StatCollector.translateToLocal("entity.Cat.name") : super.getName());
     }
 
     public void setTamed(boolean tamed)
@@ -385,7 +302,7 @@ public class EntityOcelot extends EntityTameable
     {
         if (this.avoidEntity == null)
         {
-            this.avoidEntity = new EntityAIAvoidEntity<>(this, EntityPlayer.class, 16.0F, 0.8D, 1.33D);
+            this.avoidEntity = new EntityAIAvoidEntity(this, EntityPlayer.class, 16.0F, 0.8D, 1.33D);
         }
 
         this.tasks.removeTask(this.avoidEntity);
@@ -396,10 +313,6 @@ public class EntityOcelot extends EntityTameable
         }
     }
 
-    /**
-     * Called only once on an entity when first time spawned, via egg, mob spawner, natural spawning etc, but not called
-     * when entity is reloaded from nbt. Mainly used for initializing attributes and inventory
-     */
     public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)
     {
         livingdata = super.onInitialSpawn(difficulty, livingdata);

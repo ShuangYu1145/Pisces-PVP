@@ -16,7 +16,7 @@ import net.minecraft.server.MinecraftServer;
 public class ServerScoreboard extends Scoreboard
 {
     private final MinecraftServer scoreboardMCServer;
-    private final Set<ScoreObjective> field_96553_b = Sets.newHashSet();
+    private final Set<ScoreObjective> field_96553_b = Sets.<ScoreObjective>newHashSet();
     private ScoreboardSaveData scoreboardSaveData;
 
     public ServerScoreboard(MinecraftServer mcServer)
@@ -50,9 +50,6 @@ public class ServerScoreboard extends Scoreboard
         this.markSaveDataDirty();
     }
 
-    /**
-     * 0 is tab menu, 1 is sidebar, 2 is below name
-     */
     public void setObjectiveInDisplaySlot(int p_96530_1_, ScoreObjective p_96530_2_)
     {
         ScoreObjective scoreobjective = this.getObjectiveInDisplaySlot(p_96530_1_);
@@ -85,15 +82,12 @@ public class ServerScoreboard extends Scoreboard
         this.markSaveDataDirty();
     }
 
-    /**
-     * Adds a player to the given team
-     */
     public boolean addPlayerToTeam(String player, String newTeam)
     {
         if (super.addPlayerToTeam(player, newTeam))
         {
             ScorePlayerTeam scoreplayerteam = this.getTeam(newTeam);
-            this.scoreboardMCServer.getConfigurationManager().sendPacketToAllPlayers(new S3EPacketTeams(scoreplayerteam, Arrays.asList(player), 3));
+            this.scoreboardMCServer.getConfigurationManager().sendPacketToAllPlayers(new S3EPacketTeams(scoreplayerteam, Arrays.asList(new String[] {player}), 3));
             this.markSaveDataDirty();
             return true;
         }
@@ -103,20 +97,13 @@ public class ServerScoreboard extends Scoreboard
         }
     }
 
-    /**
-     * Removes the given username from the given ScorePlayerTeam. If the player is not on the team then an
-     * IllegalStateException is thrown.
-     */
     public void removePlayerFromTeam(String p_96512_1_, ScorePlayerTeam p_96512_2_)
     {
         super.removePlayerFromTeam(p_96512_1_, p_96512_2_);
-        this.scoreboardMCServer.getConfigurationManager().sendPacketToAllPlayers(new S3EPacketTeams(p_96512_2_, Arrays.asList(p_96512_1_), 4));
+        this.scoreboardMCServer.getConfigurationManager().sendPacketToAllPlayers(new S3EPacketTeams(p_96512_2_, Arrays.asList(new String[] {p_96512_1_}), 4));
         this.markSaveDataDirty();
     }
 
-    /**
-     * Called when a score objective is added
-     */
     public void onScoreObjectiveAdded(ScoreObjective scoreObjectiveIn)
     {
         super.onScoreObjectiveAdded(scoreObjectiveIn);
@@ -147,9 +134,6 @@ public class ServerScoreboard extends Scoreboard
         this.markSaveDataDirty();
     }
 
-    /**
-     * This packet will notify the players that this team is created, and that will register it on the client
-     */
     public void broadcastTeamCreated(ScorePlayerTeam playerTeam)
     {
         super.broadcastTeamCreated(playerTeam);
@@ -157,9 +141,6 @@ public class ServerScoreboard extends Scoreboard
         this.markSaveDataDirty();
     }
 
-    /**
-     * This packet will notify the players that this team is updated
-     */
     public void sendTeamUpdate(ScorePlayerTeam playerTeam)
     {
         super.sendTeamUpdate(playerTeam);
@@ -189,7 +170,7 @@ public class ServerScoreboard extends Scoreboard
 
     public List<Packet> func_96550_d(ScoreObjective p_96550_1_)
     {
-        List<Packet> list = Lists.newArrayList();
+        List<Packet> list = Lists.<Packet>newArrayList();
         list.add(new S3BPacketScoreboardObjective(p_96550_1_, 0));
 
         for (int i = 0; i < 19; ++i)
@@ -225,7 +206,7 @@ public class ServerScoreboard extends Scoreboard
 
     public List<Packet> func_96548_f(ScoreObjective p_96548_1_)
     {
-        List<Packet> list = Lists.newArrayList();
+        List<Packet> list = Lists.<Packet>newArrayList();
         list.add(new S3BPacketScoreboardObjective(p_96548_1_, 1));
 
         for (int i = 0; i < 19; ++i)

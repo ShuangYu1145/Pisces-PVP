@@ -25,8 +25,8 @@ public class BiomeGenJungle extends BiomeGenBase
 {
     private boolean field_150614_aC;
     private static final IBlockState field_181620_aE = Blocks.log.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.JUNGLE);
-    private static final IBlockState field_181621_aF = Blocks.leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.JUNGLE).withProperty(BlockLeaves.CHECK_DECAY, false);
-    private static final IBlockState field_181622_aG = Blocks.leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK).withProperty(BlockLeaves.CHECK_DECAY, false);
+    private static final IBlockState field_181621_aF = Blocks.leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.JUNGLE).withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(false));
+    private static final IBlockState field_181622_aG = Blocks.leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK).withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(false));
 
     public BiomeGenJungle(int id, boolean p_i45379_2_)
     {
@@ -55,23 +55,9 @@ public class BiomeGenJungle extends BiomeGenBase
 
     public WorldGenAbstractTree genBigTreeChance(Random rand)
     {
-        if (rand.nextInt(10) == 0)
-        {
-            return this.worldGeneratorBigTree;
-        }
-        else if (rand.nextInt(2) == 0)
-        {
-            return new WorldGenShrub(field_181620_aE, field_181622_aG);
-        }
-        else
-        {
-            return (WorldGenAbstractTree)(!this.field_150614_aC && rand.nextInt(3) == 0 ? new WorldGenMegaJungle(false, 10, 20, field_181620_aE, field_181621_aF) : new WorldGenTrees(false, 4 + rand.nextInt(7), field_181620_aE, field_181621_aF, true));
-        }
+        return (WorldGenAbstractTree)(rand.nextInt(10) == 0 ? this.worldGeneratorBigTree : (rand.nextInt(2) == 0 ? new WorldGenShrub(field_181620_aE, field_181622_aG) : (!this.field_150614_aC && rand.nextInt(3) == 0 ? new WorldGenMegaJungle(false, 10, 20, field_181620_aE, field_181621_aF) : new WorldGenTrees(false, 4 + rand.nextInt(7), field_181620_aE, field_181621_aF, true))));
     }
 
-    /**
-     * Gets a WorldGen appropriate for this biome.
-     */
     public WorldGenerator getRandomWorldGenForGrass(Random rand)
     {
         return rand.nextInt(4) == 0 ? new WorldGenTallGrass(BlockTallGrass.EnumType.FERN) : new WorldGenTallGrass(BlockTallGrass.EnumType.GRASS);
@@ -86,7 +72,7 @@ public class BiomeGenJungle extends BiomeGenBase
         (new WorldGenMelon()).generate(worldIn, rand, pos.add(i, k, j));
         WorldGenVines worldgenvines = new WorldGenVines();
 
-        for (int j1 = 0; j1 < 50; ++j1)
+        for (j = 0; j < 50; ++j)
         {
             k = rand.nextInt(16) + 8;
             int l = 128;

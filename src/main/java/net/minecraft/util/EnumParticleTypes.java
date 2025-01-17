@@ -54,7 +54,7 @@ public enum EnumParticleTypes
     private final int particleID;
     private final boolean shouldIgnoreRange;
     private final int argumentCount;
-    private static final Map<Integer, EnumParticleTypes> PARTICLES = Maps.newHashMap();
+    private static final Map<Integer, EnumParticleTypes> PARTICLES = Maps.<Integer, EnumParticleTypes>newHashMap();
     private static final String[] PARTICLE_NAMES;
 
     private EnumParticleTypes(String particleNameIn, int particleIDIn, boolean p_i46011_5_, int argumentCountIn)
@@ -100,20 +100,17 @@ public enum EnumParticleTypes
         return this.argumentCount > 0;
     }
 
-    /**
-     * Gets the relative EnumParticleTypes by id.
-     */
     public static EnumParticleTypes getParticleFromId(int particleId)
     {
-        return PARTICLES.get(particleId);
+        return (EnumParticleTypes)PARTICLES.get(Integer.valueOf(particleId));
     }
 
     static {
-        List<String> list = Lists.newArrayList();
+        List<String> list = Lists.<String>newArrayList();
 
         for (EnumParticleTypes enumparticletypes : values())
         {
-            PARTICLES.put(enumparticletypes.getParticleID(), enumparticletypes);
+            PARTICLES.put(Integer.valueOf(enumparticletypes.getParticleID()), enumparticletypes);
 
             if (!enumparticletypes.getParticleName().endsWith("_"))
             {
@@ -121,6 +118,6 @@ public enum EnumParticleTypes
             }
         }
 
-        PARTICLE_NAMES = list.toArray(new String[list.size()]);
+        PARTICLE_NAMES = (String[])list.toArray(new String[list.size()]);
     }
 }

@@ -11,25 +11,12 @@ import net.minecraft.world.World;
 
 public class EntityXPOrb extends Entity
 {
-    /**
-     * A constantly increasing value that RenderXPOrb uses to control the colour shifting (Green / yellow)
-     */
     public int xpColor;
-
-    /** The age of the XP orb in ticks. */
     public int xpOrbAge;
     public int delayBeforeCanPickup;
-
-    /** The health of this XP orb. */
     private int xpOrbHealth = 5;
-
-    /** This is how much XP this orb has. */
     private int xpValue;
-
-    /** The closest EntityPlayer to this orb. */
     private EntityPlayer closestPlayer;
-
-    /** Threshold color for tracking players */
     private int xpTargetColor;
 
     public EntityXPOrb(World worldIn, double x, double y, double z, int expValue)
@@ -38,16 +25,12 @@ public class EntityXPOrb extends Entity
         this.setSize(0.5F, 0.5F);
         this.setPosition(x, y, z);
         this.rotationYaw = (float)(Math.random() * 360.0D);
-        this.motionX = (double)((float)(Math.random() * (double)0.2F - (double)0.1F) * 2.0F);
+        this.motionX = (double)((float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D) * 2.0F);
         this.motionY = (double)((float)(Math.random() * 0.2D) * 2.0F);
-        this.motionZ = (double)((float)(Math.random() * (double)0.2F - (double)0.1F) * 2.0F);
+        this.motionZ = (double)((float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D) * 2.0F);
         this.xpValue = expValue;
     }
 
-    /**
-     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
-     * prevent them from trampling crops
-     */
     protected boolean canTriggerWalking()
     {
         return false;
@@ -80,9 +63,6 @@ public class EntityXPOrb extends Entity
         return j | k << 16;
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         super.onUpdate();
@@ -95,11 +75,11 @@ public class EntityXPOrb extends Entity
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
-        this.motionY -= (double)0.03F;
+        this.motionY -= 0.029999999329447746D;
 
         if (this.worldObj.getBlockState(new BlockPos(this)).getBlock().getMaterial() == Material.lava)
         {
-            this.motionY = (double)0.2F;
+            this.motionY = 0.20000000298023224D;
             this.motionX = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
             this.motionZ = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
             this.playSound("random.fizz", 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
@@ -149,12 +129,12 @@ public class EntityXPOrb extends Entity
         }
 
         this.motionX *= (double)f;
-        this.motionY *= (double)0.98F;
+        this.motionY *= 0.9800000190734863D;
         this.motionZ *= (double)f;
 
         if (this.onGround)
         {
-            this.motionY *= (double) -0.9F;
+            this.motionY *= -0.8999999761581421D;
         }
 
         ++this.xpColor;
@@ -166,26 +146,16 @@ public class EntityXPOrb extends Entity
         }
     }
 
-    /**
-     * Returns if this entity is in water and will end up adding the waters velocity to the entity
-     */
     public boolean handleWaterMovement()
     {
         return this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox(), Material.water, this);
     }
 
-    /**
-     * Will deal the specified amount of damage to the entity if the entity isn't immune to fire damage. Args:
-     * amountDamage
-     */
     protected void dealFireDamage(int amount)
     {
         this.attackEntityFrom(DamageSource.inFire, (float)amount);
     }
 
-    /**
-     * Called when the entity is attacked.
-     */
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         if (this.isEntityInvulnerable(source))
@@ -206,9 +176,6 @@ public class EntityXPOrb extends Entity
         }
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     public void writeEntityToNBT(NBTTagCompound tagCompound)
     {
         tagCompound.setShort("Health", (short)((byte)this.xpOrbHealth));
@@ -216,9 +183,6 @@ public class EntityXPOrb extends Entity
         tagCompound.setShort("Value", (short)this.xpValue);
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     public void readEntityFromNBT(NBTTagCompound tagCompund)
     {
         this.xpOrbHealth = tagCompund.getShort("Health") & 255;
@@ -226,9 +190,6 @@ public class EntityXPOrb extends Entity
         this.xpValue = tagCompund.getShort("Value");
     }
 
-    /**
-     * Called by a player entity when they collide with an entity
-     */
     public void onCollideWithPlayer(EntityPlayer entityIn)
     {
         if (!this.worldObj.isRemote)
@@ -244,112 +205,21 @@ public class EntityXPOrb extends Entity
         }
     }
 
-    /**
-     * Returns the XP value of this XP orb.
-     */
     public int getXpValue()
     {
         return this.xpValue;
     }
 
-    /**
-     * Returns a number from 1 to 10 based on how much XP this orb is worth. This is used by RenderXPOrb to determine
-     * what texture to use.
-     */
     public int getTextureByXP()
     {
-        if (this.xpValue >= 2477)
-        {
-            return 10;
-        }
-        else if (this.xpValue >= 1237)
-        {
-            return 9;
-        }
-        else if (this.xpValue >= 617)
-        {
-            return 8;
-        }
-        else if (this.xpValue >= 307)
-        {
-            return 7;
-        }
-        else if (this.xpValue >= 149)
-        {
-            return 6;
-        }
-        else if (this.xpValue >= 73)
-        {
-            return 5;
-        }
-        else if (this.xpValue >= 37)
-        {
-            return 4;
-        }
-        else if (this.xpValue >= 17)
-        {
-            return 3;
-        }
-        else if (this.xpValue >= 7)
-        {
-            return 2;
-        }
-        else
-        {
-            return this.xpValue >= 3 ? 1 : 0;
-        }
+        return this.xpValue >= 2477 ? 10 : (this.xpValue >= 1237 ? 9 : (this.xpValue >= 617 ? 8 : (this.xpValue >= 307 ? 7 : (this.xpValue >= 149 ? 6 : (this.xpValue >= 73 ? 5 : (this.xpValue >= 37 ? 4 : (this.xpValue >= 17 ? 3 : (this.xpValue >= 7 ? 2 : (this.xpValue >= 3 ? 1 : 0)))))))));
     }
 
-    /**
-     * Get a fragment of the maximum experience points value for the supplied value of experience points value.
-     */
     public static int getXPSplit(int expValue)
     {
-        if (expValue >= 2477)
-        {
-            return 2477;
-        }
-        else if (expValue >= 1237)
-        {
-            return 1237;
-        }
-        else if (expValue >= 617)
-        {
-            return 617;
-        }
-        else if (expValue >= 307)
-        {
-            return 307;
-        }
-        else if (expValue >= 149)
-        {
-            return 149;
-        }
-        else if (expValue >= 73)
-        {
-            return 73;
-        }
-        else if (expValue >= 37)
-        {
-            return 37;
-        }
-        else if (expValue >= 17)
-        {
-            return 17;
-        }
-        else if (expValue >= 7)
-        {
-            return 7;
-        }
-        else
-        {
-            return expValue >= 3 ? 3 : 1;
-        }
+        return expValue >= 2477 ? 2477 : (expValue >= 1237 ? 1237 : (expValue >= 617 ? 617 : (expValue >= 307 ? 307 : (expValue >= 149 ? 149 : (expValue >= 73 ? 73 : (expValue >= 37 ? 37 : (expValue >= 17 ? 17 : (expValue >= 7 ? 7 : (expValue >= 3 ? 3 : 1)))))))));
     }
 
-    /**
-     * If returns false, the item will not inflict any damage against entities.
-     */
     public boolean canAttackWithItem()
     {
         return false;

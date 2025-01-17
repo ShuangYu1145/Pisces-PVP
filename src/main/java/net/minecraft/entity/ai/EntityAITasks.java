@@ -10,10 +10,8 @@ import org.apache.logging.log4j.Logger;
 public class EntityAITasks
 {
     private static final Logger logger = LogManager.getLogger();
-    private List<EntityAITasks.EntityAITaskEntry> taskEntries = Lists.newArrayList();
-    private List<EntityAITasks.EntityAITaskEntry> executingTaskEntries = Lists.newArrayList();
-
-    /** Instance of Profiler. */
+    private List<EntityAITasks.EntityAITaskEntry> taskEntries = Lists.<EntityAITasks.EntityAITaskEntry>newArrayList();
+    private List<EntityAITasks.EntityAITaskEntry> executingTaskEntries = Lists.<EntityAITasks.EntityAITaskEntry>newArrayList();
     private final Profiler theProfiler;
     private int tickCount;
     private int tickRate = 3;
@@ -23,24 +21,18 @@ public class EntityAITasks
         this.theProfiler = profilerIn;
     }
 
-    /**
-     * Add a now AITask. Args : priority, task
-     */
     public void addTask(int priority, EntityAIBase task)
     {
         this.taskEntries.add(new EntityAITasks.EntityAITaskEntry(priority, task));
     }
 
-    /**
-     * removes the indicated task from the entity's AI tasks.
-     */
     public void removeTask(EntityAIBase task)
     {
         Iterator<EntityAITasks.EntityAITaskEntry> iterator = this.taskEntries.iterator();
 
         while (iterator.hasNext())
         {
-            EntityAITasks.EntityAITaskEntry entityaitasks$entityaitaskentry = iterator.next();
+            EntityAITasks.EntityAITaskEntry entityaitasks$entityaitaskentry = (EntityAITasks.EntityAITaskEntry)iterator.next();
             EntityAIBase entityaibase = entityaitasks$entityaitaskentry.action;
 
             if (entityaibase == task)
@@ -63,7 +55,7 @@ public class EntityAITasks
         if (this.tickCount++ % this.tickRate == 0)
         {
             Iterator iterator = this.taskEntries.iterator();
-            label50:
+            label38:
 
             while (true)
             {
@@ -73,7 +65,7 @@ public class EntityAITasks
                 {
                     if (!iterator.hasNext())
                     {
-                        break label50;
+                        break label38;
                     }
 
                     entityaitasks$entityaitaskentry = (EntityAITasks.EntityAITaskEntry)iterator.next();
@@ -105,7 +97,7 @@ public class EntityAITasks
 
             while (iterator1.hasNext())
             {
-                EntityAITasks.EntityAITaskEntry entityaitasks$entityaitaskentry1 = iterator1.next();
+                EntityAITasks.EntityAITaskEntry entityaitasks$entityaitaskentry1 = (EntityAITasks.EntityAITaskEntry)iterator1.next();
 
                 if (!this.canContinue(entityaitasks$entityaitaskentry1))
                 {
@@ -126,19 +118,12 @@ public class EntityAITasks
         this.theProfiler.endSection();
     }
 
-    /**
-     * Determine if a specific AI Task should continue being executed.
-     */
     private boolean canContinue(EntityAITasks.EntityAITaskEntry taskEntry)
     {
         boolean flag = taskEntry.action.continueExecuting();
         return flag;
     }
 
-    /**
-     * Determine if a specific AI Task can be executed, which means that all running higher (= lower int value) priority
-     * tasks are compatible with it or all lower priority tasks can be interrupted.
-     */
     private boolean canUse(EntityAITasks.EntityAITaskEntry taskEntry)
     {
         for (EntityAITasks.EntityAITaskEntry entityaitasks$entityaitaskentry : this.taskEntries)
@@ -162,9 +147,6 @@ public class EntityAITasks
         return true;
     }
 
-    /**
-     * Returns whether two EntityAITaskEntries can be executed concurrently
-     */
     private boolean areTasksCompatible(EntityAITasks.EntityAITaskEntry taskEntry1, EntityAITasks.EntityAITaskEntry taskEntry2)
     {
         return (taskEntry1.action.getMutexBits() & taskEntry2.action.getMutexBits()) == 0;

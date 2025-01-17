@@ -17,15 +17,19 @@ public class VboRegion
     private int capacity = 4096;
     private int positionTop = 0;
     private int sizeUsed;
-    private LinkedList<VboRange> rangeList = new LinkedList<>();
+    private LinkedList<VboRange> rangeList = new LinkedList();
     private VboRange compactRangeLast = null;
-    private IntBuffer bufferIndexVertex = Config.createDirectIntBuffer(this.capacity);
-    private IntBuffer bufferCountVertex = Config.createDirectIntBuffer(this.capacity);
-    private int drawMode = 7;
-    private final int vertexBytes = DefaultVertexFormats.BLOCK.getNextOffset();
+    private IntBuffer bufferIndexVertex;
+    private IntBuffer bufferCountVertex;
+    private int drawMode;
+    private final int vertexBytes;
 
     public VboRegion(EnumWorldBlockLayer layer)
     {
+        this.bufferIndexVertex = Config.createDirectIntBuffer(this.capacity);
+        this.bufferCountVertex = Config.createDirectIntBuffer(this.capacity);
+        this.drawMode = 7;
+        this.vertexBytes = DefaultVertexFormats.BLOCK.getNextOffset();
         this.layer = layer;
         this.bindBuffer();
         long i = this.toBytes(this.capacity);
@@ -88,7 +92,7 @@ public class VboRegion
 
             if (vborange == null || !this.rangeList.contains(vborange.getNode()))
             {
-                vborange = this.rangeList.getFirst().getItem();
+                vborange = (VboRange)this.rangeList.getFirst().getItem();
             }
 
             int i = vborange.getPosition();
@@ -141,7 +145,7 @@ public class VboRegion
 
             if (vborange == null)
             {
-                this.positionTop = this.rangeList.getLast().getItem().getPositionNext();
+                this.positionTop = ((VboRange)this.rangeList.getLast().getItem()).getPositionNext();
             }
 
             this.compactRangeLast = vborange;
@@ -153,7 +157,7 @@ public class VboRegion
         int i = 0;
         int j = 0;
 
-        for (VboRange vborange = this.rangeList.getFirst().getItem(); vborange != null; vborange = vborange.getNext())
+        for (VboRange vborange = (VboRange)this.rangeList.getFirst().getItem(); vborange != null; vborange = vborange.getNext())
         {
             ++i;
             j += vborange.getSize();

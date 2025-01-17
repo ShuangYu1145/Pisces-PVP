@@ -24,15 +24,7 @@ public class ShaderOptionSwitch extends ShaderOption
     public String getValueText(String val)
     {
         String s = super.getValueText(val);
-
-        if (s != val)
-        {
-            return s;
-        }
-        else
-        {
-            return isTrue(val) ? Lang.getOn() : Lang.getOff();
-        }
+        return s != val ? s : (isTrue(val) ? Lang.getOn() : Lang.getOff());
     }
 
     public String getValueColor(String val)
@@ -108,6 +100,6 @@ public class ShaderOptionSwitch extends ShaderOption
 
     public static boolean isTrue(String val)
     {
-        return Boolean.valueOf(val);
+        return Boolean.valueOf(val).booleanValue();
     }
 }

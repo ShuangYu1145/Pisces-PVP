@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class GameRules
 {
-    private TreeMap<String, GameRules.Value> theGameRules = new TreeMap<>();
+    private TreeMap<String, GameRules.Value> theGameRules = new TreeMap();
 
     public GameRules()
     {
@@ -34,7 +34,7 @@ public class GameRules
 
     public void setOrCreateGameRule(String key, String ruleValue)
     {
-        GameRules.Value gamerules$value = this.theGameRules.get(key);
+        GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(key);
 
         if (gamerules$value != null)
         {
@@ -46,49 +46,37 @@ public class GameRules
         }
     }
 
-    /**
-     * Gets the string Game Rule value.
-     */
     public String getString(String name)
     {
-        GameRules.Value gamerules$value = this.theGameRules.get(name);
+        GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(name);
         return gamerules$value != null ? gamerules$value.getString() : "";
     }
 
-    /**
-     * Gets the boolean Game Rule value.
-     */
     public boolean getBoolean(String name)
     {
-        GameRules.Value gamerules$value = this.theGameRules.get(name);
+        GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(name);
         return gamerules$value != null ? gamerules$value.getBoolean() : false;
     }
 
     public int getInt(String name)
     {
-        GameRules.Value gamerules$value = this.theGameRules.get(name);
+        GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(name);
         return gamerules$value != null ? gamerules$value.getInt() : 0;
     }
 
-    /**
-     * Return the defined game rules as NBT.
-     */
     public NBTTagCompound writeToNBT()
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
 
         for (String s : this.theGameRules.keySet())
         {
-            GameRules.Value gamerules$value = this.theGameRules.get(s);
+            GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(s);
             nbttagcompound.setString(s, gamerules$value.getString());
         }
 
         return nbttagcompound;
     }
 
-    /**
-     * Set defined game rules from NBT.
-     */
     public void readFromNBT(NBTTagCompound nbt)
     {
         for (String s : nbt.getKeySet())
@@ -98,18 +86,12 @@ public class GameRules
         }
     }
 
-    /**
-     * Return the defined game rules.
-     */
     public String[] getRules()
     {
         Set<String> set = this.theGameRules.keySet();
-        return set.toArray(new String[set.size()]);
+        return (String[])((String[])set.toArray(new String[set.size()]));
     }
 
-    /**
-     * Return whether the specified game rule is defined.
-     */
     public boolean hasRule(String name)
     {
         return this.theGameRules.containsKey(name);
@@ -117,7 +99,7 @@ public class GameRules
 
     public boolean areSameType(String key, GameRules.ValueType otherValue)
     {
-        GameRules.Value gamerules$value = this.theGameRules.get(key);
+        GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(key);
         return gamerules$value != null && (gamerules$value.getType() == otherValue || otherValue == GameRules.ValueType.ANY_VALUE);
     }
 

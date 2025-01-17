@@ -37,9 +37,6 @@ public class EntityMinecartTNT extends EntityMinecart
         return Blocks.tnt.getDefaultState();
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         super.onUpdate();
@@ -47,7 +44,7 @@ public class EntityMinecartTNT extends EntityMinecart
         if (this.minecartTNTFuse > 0)
         {
             --this.minecartTNTFuse;
-            this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
+            this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
         }
         else if (this.minecartTNTFuse == 0)
         {
@@ -58,16 +55,13 @@ public class EntityMinecartTNT extends EntityMinecart
         {
             double d0 = this.motionX * this.motionX + this.motionZ * this.motionZ;
 
-            if (d0 >= (double)0.01F)
+            if (d0 >= 0.009999999776482582D)
             {
                 this.explodeCart(d0);
             }
         }
     }
 
-    /**
-     * Called when the entity is attacked.
-     */
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         Entity entity = source.getSourceOfDamage();
@@ -95,15 +89,12 @@ public class EntityMinecartTNT extends EntityMinecart
             this.entityDropItem(new ItemStack(Blocks.tnt, 1), 0.0F);
         }
 
-        if (source.isFireDamage() || source.isExplosion() || d0 >= (double)0.01F)
+        if (source.isFireDamage() || source.isExplosion() || d0 >= 0.009999999776482582D)
         {
             this.explodeCart(d0);
         }
     }
 
-    /**
-     * Makes the minecart explode.
-     */
     protected void explodeCart(double p_94103_1_)
     {
         if (!this.worldObj.isRemote)
@@ -131,9 +122,6 @@ public class EntityMinecartTNT extends EntityMinecart
         super.fall(distance, damageMultiplier);
     }
 
-    /**
-     * Called every tick the minecart is on an activator rail. Args: x, y, z, is the rail receiving power
-     */
     public void onActivatorRailPass(int x, int y, int z, boolean receivingPower)
     {
         if (receivingPower && this.minecartTNTFuse < 0)
@@ -154,9 +142,6 @@ public class EntityMinecartTNT extends EntityMinecart
         }
     }
 
-    /**
-     * Ignites this TNT cart.
-     */
     public void ignite()
     {
         this.minecartTNTFuse = 80;
@@ -172,25 +157,16 @@ public class EntityMinecartTNT extends EntityMinecart
         }
     }
 
-    /**
-     * Gets the remaining fuse time in ticks.
-     */
     public int getFuseTicks()
     {
         return this.minecartTNTFuse;
     }
 
-    /**
-     * Returns true if the TNT minecart is ignited.
-     */
     public boolean isIgnited()
     {
         return this.minecartTNTFuse > -1;
     }
 
-    /**
-     * Explosion resistance of a block relative to this entity
-     */
     public float getExplosionResistance(Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn)
     {
         return !this.isIgnited() || !BlockRailBase.isRailBlock(blockStateIn) && !BlockRailBase.isRailBlock(worldIn, pos.up()) ? super.getExplosionResistance(explosionIn, worldIn, pos, blockStateIn) : 0.0F;
@@ -201,9 +177,6 @@ public class EntityMinecartTNT extends EntityMinecart
         return !this.isIgnited() || !BlockRailBase.isRailBlock(blockStateIn) && !BlockRailBase.isRailBlock(worldIn, pos.up()) ? super.verifyExplosion(explosionIn, worldIn, pos, blockStateIn, p_174816_5_) : false;
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     protected void readEntityFromNBT(NBTTagCompound tagCompund)
     {
         super.readEntityFromNBT(tagCompund);
@@ -214,9 +187,6 @@ public class EntityMinecartTNT extends EntityMinecart
         }
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     protected void writeEntityToNBT(NBTTagCompound tagCompound)
     {
         super.writeEntityToNBT(tagCompound);

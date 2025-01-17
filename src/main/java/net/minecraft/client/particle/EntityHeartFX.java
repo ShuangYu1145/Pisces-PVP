@@ -17,9 +17,9 @@ public class EntityHeartFX extends EntityFX
     protected EntityHeartFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double p_i46354_8_, double p_i46354_10_, double p_i46354_12_, float scale)
     {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0.0D, 0.0D, 0.0D);
-        this.motionX *= (double)0.01F;
-        this.motionY *= (double)0.01F;
-        this.motionZ *= (double)0.01F;
+        this.motionX *= 0.009999999776482582D;
+        this.motionY *= 0.009999999776482582D;
+        this.motionZ *= 0.009999999776482582D;
         this.motionY += 0.1D;
         this.particleScale *= 0.75F;
         this.particleScale *= scale;
@@ -29,9 +29,6 @@ public class EntityHeartFX extends EntityFX
         this.setParticleTextureIndex(80);
     }
 
-    /**
-     * Renders the particle
-     */
     public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
     {
         float f = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge * 32.0F;
@@ -40,9 +37,6 @@ public class EntityHeartFX extends EntityFX
         super.renderParticle(worldRendererIn, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         this.prevPosX = this.posX;
@@ -62,14 +56,14 @@ public class EntityHeartFX extends EntityFX
             this.motionZ *= 1.1D;
         }
 
-        this.motionX *= (double)0.86F;
-        this.motionY *= (double)0.86F;
-        this.motionZ *= (double)0.86F;
+        this.motionX *= 0.8600000143051147D;
+        this.motionY *= 0.8600000143051147D;
+        this.motionZ *= 0.8600000143051147D;
 
         if (this.onGround)
         {
-            this.motionX *= (double)0.7F;
-            this.motionZ *= (double)0.7F;
+            this.motionX *= 0.699999988079071D;
+            this.motionZ *= 0.699999988079071D;
         }
     }
 

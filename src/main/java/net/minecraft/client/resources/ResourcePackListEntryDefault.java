@@ -14,12 +14,13 @@ import org.apache.logging.log4j.Logger;
 public class ResourcePackListEntryDefault extends ResourcePackListEntry
 {
     private static final Logger logger = LogManager.getLogger();
-    private final IResourcePack field_148320_d = this.mc.getResourcePackRepository().rprDefaultResourcePack;
+    private final IResourcePack field_148320_d;
     private final ResourceLocation resourcePackIcon;
 
     public ResourcePackListEntryDefault(GuiScreenResourcePacks resourcePacksGUIIn)
     {
         super(resourcePacksGUIIn);
+        this.field_148320_d = this.mc.getResourcePackRepository().rprDefaultResourcePack;
         DynamicTexture dynamictexture;
 
         try
@@ -43,7 +44,7 @@ public class ResourcePackListEntryDefault extends ResourcePackListEntry
     {
         try
         {
-            PackMetadataSection packmetadatasection = this.field_148320_d.getPackMetadata(this.mc.getResourcePackRepository().rprMetadataSerializer, "pack");
+            PackMetadataSection packmetadatasection = (PackMetadataSection)this.field_148320_d.getPackMetadata(this.mc.getResourcePackRepository().rprMetadataSerializer, "pack");
 
             if (packmetadatasection != null)
             {
@@ -52,11 +53,11 @@ public class ResourcePackListEntryDefault extends ResourcePackListEntry
         }
         catch (JsonParseException jsonparseexception)
         {
-            logger.error("Couldn't load metadata info", (Throwable)jsonparseexception);
+            logger.error((String)"Couldn\'t load metadata info", (Throwable)jsonparseexception);
         }
         catch (IOException ioexception)
         {
-            logger.error("Couldn't load metadata info", (Throwable)ioexception);
+            logger.error((String)"Couldn\'t load metadata info", (Throwable)ioexception);
         }
 
         return EnumChatFormatting.RED + "Missing " + "pack.mcmeta" + " :(";

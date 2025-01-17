@@ -25,20 +25,17 @@ import net.minecraft.util.Vec3;
 
 public class Explosion
 {
-    /** whether or not the explosion sets fire to blocks around it */
     private final boolean isFlaming;
-
-    /** whether or not this explosion spawns smoke particles */
     private final boolean isSmoking;
-    private final Random explosionRNG = new Random();
+    private final Random explosionRNG;
     private final World worldObj;
     private final double explosionX;
     private final double explosionY;
     private final double explosionZ;
     private final Entity exploder;
     private final float explosionSize;
-    private final List<BlockPos> affectedBlockPositions = Lists.newArrayList();
-    private final Map<EntityPlayer, Vec3> playerKnockbackMap = Maps.newHashMap();
+    private final List<BlockPos> affectedBlockPositions;
+    private final Map<EntityPlayer, Vec3> playerKnockbackMap;
 
     public Explosion(World worldIn, Entity entityIn, double x, double y, double z, float size, List<BlockPos> affectedPositions)
     {
@@ -53,6 +50,9 @@ public class Explosion
 
     public Explosion(World worldIn, Entity entityIn, double x, double y, double z, float size, boolean flaming, boolean smoking)
     {
+        this.explosionRNG = new Random();
+        this.affectedBlockPositions = Lists.<BlockPos>newArrayList();
+        this.playerKnockbackMap = Maps.<EntityPlayer, Vec3>newHashMap();
         this.worldObj = worldIn;
         this.exploder = entityIn;
         this.explosionSize = size;
@@ -63,12 +63,9 @@ public class Explosion
         this.isSmoking = smoking;
     }
 
-    /**
-     * Does the first part of the explosion (destroy blocks)
-     */
     public void doExplosionA()
     {
-        Set<BlockPos> set = Sets.newHashSet();
+        Set<BlockPos> set = Sets.<BlockPos>newHashSet();
         int i = 16;
 
         for (int j = 0; j < 16; ++j)
@@ -107,9 +104,9 @@ public class Explosion
                                 set.add(blockpos);
                             }
 
-                            d4 += d0 * (double)0.3F;
-                            d6 += d1 * (double)0.3F;
-                            d8 += d2 * (double)0.3F;
+                            d4 += d0 * 0.30000001192092896D;
+                            d6 += d1 * 0.30000001192092896D;
+                            d8 += d2 * 0.30000001192092896D;
                         }
                     }
                 }
@@ -129,7 +126,7 @@ public class Explosion
 
         for (int k2 = 0; k2 < list.size(); ++k2)
         {
-            Entity entity = list.get(k2);
+            Entity entity = (Entity)list.get(k2);
 
             if (!entity.isImmuneToExplosions())
             {
@@ -165,20 +162,17 @@ public class Explosion
         }
     }
 
-    /**
-     * Does the second part of the explosion (sound, particles, drop spawn)
-     */
     public void doExplosionB(boolean spawnParticles)
     {
         this.worldObj.playSoundEffect(this.explosionX, this.explosionY, this.explosionZ, "random.explode", 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 
-        if (!(this.explosionSize < 2.0F) && this.isSmoking)
+        if (this.explosionSize >= 2.0F && this.isSmoking)
         {
-            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, this.explosionX, this.explosionY, this.explosionZ, 1.0D, 0.0D, 0.0D);
+            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, this.explosionX, this.explosionY, this.explosionZ, 1.0D, 0.0D, 0.0D, new int[0]);
         }
         else
         {
-            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.explosionX, this.explosionY, this.explosionZ, 1.0D, 0.0D, 0.0D);
+            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.explosionX, this.explosionY, this.explosionZ, 1.0D, 0.0D, 0.0D, new int[0]);
         }
 
         if (this.isSmoking)
@@ -204,8 +198,8 @@ public class Explosion
                     d3 = d3 * d7;
                     d4 = d4 * d7;
                     d5 = d5 * d7;
-                    this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d0 + this.explosionX * 1.0D) / 2.0D, (d1 + this.explosionY * 1.0D) / 2.0D, (d2 + this.explosionZ * 1.0D) / 2.0D, d3, d4, d5);
-                    this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5);
+                    this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (d0 + this.explosionX * 1.0D) / 2.0D, (d1 + this.explosionY * 1.0D) / 2.0D, (d2 + this.explosionZ * 1.0D) / 2.0D, d3, d4, d5, new int[0]);
+                    this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5, new int[0]);
                 }
 
                 if (block.getMaterial() != Material.air)
@@ -238,23 +232,9 @@ public class Explosion
         return this.playerKnockbackMap;
     }
 
-    /**
-     * Returns either the entity that placed the explosive block, the entity that caused the explosion or null.
-     */
     public EntityLivingBase getExplosivePlacedBy()
     {
-        if (this.exploder == null)
-        {
-            return null;
-        }
-        else if (this.exploder instanceof EntityTNTPrimed)
-        {
-            return ((EntityTNTPrimed)this.exploder).getTntPlacedBy();
-        }
-        else
-        {
-            return this.exploder instanceof EntityLivingBase ? (EntityLivingBase)this.exploder : null;
-        }
+        return this.exploder == null ? null : (this.exploder instanceof EntityTNTPrimed ? ((EntityTNTPrimed)this.exploder).getTntPlacedBy() : (this.exploder instanceof EntityLivingBase ? (EntityLivingBase)this.exploder : null));
     }
 
     public void clearAffectedBlockPositions()

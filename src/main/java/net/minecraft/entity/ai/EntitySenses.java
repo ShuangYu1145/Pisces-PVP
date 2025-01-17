@@ -8,26 +8,20 @@ import net.minecraft.entity.EntityLiving;
 public class EntitySenses
 {
     EntityLiving entityObj;
-    List<Entity> seenEntities = Lists.newArrayList();
-    List<Entity> unseenEntities = Lists.newArrayList();
+    List<Entity> seenEntities = Lists.<Entity>newArrayList();
+    List<Entity> unseenEntities = Lists.<Entity>newArrayList();
 
     public EntitySenses(EntityLiving entityObjIn)
     {
         this.entityObj = entityObjIn;
     }
 
-    /**
-     * Clears canSeeCachePositive and canSeeCacheNegative.
-     */
     public void clearSensingCache()
     {
         this.seenEntities.clear();
         this.unseenEntities.clear();
     }
 
-    /**
-     * Checks, whether 'our' entity can see the entity given as argument (true) or not (false), caching the result.
-     */
     public boolean canSee(Entity entityIn)
     {
         if (this.seenEntities.contains(entityIn))

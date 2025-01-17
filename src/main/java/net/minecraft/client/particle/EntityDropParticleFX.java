@@ -10,10 +10,7 @@ import net.minecraft.world.World;
 
 public class EntityDropParticleFX extends EntityFX
 {
-    /** the material type for dropped items/blocks */
     private Material materialType;
-
-    /** The height of the current bob */
     private int bobTimer;
 
     protected EntityDropParticleFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, Material p_i1203_8_)
@@ -48,17 +45,11 @@ public class EntityDropParticleFX extends EntityFX
         return this.materialType == Material.water ? super.getBrightnessForRender(partialTicks) : 257;
     }
 
-    /**
-     * Gets how bright this entity is.
-     */
     public float getBrightness(float partialTicks)
     {
         return this.materialType == Material.water ? super.getBrightness(partialTicks) : 1.0F;
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         this.prevPosX = this.posX;
@@ -93,9 +84,9 @@ public class EntityDropParticleFX extends EntityFX
         }
 
         this.moveEntity(this.motionX, this.motionY, this.motionZ);
-        this.motionX *= (double)0.98F;
-        this.motionY *= (double)0.98F;
-        this.motionZ *= (double)0.98F;
+        this.motionX *= 0.9800000190734863D;
+        this.motionY *= 0.9800000190734863D;
+        this.motionZ *= 0.9800000190734863D;
 
         if (this.particleMaxAge-- <= 0)
         {
@@ -107,15 +98,15 @@ public class EntityDropParticleFX extends EntityFX
             if (this.materialType == Material.water)
             {
                 this.setDead();
-                this.worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+                this.worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
             }
             else
             {
                 this.setParticleTextureIndex(114);
             }
 
-            this.motionX *= (double)0.7F;
-            this.motionZ *= (double)0.7F;
+            this.motionX *= 0.699999988079071D;
+            this.motionZ *= 0.699999988079071D;
         }
 
         BlockPos blockpos = new BlockPos(this);
@@ -128,7 +119,7 @@ public class EntityDropParticleFX extends EntityFX
 
             if (iblockstate.getBlock() instanceof BlockLiquid)
             {
-                d0 = (double)BlockLiquid.getLiquidHeightPercent(iblockstate.getValue(BlockLiquid.LEVEL));
+                d0 = (double)BlockLiquid.getLiquidHeightPercent(((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue());
             }
 
             double d1 = (double)(MathHelper.floor_double(this.posY) + 1) - d0;

@@ -19,9 +19,6 @@ public class EntityAIPlay extends EntityAIBase
         this.setMutexBits(1);
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     public boolean shouldExecute()
     {
         if (this.villagerObj.getGrowingAge() >= 0)
@@ -34,7 +31,7 @@ public class EntityAIPlay extends EntityAIBase
         }
         else
         {
-            List<EntityVillager> list = this.villagerObj.worldObj.getEntitiesWithinAABB(EntityVillager.class, this.villagerObj.getEntityBoundingBox().expand(6.0D, 3.0D, 6.0D));
+            List<EntityVillager> list = this.villagerObj.worldObj.<EntityVillager>getEntitiesWithinAABB(EntityVillager.class, this.villagerObj.getEntityBoundingBox().expand(6.0D, 3.0D, 6.0D));
             double d0 = Double.MAX_VALUE;
 
             for (EntityVillager entityvillager : list)
@@ -43,7 +40,7 @@ public class EntityAIPlay extends EntityAIBase
                 {
                     double d1 = entityvillager.getDistanceSqToEntity(this.villagerObj);
 
-                    if (!(d1 > d0))
+                    if (d1 <= d0)
                     {
                         d0 = d1;
                         this.targetVillager = entityvillager;
@@ -65,17 +62,11 @@ public class EntityAIPlay extends EntityAIBase
         }
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
     public boolean continueExecuting()
     {
         return this.playTime > 0;
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
     public void startExecuting()
     {
         if (this.targetVillager != null)
@@ -86,18 +77,12 @@ public class EntityAIPlay extends EntityAIBase
         this.playTime = 1000;
     }
 
-    /**
-     * Resets the task
-     */
     public void resetTask()
     {
         this.villagerObj.setPlaying(false);
         this.targetVillager = null;
     }
 
-    /**
-     * Updates the task
-     */
     public void updateTask()
     {
         --this.playTime;

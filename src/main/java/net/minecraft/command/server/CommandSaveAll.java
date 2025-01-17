@@ -11,29 +11,20 @@ import net.minecraft.world.WorldServer;
 
 public class CommandSaveAll extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "save-all";
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.save.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         MinecraftServer minecraftserver = MinecraftServer.getServer();
-        sender.addChatMessage(new ChatComponentTranslation("commands.save.start"));
+        sender.addChatMessage(new ChatComponentTranslation("commands.save.start", new Object[0]));
 
         if (minecraftserver.getConfigurationManager() != null)
         {
@@ -56,7 +47,7 @@ public class CommandSaveAll extends CommandBase
 
             if (args.length > 0 && "flush".equals(args[0]))
             {
-                sender.addChatMessage(new ChatComponentTranslation("commands.save.flushStart"));
+                sender.addChatMessage(new ChatComponentTranslation("commands.save.flushStart", new Object[0]));
 
                 for (int j = 0; j < minecraftserver.worldServers.length; ++j)
                 {
@@ -70,7 +61,7 @@ public class CommandSaveAll extends CommandBase
                     }
                 }
 
-                sender.addChatMessage(new ChatComponentTranslation("commands.save.flushEnd"));
+                sender.addChatMessage(new ChatComponentTranslation("commands.save.flushEnd", new Object[0]));
             }
         }
         catch (MinecraftException minecraftexception)

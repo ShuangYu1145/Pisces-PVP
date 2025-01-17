@@ -62,23 +62,7 @@ public final class EntitySelectors
             else
             {
                 EntityLivingBase entitylivingbase = (EntityLivingBase)p_apply_1_;
-
-                if (entitylivingbase.getEquipmentInSlot(EntityLiving.getArmorPosition(this.armor)) != null)
-                {
-                    return false;
-                }
-                else if (entitylivingbase instanceof EntityLiving)
-                {
-                    return ((EntityLiving)entitylivingbase).canPickUpLoot();
-                }
-                else if (entitylivingbase instanceof EntityArmorStand)
-                {
-                    return true;
-                }
-                else
-                {
-                    return entitylivingbase instanceof EntityPlayer;
-                }
+                return entitylivingbase.getEquipmentInSlot(EntityLiving.getArmorPosition(this.armor)) != null ? false : (entitylivingbase instanceof EntityLiving ? ((EntityLiving)entitylivingbase).canPickUpLoot() : (entitylivingbase instanceof EntityArmorStand ? true : entitylivingbase instanceof EntityPlayer));
             }
         }
     }

@@ -3,6 +3,7 @@ package net.minecraft.block;
 import java.util.List;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
@@ -18,42 +19,32 @@ import net.minecraft.world.World;
 
 public class BlockDirt extends Block
 {
-    public static final PropertyEnum<BlockDirt.DirtType> VARIANT = PropertyEnum.create("variant", BlockDirt.DirtType.class);
+    public static final PropertyEnum<BlockDirt.DirtType> VARIANT = PropertyEnum.<BlockDirt.DirtType>create("variant", BlockDirt.DirtType.class);
     public static final PropertyBool SNOWY = PropertyBool.create("snowy");
 
     protected BlockDirt()
     {
         super(Material.ground);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockDirt.DirtType.DIRT).withProperty(SNOWY, false));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockDirt.DirtType.DIRT).withProperty(SNOWY, Boolean.valueOf(false)));
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
-    /**
-     * Get the MapColor for this Block and the given BlockState
-     */
     public MapColor getMapColor(IBlockState state)
     {
-        return state.getValue(VARIANT).func_181066_d();
+        return ((BlockDirt.DirtType)state.getValue(VARIANT)).func_181066_d();
     }
 
-    /**
-     * Get the actual Block state of this Block at the given position. This applies properties not visible in the
-     * metadata, such as fence connections.
-     */
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
     {
         if (state.getValue(VARIANT) == BlockDirt.DirtType.PODZOL)
         {
             Block block = worldIn.getBlockState(pos.up()).getBlock();
-            state = state.withProperty(SNOWY, block == Blocks.snow || block == Blocks.snow_layer);
+            state = state.withProperty(SNOWY, Boolean.valueOf(block == Blocks.snow || block == Blocks.snow_layer));
         }
 
         return state;
     }
 
-    /**
-     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
-     */
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
         list.add(new ItemStack(this, 1, BlockDirt.DirtType.DIRT.getMetadata()));
@@ -61,43 +52,30 @@ public class BlockDirt extends Block
         list.add(new ItemStack(this, 1, BlockDirt.DirtType.PODZOL.getMetadata()));
     }
 
-    /**
-     * Gets the meta to use for the Pick Block ItemStack result
-     */
     public int getDamageValue(World worldIn, BlockPos pos)
     {
         IBlockState iblockstate = worldIn.getBlockState(pos);
-        return iblockstate.getBlock() != this ? 0 : iblockstate.getValue(VARIANT).getMetadata();
+        return iblockstate.getBlock() != this ? 0 : ((BlockDirt.DirtType)iblockstate.getValue(VARIANT)).getMetadata();
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
         return this.getDefaultState().withProperty(VARIANT, BlockDirt.DirtType.byMetadata(meta));
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(VARIANT).getMetadata();
+        return ((BlockDirt.DirtType)state.getValue(VARIANT)).getMetadata();
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, VARIANT, SNOWY);
+        return new BlockState(this, new IProperty[] {VARIANT, SNOWY});
     }
 
-    /**
-     * Gets the metadata of the item this Block can drop. This method is called when the block gets destroyed. It
-     * returns the metadata of the dropped item based on the old metadata of the block.
-     */
     public int damageDropped(IBlockState state)
     {
-        BlockDirt.DirtType blockdirt$dirttype = state.getValue(VARIANT);
+        BlockDirt.DirtType blockdirt$dirttype = (BlockDirt.DirtType)state.getValue(VARIANT);
 
         if (blockdirt$dirttype == BlockDirt.DirtType.PODZOL)
         {

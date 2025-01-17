@@ -40,9 +40,6 @@ public class EntityAIFollowOwner extends EntityAIBase
         }
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     public boolean shouldExecute()
     {
         EntityLivingBase entitylivingbase = this.thePet.getOwner();
@@ -70,17 +67,11 @@ public class EntityAIFollowOwner extends EntityAIBase
         }
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
     public boolean continueExecuting()
     {
         return !this.petPathfinder.noPath() && this.thePet.getDistanceSqToEntity(this.theOwner) > (double)(this.maxDist * this.maxDist) && !this.thePet.isSitting();
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
     public void startExecuting()
     {
         this.field_75343_h = 0;
@@ -88,9 +79,6 @@ public class EntityAIFollowOwner extends EntityAIBase
         ((PathNavigateGround)this.thePet.getNavigator()).setAvoidsWater(false);
     }
 
-    /**
-     * Resets the task
-     */
     public void resetTask()
     {
         this.theOwner = null;
@@ -102,20 +90,9 @@ public class EntityAIFollowOwner extends EntityAIBase
     {
         IBlockState iblockstate = this.theWorld.getBlockState(p_181065_1_);
         Block block = iblockstate.getBlock();
-
-        if (block == Blocks.air)
-        {
-            return true;
-        }
-        else
-        {
-            return !block.isFullCube();
-        }
+        return block == Blocks.air ? true : !block.isFullCube();
     }
 
-    /**
-     * Updates the task
-     */
     public void updateTask()
     {
         this.thePet.getLookHelper().setLookPositionWithEntity(this.theOwner, 10.0F, (float)this.thePet.getVerticalFaceSpeed());
@@ -130,7 +107,7 @@ public class EntityAIFollowOwner extends EntityAIBase
                 {
                     if (!this.thePet.getLeashed())
                     {
-                        if (!(this.thePet.getDistanceSqToEntity(this.theOwner) < 144.0D))
+                        if (this.thePet.getDistanceSqToEntity(this.theOwner) >= 144.0D)
                         {
                             int i = MathHelper.floor_double(this.theOwner.posX) - 2;
                             int j = MathHelper.floor_double(this.theOwner.posZ) - 2;

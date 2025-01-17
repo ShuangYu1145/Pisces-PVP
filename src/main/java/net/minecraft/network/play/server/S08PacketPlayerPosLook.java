@@ -30,9 +30,6 @@ public class S08PacketPlayerPosLook implements Packet<INetHandlerPlayClient>
         this.field_179835_f = p_i45993_9_;
     }
 
-    /**
-     * Reads the raw packet data from the data stream.
-     */
     public void readPacketData(PacketBuffer buf) throws IOException
     {
         this.x = buf.readDouble();
@@ -43,9 +40,6 @@ public class S08PacketPlayerPosLook implements Packet<INetHandlerPlayClient>
         this.field_179835_f = S08PacketPlayerPosLook.EnumFlags.func_180053_a(buf.readUnsignedByte());
     }
 
-    /**
-     * Writes the raw packet data to the data stream.
-     */
     public void writePacketData(PacketBuffer buf) throws IOException
     {
         buf.writeDouble(this.x);
@@ -56,9 +50,6 @@ public class S08PacketPlayerPosLook implements Packet<INetHandlerPlayClient>
         buf.writeByte(S08PacketPlayerPosLook.EnumFlags.func_180056_a(this.field_179835_f));
     }
 
-    /**
-     * Passes this Packet on to the NetHandler for processing.
-     */
     public void processPacket(INetHandlerPlayClient handler)
     {
         handler.handlePlayerPosLook(this);
@@ -121,7 +112,7 @@ public class S08PacketPlayerPosLook implements Packet<INetHandlerPlayClient>
 
         public static Set<S08PacketPlayerPosLook.EnumFlags> func_180053_a(int p_180053_0_)
         {
-            Set<S08PacketPlayerPosLook.EnumFlags> set = EnumSet.noneOf(S08PacketPlayerPosLook.EnumFlags.class);
+            Set<S08PacketPlayerPosLook.EnumFlags> set = EnumSet.<S08PacketPlayerPosLook.EnumFlags>noneOf(S08PacketPlayerPosLook.EnumFlags.class);
 
             for (S08PacketPlayerPosLook.EnumFlags s08packetplayerposlook$enumflags : values())
             {

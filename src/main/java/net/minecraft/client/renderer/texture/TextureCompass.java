@@ -7,10 +7,7 @@ import net.minecraft.world.World;
 
 public class TextureCompass extends TextureAtlasSprite
 {
-    /** Current compass heading in radians */
     public double currentAngle;
-
-    /** Speed and direction of compass rotation */
     public double angleDelta;
     public static String locationSprite;
 
@@ -34,9 +31,6 @@ public class TextureCompass extends TextureAtlasSprite
         }
     }
 
-    /**
-     * Updates the compass based on the given x,z coords and camera direction
-     */
     public void updateCompass(World worldIn, double p_94241_2_, double p_94241_4_, double p_94241_6_, boolean p_94241_8_, boolean p_94241_9_)
     {
         if (!this.framesTextureData.isEmpty())
@@ -53,7 +47,7 @@ public class TextureCompass extends TextureAtlasSprite
 
                 if (!worldIn.provider.isSurfaceWorld())
                 {
-                    d0 = Math.random() * (double)(float)Math.PI * 2.0D;
+                    d0 = Math.random() * Math.PI * 2.0D;
                 }
             }
 
@@ -91,7 +85,7 @@ public class TextureCompass extends TextureAtlasSprite
             if (i != this.frameCounter)
             {
                 this.frameCounter = i;
-                TextureUtil.uploadTextureMipmap(this.framesTextureData.get(this.frameCounter), this.width, this.height, this.originX, this.originY, false, false);
+                TextureUtil.uploadTextureMipmap((int[][])this.framesTextureData.get(this.frameCounter), this.width, this.height, this.originX, this.originY, false, false);
             }
         }
     }

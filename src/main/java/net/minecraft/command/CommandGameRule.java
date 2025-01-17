@@ -10,33 +10,21 @@ import net.minecraft.world.GameRules;
 
 public class CommandGameRule extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "gamerule";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.gamerule.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         GameRules gamerules = this.getGameRules();
@@ -52,7 +40,7 @@ public class CommandGameRule extends CommandBase
             case 1:
                 if (!gamerules.hasRule(s))
                 {
-                    throw new CommandException("commands.gamerule.norule", s);
+                    throw new CommandException("commands.gamerule.norule", new Object[] {s});
                 }
 
                 String s2 = gamerules.getString(s);
@@ -63,7 +51,7 @@ public class CommandGameRule extends CommandBase
             default:
                 if (gamerules.areSameType(s, GameRules.ValueType.BOOLEAN_VALUE) && !"true".equals(s1) && !"false".equals(s1))
                 {
-                    throw new CommandException("commands.generic.boolean.invalid", s1);
+                    throw new CommandException("commands.generic.boolean.invalid", new Object[] {s1});
                 }
 
                 gamerules.setOrCreateGameRule(s, s1);
@@ -107,9 +95,6 @@ public class CommandGameRule extends CommandBase
         }
     }
 
-    /**
-     * Return the game rule set this command should be able to manipulate.
-     */
     private GameRules getGameRules()
     {
         return MinecraftServer.getServer().worldServerForDimension(0).getGameRules();

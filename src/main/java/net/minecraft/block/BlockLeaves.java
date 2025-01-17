@@ -68,9 +68,9 @@ public abstract class BlockLeaves extends BlockLeavesBase
                         BlockPos blockpos = pos.add(j1, k1, l1);
                         IBlockState iblockstate = worldIn.getBlockState(blockpos);
 
-                        if (iblockstate.getBlock().getMaterial() == Material.leaves && !iblockstate.getValue(CHECK_DECAY))
+                        if (iblockstate.getBlock().getMaterial() == Material.leaves && !((Boolean)iblockstate.getValue(CHECK_DECAY)).booleanValue())
                         {
-                            worldIn.setBlockState(blockpos, iblockstate.withProperty(CHECK_DECAY, true), 4);
+                            worldIn.setBlockState(blockpos, iblockstate.withProperty(CHECK_DECAY, Boolean.valueOf(true)), 4);
                         }
                     }
                 }
@@ -82,7 +82,7 @@ public abstract class BlockLeaves extends BlockLeavesBase
     {
         if (!worldIn.isRemote)
         {
-            if (state.getValue(CHECK_DECAY) && state.getValue(DECAYABLE))
+            if (((Boolean)state.getValue(CHECK_DECAY)).booleanValue() && ((Boolean)state.getValue(DECAYABLE)).booleanValue())
             {
                 int i = 4;
                 int j = i + 1;
@@ -179,7 +179,7 @@ public abstract class BlockLeaves extends BlockLeavesBase
 
                 if (l2 >= 0)
                 {
-                    worldIn.setBlockState(pos, state.withProperty(CHECK_DECAY, false), 4);
+                    worldIn.setBlockState(pos, state.withProperty(CHECK_DECAY, Boolean.valueOf(false)), 4);
                 }
                 else
                 {
@@ -196,7 +196,7 @@ public abstract class BlockLeaves extends BlockLeavesBase
             double d0 = (double)((float)pos.getX() + rand.nextFloat());
             double d1 = (double)pos.getY() - 0.05D;
             double d2 = (double)((float)pos.getZ() + rand.nextFloat());
-            worldIn.spawnParticle(EnumParticleTypes.DRIP_WATER, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+            worldIn.spawnParticle(EnumParticleTypes.DRIP_WATER, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
         }
     }
 
@@ -206,25 +206,16 @@ public abstract class BlockLeaves extends BlockLeavesBase
         worldIn.setBlockToAir(pos);
     }
 
-    /**
-     * Returns the quantity of items to drop on block destruction.
-     */
     public int quantityDropped(Random random)
     {
         return random.nextInt(20) == 0 ? 1 : 0;
     }
 
-    /**
-     * Get the Item that this Block should drop when harvested.
-     */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Item.getItemFromBlock(Blocks.sapling);
     }
 
-    /**
-     * Spawns this Block's drops into the World as EntityItems.
-     */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
         if (!worldIn.isRemote)
@@ -272,17 +263,11 @@ public abstract class BlockLeaves extends BlockLeavesBase
         return 20;
     }
 
-    /**
-     * Used to determine ambient occlusion and culling when rebuilding chunks for render
-     */
     public boolean isOpaqueCube()
     {
         return !this.fancyGraphics;
     }
 
-    /**
-     * Pass true to draw this block using fancy graphics, or false for fast graphics.
-     */
     public void setGraphicsLevel(boolean fancy)
     {
         this.isTransparent = fancy;

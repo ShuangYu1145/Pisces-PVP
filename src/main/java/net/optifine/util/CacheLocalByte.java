@@ -58,7 +58,7 @@ public class CacheLocalByte
         catch (ArrayIndexOutOfBoundsException arrayindexoutofboundsexception)
         {
             arrayindexoutofboundsexception.printStackTrace();
-            return -1;
+            return (byte) - 1;
         }
     }
 

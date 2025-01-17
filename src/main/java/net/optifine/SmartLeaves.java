@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockNewLeaf;
 import net.minecraft.block.BlockOldLeaf;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.IBakedModel;
@@ -45,31 +46,7 @@ public class SmartLeaves
         else
         {
             List list = model.getGeneralQuads();
-
-            if (list == generalQuadsCullAcacia)
-            {
-                return modelLeavesDoubleAcacia;
-            }
-            else if (list == generalQuadsCullBirch)
-            {
-                return modelLeavesDoubleBirch;
-            }
-            else if (list == generalQuadsCullDarkOak)
-            {
-                return modelLeavesDoubleDarkOak;
-            }
-            else if (list == generalQuadsCullJungle)
-            {
-                return modelLeavesDoubleJungle;
-            }
-            else if (list == generalQuadsCullOak)
-            {
-                return modelLeavesDoubleOak;
-            }
-            else
-            {
-                return list == generalQuadsCullSpruce ? modelLeavesDoubleSpruce : model;
-            }
+            return list == generalQuadsCullAcacia ? modelLeavesDoubleAcacia : (list == generalQuadsCullBirch ? modelLeavesDoubleBirch : (list == generalQuadsCullDarkOak ? modelLeavesDoubleDarkOak : (list == generalQuadsCullJungle ? modelLeavesDoubleJungle : (list == generalQuadsCullOak ? modelLeavesDoubleOak : (list == generalQuadsCullSpruce ? modelLeavesDoubleSpruce : model)))));
         }
     }
 
@@ -83,19 +60,7 @@ public class SmartLeaves
         {
             Block block = state1.getBlock();
             Block block1 = state2.getBlock();
-
-            if (block != block1)
-            {
-                return false;
-            }
-            else if (block instanceof BlockOldLeaf)
-            {
-                return state1.getValue(BlockOldLeaf.VARIANT).equals(state2.getValue(BlockOldLeaf.VARIANT));
-            }
-            else
-            {
-                return block instanceof BlockNewLeaf ? state1.getValue(BlockNewLeaf.VARIANT).equals(state2.getValue(BlockNewLeaf.VARIANT)) : false;
-            }
+            return block != block1 ? false : (block instanceof BlockOldLeaf ? ((BlockPlanks.EnumType)state1.getValue(BlockOldLeaf.VARIANT)).equals(state2.getValue(BlockOldLeaf.VARIANT)) : (block instanceof BlockNewLeaf ? ((BlockPlanks.EnumType)state1.getValue(BlockNewLeaf.VARIANT)).equals(state2.getValue(BlockNewLeaf.VARIANT)) : false));
         }
     }
 
@@ -177,7 +142,7 @@ public class SmartLeaves
                         {
                             for (Object o : list)
                             {
-                            	BakedQuad bakedquad = (BakedQuad)o;
+                                BakedQuad bakedquad = (BakedQuad) o;
                                 List list1 = ibakedmodel.getFaceQuads(bakedquad.getFace());
 
                                 if (list1.size() > 0)
@@ -236,7 +201,7 @@ public class SmartLeaves
             {
                 EnumFacing enumfacing1 = aenumfacing[k];
                 List<BakedQuad> list1 = ibakedmodel.getFaceQuads(enumfacing1);
-                BakedQuad bakedquad = list1.get(0);
+                BakedQuad bakedquad = (BakedQuad)list1.get(0);
                 BakedQuad bakedquad1 = new BakedQuad((int[])bakedquad.getVertexData().clone(), bakedquad.getTintIndex(), bakedquad.getFace(), bakedquad.getSprite());
                 int[] aint = bakedquad1.getVertexData();
                 int[] aint1 = (int[])aint.clone();

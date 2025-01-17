@@ -95,7 +95,7 @@ public class RealmsScreen
     {
         for (int i = 0; i < this.proxy.func_154320_j().size(); ++i)
         {
-            this.proxy.func_154320_j().get(i).render(p_render_1_, p_render_2_);
+            ((RealmsButton)this.proxy.func_154320_j().get(i)).render(p_render_1_, p_render_2_);
         }
     }
 
@@ -236,7 +236,7 @@ public class RealmsScreen
 
     public static String getLocalizedString(String p_getLocalizedString_0_)
     {
-        return I18n.format(p_getLocalizedString_0_);
+        return I18n.format(p_getLocalizedString_0_, new Object[0]);
     }
 
     public static String getLocalizedString(String p_getLocalizedString_0_, Object... p_getLocalizedString_1_)

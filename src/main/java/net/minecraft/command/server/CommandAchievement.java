@@ -18,38 +18,26 @@ import net.minecraft.util.BlockPos;
 
 public class CommandAchievement extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "achievement";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.achievement.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 2)
         {
-            throw new WrongUsageException("commands.achievement.usage");
+            throw new WrongUsageException("commands.achievement.usage", new Object[0]);
         }
         else
         {
@@ -57,7 +45,7 @@ public class CommandAchievement extends CommandBase
 
             if (statbase == null && !args[1].equals("*"))
             {
-                throw new CommandException("commands.achievement.unknownAchievement", args[1]);
+                throw new CommandException("commands.achievement.unknownAchievement", new Object[] {args[1]});
             }
             else
             {
@@ -98,12 +86,12 @@ public class CommandAchievement extends CommandBase
                             {
                                 if (entityplayermp.getStatFile().hasAchievementUnlocked(achievement))
                                 {
-                                    throw new CommandException("commands.achievement.alreadyHave", entityplayermp.getName(), statbase.createChatComponent());
+                                    throw new CommandException("commands.achievement.alreadyHave", new Object[] {entityplayermp.getName(), statbase.createChatComponent()});
                                 }
 
                                 List<Achievement> list;
 
-                                for (list = Lists.newArrayList(); achievement.parentAchievement != null && !entityplayermp.getStatFile().hasAchievementUnlocked(achievement.parentAchievement); achievement = achievement.parentAchievement)
+                                for (list = Lists.<Achievement>newArrayList(); achievement.parentAchievement != null && !entityplayermp.getStatFile().hasAchievementUnlocked(achievement.parentAchievement); achievement = achievement.parentAchievement)
                                 {
                                     list.add(achievement.parentAchievement);
                                 }
@@ -117,7 +105,7 @@ public class CommandAchievement extends CommandBase
                             {
                                 if (!entityplayermp.getStatFile().hasAchievementUnlocked(achievement))
                                 {
-                                    throw new CommandException("commands.achievement.dontHave", entityplayermp.getName(), statbase.createChatComponent());
+                                    throw new CommandException("commands.achievement.dontHave", new Object[] {entityplayermp.getName(), statbase.createChatComponent()});
                                 }
 
                                 List<Achievement> list1 = Lists.newArrayList(Iterators.filter(AchievementList.achievementList.iterator(), new Predicate<Achievement>()
@@ -144,7 +132,7 @@ public class CommandAchievement extends CommandBase
 
                                     if (!flag2)
                                     {
-                                        for (Achievement achievement7 = achievement2; achievement7 != null; achievement7 = achievement7.parentAchievement)
+                                        for (achievement3 = achievement2; achievement3 != null; achievement3 = achievement3.parentAchievement)
                                         {
                                             list2.remove(achievement2);
                                         }
@@ -186,7 +174,7 @@ public class CommandAchievement extends CommandBase
         }
         else
         {
-            List<String> list = Lists.newArrayList();
+            List<String> list = Lists.<String>newArrayList();
 
             for (StatBase statbase : StatList.allStats)
             {
@@ -197,9 +185,6 @@ public class CommandAchievement extends CommandBase
         }
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return index == 2;

@@ -1,5 +1,6 @@
 package net.minecraft.block;
 
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -12,12 +13,9 @@ public class BlockStandingSign extends BlockSign
 
     public BlockStandingSign()
     {
-        this.setDefaultState(this.blockState.getBaseState().withProperty(ROTATION, 0));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(ROTATION, Integer.valueOf(0)));
     }
 
-    /**
-     * Called when a neighboring block changes.
-     */
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
         if (!worldIn.getBlockState(pos.down()).getBlock().getMaterial().isSolid())
@@ -29,24 +27,18 @@ public class BlockStandingSign extends BlockSign
         super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(ROTATION, meta);
+        return this.getDefaultState().withProperty(ROTATION, Integer.valueOf(meta));
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(ROTATION);
+        return ((Integer)state.getValue(ROTATION)).intValue();
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, ROTATION);
+        return new BlockState(this, new IProperty[] {ROTATION});
     }
 }

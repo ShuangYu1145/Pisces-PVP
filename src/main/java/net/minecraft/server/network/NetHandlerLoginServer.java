@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.exceptions.AuthenticationUnavailableException;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.util.concurrent.GenericFutureListener;
 import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.util.Arrays;
@@ -39,8 +40,6 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
     private final MinecraftServer server;
     public final NetworkManager networkManager;
     private NetHandlerLoginServer.LoginState currentLoginState = NetHandlerLoginServer.LoginState.HELLO;
-
-    /** How long has player been trying to login into the server. */
     private int connectionTimer;
     private GameProfile loginGameProfile;
     private String serverId = "";
@@ -54,9 +53,6 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
         RANDOM.nextBytes(this.verifyToken);
     }
 
-    /**
-     * Like the old updateEntity(), except more generic.
-     */
     public void update()
     {
         if (this.currentLoginState == NetHandlerLoginServer.LoginState.READY_TO_ACCEPT)
@@ -92,7 +88,7 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
         }
         catch (Exception exception)
         {
-            logger.error("Error whilst disconnecting player", (Throwable)exception);
+            logger.error((String)"Error whilst disconnecting player", (Throwable)exception);
         }
     }
 
@@ -121,7 +117,7 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
                     {
                         NetHandlerLoginServer.this.networkManager.setCompressionTreshold(NetHandlerLoginServer.this.server.getNetworkCompressionTreshold());
                     }
-                });
+                }, new GenericFutureListener[0]);
             }
 
             this.networkManager.sendPacket(new S02PacketLoginSuccess(this.loginGameProfile));
@@ -139,9 +135,6 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
         }
     }
 
-    /**
-     * Invoked when disconnecting, the parameter is a ChatComponent describing the reason for termination
-     */
     public void onDisconnect(IChatComponent reason)
     {
         logger.info(this.getConnectionInfo() + " lost connection: " + reason.getUnformattedText());
@@ -154,7 +147,7 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
 
     public void processLoginStart(C00PacketLoginStart packetIn)
     {
-        Validate.validState(this.currentLoginState == NetHandlerLoginServer.LoginState.HELLO, "Unexpected hello packet");
+        Validate.validState(this.currentLoginState == NetHandlerLoginServer.LoginState.HELLO, "Unexpected hello packet", new Object[0]);
         this.loginGameProfile = packetIn.getProfile();
 
         if (this.server.isServerInOnlineMode() && !this.networkManager.isLocalChannel())
@@ -170,7 +163,7 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
 
     public void processEncryptionResponse(C01PacketEncryptionResponse packetIn)
     {
-        Validate.validState(this.currentLoginState == NetHandlerLoginServer.LoginState.KEY, "Unexpected key packet");
+        Validate.validState(this.currentLoginState == NetHandlerLoginServer.LoginState.KEY, "Unexpected key packet", new Object[0]);
         PrivateKey privatekey = this.server.getKeyPair().getPrivate();
 
         if (!Arrays.equals(this.verifyToken, packetIn.getVerifyToken(privatekey)))
@@ -207,7 +200,7 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
                         else
                         {
                             NetHandlerLoginServer.this.closeConnection("Failed to verify username!");
-                            NetHandlerLoginServer.logger.error("Username '" + NetHandlerLoginServer.this.loginGameProfile.getName() + "' tried to join with an invalid session");
+                            NetHandlerLoginServer.logger.error("Username \'" + NetHandlerLoginServer.this.loginGameProfile.getName() + "\' tried to join with an invalid session");
                         }
                     }
                     catch (AuthenticationUnavailableException var3)
@@ -221,7 +214,7 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
                         else
                         {
                             NetHandlerLoginServer.this.closeConnection("Authentication servers are down. Please try again later, sorry!");
-                            NetHandlerLoginServer.logger.error("Couldn't verify username because servers are unavailable");
+                            NetHandlerLoginServer.logger.error("Couldn\'t verify username because servers are unavailable");
                         }
                     }
                 }

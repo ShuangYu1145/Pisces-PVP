@@ -12,33 +12,21 @@ import net.minecraft.util.BlockPos;
 
 public class CommandOp extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "op";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 3;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.op.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length == 1 && args[0].length() > 0)
@@ -48,7 +36,7 @@ public class CommandOp extends CommandBase
 
             if (gameprofile == null)
             {
-                throw new CommandException("commands.op.failed", args[0]);
+                throw new CommandException("commands.op.failed", new Object[] {args[0]});
             }
             else
             {
@@ -58,7 +46,7 @@ public class CommandOp extends CommandBase
         }
         else
         {
-            throw new WrongUsageException("commands.op.usage");
+            throw new WrongUsageException("commands.op.usage", new Object[0]);
         }
     }
 
@@ -67,7 +55,7 @@ public class CommandOp extends CommandBase
         if (args.length == 1)
         {
             String s = args[args.length - 1];
-            List<String> list = Lists.newArrayList();
+            List<String> list = Lists.<String>newArrayList();
 
             for (GameProfile gameprofile : MinecraftServer.getServer().getGameProfiles())
             {

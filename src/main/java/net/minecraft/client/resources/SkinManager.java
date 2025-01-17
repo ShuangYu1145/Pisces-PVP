@@ -26,7 +26,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class SkinManager
 {
-    private static final ExecutorService THREAD_POOL = new ThreadPoolExecutor(0, 2, 1L, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
+    private static final ExecutorService THREAD_POOL = new ThreadPoolExecutor(0, 2, 1L, TimeUnit.MINUTES, new LinkedBlockingQueue());
     private final TextureManager textureManager;
     private final File skinCacheDir;
     private final MinecraftSessionService sessionService;
@@ -37,7 +37,7 @@ public class SkinManager
         this.textureManager = textureManagerInstance;
         this.skinCacheDir = skinCacheDirectory;
         this.sessionService = sessionService;
-        this.skinCacheLoader = CacheBuilder.newBuilder().expireAfterAccess(15L, TimeUnit.SECONDS).build(new CacheLoader<GameProfile, Map<Type, MinecraftProfileTexture>>()
+        this.skinCacheLoader = CacheBuilder.newBuilder().expireAfterAccess(15L, TimeUnit.SECONDS).<GameProfile, Map<Type, MinecraftProfileTexture>>build(new CacheLoader<GameProfile, Map<Type, MinecraftProfileTexture>>()
         {
             public Map<Type, MinecraftProfileTexture> load(GameProfile p_load_1_) throws Exception
             {
@@ -46,17 +46,11 @@ public class SkinManager
         });
     }
 
-    /**
-     * Used in the Skull renderer to fetch a skin. May download the skin if it's not in the cache
-     */
     public ResourceLocation loadSkin(MinecraftProfileTexture profileTexture, Type p_152792_2_)
     {
         return this.loadSkin(profileTexture, p_152792_2_, (SkinManager.SkinAvailableCallback)null);
     }
 
-    /**
-     * May download the skin if its not in the cache, can be passed a SkinManager#SkinAvailableCallback for handling
-     */
     public ResourceLocation loadSkin(final MinecraftProfileTexture profileTexture, final Type p_152789_2_, final SkinManager.SkinAvailableCallback skinAvailableCallback)
     {
         final ResourceLocation resourcelocation = new ResourceLocation("skins/" + profileTexture.getHash());
@@ -110,7 +104,7 @@ public class SkinManager
         {
             public void run()
             {
-                final Map<Type, MinecraftProfileTexture> map = Maps.newHashMap();
+                final Map<Type, MinecraftProfileTexture> map = Maps.<Type, MinecraftProfileTexture>newHashMap();
 
                 try
                 {
@@ -134,12 +128,12 @@ public class SkinManager
                     {
                         if (map.containsKey(Type.SKIN))
                         {
-                            SkinManager.this.loadSkin(map.get(Type.SKIN), Type.SKIN, skinAvailableCallback);
+                            SkinManager.this.loadSkin((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN, skinAvailableCallback);
                         }
 
                         if (map.containsKey(Type.CAPE))
                         {
-                            SkinManager.this.loadSkin(map.get(Type.CAPE), Type.CAPE, skinAvailableCallback);
+                            SkinManager.this.loadSkin((MinecraftProfileTexture)map.get(Type.CAPE), Type.CAPE, skinAvailableCallback);
                         }
                     }
                 });
@@ -149,7 +143,7 @@ public class SkinManager
 
     public Map<Type, MinecraftProfileTexture> loadSkinFromCache(GameProfile profile)
     {
-        return this.skinCacheLoader.getUnchecked(profile);
+        return (Map)this.skinCacheLoader.getUnchecked(profile);
     }
 
     public interface SkinAvailableCallback

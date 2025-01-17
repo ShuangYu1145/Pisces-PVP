@@ -50,17 +50,7 @@ public class OpenGlHelper
     public static int GL_VERTEX_SHADER;
     public static int GL_FRAGMENT_SHADER;
     private static boolean arbMultitexture;
-
-    /**
-     * An OpenGL constant corresponding to GL_TEXTURE0, used when setting data pertaining to auxiliary OpenGL texture
-     * units.
-     */
     public static int defaultTexUnit;
-
-    /**
-     * An OpenGL constant corresponding to GL_TEXTURE1, used when setting data pertaining to auxiliary OpenGL texture
-     * units.
-     */
     public static int lightmapTexUnit;
     public static int GL_TEXTURE2;
     private static boolean arbTextureEnvCombine;
@@ -103,9 +93,6 @@ public class OpenGlHelper
     public static final int GL_QUADS = 7;
     public static final int GL_TRIANGLES = 4;
 
-    /**
-     * Initializes the texture constants to be used when rendering lightmap values
-     */
     public static void initializeTextures()
     {
         Config.initDisplay();
@@ -131,7 +118,7 @@ public class OpenGlHelper
 
         if (!vboRegions)
         {
-            List<String> list = new ArrayList<>();
+            List<String> list = new ArrayList();
 
             if (!flag)
             {
@@ -344,7 +331,7 @@ public class OpenGlHelper
         try
         {
             Processor[] aprocessor = (new SystemInfo()).getHardware().getProcessors();
-            cpu = String.format("%dx %s", aprocessor.length, aprocessor[0]).replaceAll("\\s+", " ");
+            cpu = String.format("%dx %s", new Object[] {Integer.valueOf(aprocessor.length), aprocessor[0]}).replaceAll("\\s+", " ");
         }
         catch (Throwable var5)
         {
@@ -391,9 +378,6 @@ public class OpenGlHelper
         }
     }
 
-    /**
-     * creates a shader with the given mode and returns the GL id. params: mode
-     */
     public static int glCreateShader(int type)
     {
         return arbShaders ? ARBShaderObjects.glCreateShaderObjectARB(type) : GL20.glCreateShader(type);
@@ -676,18 +660,7 @@ public class OpenGlHelper
 
     public static boolean useVbo()
     {
-        if (Config.isMultiTexture())
-        {
-            return false;
-        }
-        else if (Config.isRenderRegions() && !vboRegions)
-        {
-            return false;
-        }
-        else
-        {
-            return vboSupported && Minecraft.getMinecraft().gameSettings.useVbo;
-        }
+        return Config.isMultiTexture() ? false : (Config.isRenderRegions() && !vboRegions ? false : vboSupported && Minecraft.getMinecraft().gameSettings.useVbo);
     }
 
     public static void glBindFramebuffer(int target, int framebufferIn)
@@ -770,9 +743,6 @@ public class OpenGlHelper
         }
     }
 
-    /**
-     * Calls the appropriate glGenFramebuffers method and returns the newly created fbo, or returns -1 if not supported.
-     */
     public static int glGenFramebuffers()
     {
         if (!framebufferSupported)
@@ -908,9 +878,6 @@ public class OpenGlHelper
         }
     }
 
-    /**
-     * Sets the current lightmap texture to the specified OpenGL constant
-     */
     public static void setActiveTexture(int texture)
     {
         if (arbMultitexture)
@@ -923,9 +890,6 @@ public class OpenGlHelper
         }
     }
 
-    /**
-     * Sets the current lightmap texture to the specified OpenGL constant
-     */
     public static void setClientActiveTexture(int texture)
     {
         if (arbMultitexture)
@@ -938,9 +902,6 @@ public class OpenGlHelper
         }
     }
 
-    /**
-     * Sets the current coordinates of the given lightmap texture
-     */
     public static void setLightmapTextureCoords(int target, float p_77475_1_, float p_77475_2_)
     {
         if (arbMultitexture)
@@ -980,18 +941,7 @@ public class OpenGlHelper
 
     public static boolean isFramebufferEnabled()
     {
-        if (Config.isFastRender())
-        {
-            return false;
-        }
-        else if (Config.isAntialiasing())
-        {
-            return false;
-        }
-        else
-        {
-            return framebufferSupported && Minecraft.getMinecraft().gameSettings.fboEnable;
-        }
+        return Config.isFastRender() ? false : (Config.isAntialiasing() ? false : framebufferSupported && Minecraft.getMinecraft().gameSettings.fboEnable);
     }
 
     public static void glBufferData(int p_glBufferData_0_, long p_glBufferData_1_, int p_glBufferData_3_)

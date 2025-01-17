@@ -34,22 +34,11 @@ import org.lwjgl.input.Mouse;
 
 public class GuiContainerCreative extends InventoryEffectRenderer
 {
-    /** The location of the creative inventory tabs texture */
     private static final ResourceLocation creativeInventoryTabs = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
     private static InventoryBasic field_147060_v = new InventoryBasic("tmp", true, 45);
-
-    /** Currently selected creative inventory tab index. */
     private static int selectedTabIndex = CreativeTabs.tabBlock.getTabIndex();
-
-    /** Amount scrolled in Creative mode inventory (0 = top, 1 = bottom) */
     private float currentScroll;
-
-    /** True if the scrollbar is being dragged */
     private boolean isScrolling;
-
-    /**
-     * True if the left mouse button was held down last time drawScreen was called.
-     */
     private boolean wasClicking;
     private GuiTextField searchField;
     private List<Slot> field_147063_B;
@@ -66,9 +55,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         this.xSize = 195;
     }
 
-    /**
-     * Called from the main game loop to update the screen.
-     */
     public void updateScreen()
     {
         if (!this.mc.playerController.isInCreativeMode())
@@ -79,9 +65,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         this.updateActivePotionEffects();
     }
 
-    /**
-     * Called when the mouse is clicked over a slot or outside the gui.
-     */
     protected void handleMouseClick(Slot slotIn, int slotId, int clickedButton, int clickType)
     {
         this.field_147057_D = true;
@@ -256,10 +239,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         }
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
     public void initGui()
     {
         if (this.mc.playerController.isInCreativeMode())
@@ -284,9 +263,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         }
     }
 
-    /**
-     * Called when the screen is unloaded. Used to disable keyboard repeat events
-     */
     public void onGuiClosed()
     {
         super.onGuiClosed();
@@ -299,10 +275,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         Keyboard.enableRepeatEvents(false);
     }
 
-    /**
-     * Fired when a key is typed (except F11 which toggles full screen). This is the equivalent of
-     * KeyListener.keyTyped(KeyEvent e). Args : character (character on the key), keyCode (lwjgl Keyboard key code)
-     */
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
         if (selectedTabIndex != CreativeTabs.tabAllSearch.getTabIndex())
@@ -364,7 +336,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
 
         while (iterator.hasNext())
         {
-            ItemStack itemstack = iterator.next();
+            ItemStack itemstack = (ItemStack)iterator.next();
             boolean flag = false;
 
             for (String s : itemstack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips))
@@ -386,9 +358,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         guicontainercreative$containercreative.scrollTo(0.0F);
     }
 
-    /**
-     * Draw the foreground layer for the GuiContainer (everything in front of the items). Args : mouseX, mouseY
-     */
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         CreativeTabs creativetabs = CreativeTabs.creativeTabArray[selectedTabIndex];
@@ -396,13 +365,10 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         if (creativetabs.drawInForegroundOfTab())
         {
             GlStateManager.disableBlend();
-            this.fontRendererObj.drawString(I18n.format(creativetabs.getTranslatedTabLabel()), 8, 6, 4210752);
+            this.fontRendererObj.drawString(I18n.format(creativetabs.getTranslatedTabLabel(), new Object[0]), 8, 6, 4210752);
         }
     }
 
-    /**
-     * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
-     */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         if (mouseButton == 0)
@@ -422,9 +388,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
-    /**
-     * Called when a mouse button is released.  Args : mouseX, mouseY, releaseButton
-     */
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
         if (state == 0)
@@ -445,9 +408,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         super.mouseReleased(mouseX, mouseY, state);
     }
 
-    /**
-     * returns (if you are not on the inventoryTab) and (the flag isn't set) and (you have more than 1 page of items)
-     */
     private boolean needsScrollBars()
     {
         return selectedTabIndex != CreativeTabs.tabInventory.getTabIndex() && CreativeTabs.creativeTabArray[selectedTabIndex].shouldHidePlayerInventory() && ((GuiContainerCreative.ContainerCreative)this.inventorySlots).func_148328_e();
@@ -471,11 +431,11 @@ public class GuiContainerCreative extends InventoryEffectRenderer
                 this.field_147063_B = guicontainercreative$containercreative.inventorySlots;
             }
 
-            guicontainercreative$containercreative.inventorySlots = Lists.newArrayList();
+            guicontainercreative$containercreative.inventorySlots = Lists.<Slot>newArrayList();
 
             for (int j = 0; j < container.inventorySlots.size(); ++j)
             {
-                Slot slot = new GuiContainerCreative.CreativeSlot(container.inventorySlots.get(j), j);
+                Slot slot = new GuiContainerCreative.CreativeSlot((Slot)container.inventorySlots.get(j), j);
                 guicontainercreative$containercreative.inventorySlots.add(slot);
 
                 if (j >= 5 && j < 9)
@@ -540,9 +500,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         guicontainercreative$containercreative.scrollTo(0.0F);
     }
 
-    /**
-     * Handles mouse input.
-     */
     public void handleMouseInput() throws IOException
     {
         super.handleMouseInput();
@@ -568,9 +525,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         }
     }
 
-    /**
-     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
-     */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         boolean flag = Mouse.isButtonDown(0);
@@ -612,7 +566,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
 
         if (this.field_147064_C != null && selectedTabIndex == CreativeTabs.tabInventory.getTabIndex() && this.isPointInRegion(this.field_147064_C.xDisplayPosition, this.field_147064_C.yDisplayPosition, 16, 16, mouseX, mouseY))
         {
-            this.drawCreativeTabHoveringText(I18n.format("inventory.binSlot"), mouseX, mouseY);
+            this.drawCreativeTabHoveringText(I18n.format("inventory.binSlot", new Object[0]), mouseX, mouseY);
         }
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -632,7 +586,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
 
                 if (map.size() == 1)
                 {
-                    Enchantment enchantment = Enchantment.getEnchantmentById(map.keySet().iterator().next());
+                    Enchantment enchantment = Enchantment.getEnchantmentById(((Integer)map.keySet().iterator().next()).intValue());
 
                     for (CreativeTabs creativetabs1 : CreativeTabs.creativeTabArray)
                     {
@@ -647,7 +601,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
 
             if (creativetabs != null)
             {
-                list.add(1, "" + EnumChatFormatting.BOLD + EnumChatFormatting.BLUE + I18n.format(creativetabs.getTranslatedTabLabel()));
+                list.add(1, "" + EnumChatFormatting.BOLD + EnumChatFormatting.BLUE + I18n.format(creativetabs.getTranslatedTabLabel(), new Object[0]));
             }
 
             for (int i = 0; i < list.size(); ++i)
@@ -670,9 +624,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         }
     }
 
-    /**
-     * Args : renderPartialTicks, mouseX, mouseY
-     */
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
     {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -738,10 +689,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         return p_147049_2_ >= j && p_147049_2_ <= j + 28 && p_147049_3_ >= k && p_147049_3_ <= k + 32;
     }
 
-    /**
-     * Renders the creative inventory hovering text if mouse is over it. Returns true if did render or false otherwise.
-     * Params: current creative tab to be checked, current mouse x position, current mouse y position.
-     */
     protected boolean renderCreativeInventoryHoveringText(CreativeTabs p_147052_1_, int p_147052_2_, int p_147052_3_)
     {
         int i = p_147052_1_.getTabColumn();
@@ -768,7 +715,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
 
         if (this.isPointInRegion(j + 3, k + 3, 23, 27, p_147052_2_, p_147052_3_))
         {
-            this.drawCreativeTabHoveringText(I18n.format(p_147052_1_.getTranslatedTabLabel()), p_147052_2_, p_147052_3_);
+            this.drawCreativeTabHoveringText(I18n.format(p_147052_1_.getTranslatedTabLabel(), new Object[0]), p_147052_2_, p_147052_3_);
             return true;
         }
         else
@@ -828,9 +775,6 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         this.zLevel = 0.0F;
     }
 
-    /**
-     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-     */
     protected void actionPerformed(GuiButton button) throws IOException
     {
         if (button.id == 0)
@@ -851,7 +795,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
 
     static class ContainerCreative extends Container
     {
-        public List<ItemStack> itemList = Lists.newArrayList();
+        public List<ItemStack> itemList = Lists.<ItemStack>newArrayList();
 
         public ContainerCreative(EntityPlayer p_i1086_1_)
         {
@@ -896,7 +840,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
 
                     if (i1 >= 0 && i1 < this.itemList.size())
                     {
-                        GuiContainerCreative.field_147060_v.setInventorySlotContents(l + k * 9, this.itemList.get(i1));
+                        GuiContainerCreative.field_147060_v.setInventorySlotContents(l + k * 9, (ItemStack)this.itemList.get(i1));
                     }
                     else
                     {
@@ -919,7 +863,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         {
             if (index >= this.inventorySlots.size() - 9 && index < this.inventorySlots.size())
             {
-                Slot slot = this.inventorySlots.get(index);
+                Slot slot = (Slot)this.inventorySlots.get(index);
 
                 if (slot != null && slot.getHasStack())
                 {

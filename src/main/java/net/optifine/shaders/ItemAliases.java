@@ -59,7 +59,7 @@ public class ItemAliases
             }
             else
             {
-                List<Integer> list = new ArrayList<>();
+                List<Integer> list = new ArrayList();
                 String s = "/shaders/item.properties";
                 InputStream inputstream = shaderPack.getResourceAsStream(s);
 
@@ -70,7 +70,7 @@ public class ItemAliases
 
                 loadModItemAliases(list);
 
-                if (list.size() > 0)
+                if (((List)list).size() > 0)
                 {
                     itemAliases = toArray(list);
                 }
@@ -112,9 +112,9 @@ public class ItemAliases
                 Config.dbg("[Shaders] Parsing item mappings: " + path);
                 ConnectedParser connectedparser = new ConnectedParser("Shaders");
 
-                for (Object o  : properties.keySet())
+                for (Object o : properties.keySet())
                 {
-                	String s = (String)o;
+                    String s = (String) o;
                     String s1 = properties.getProperty(s);
                     String s2 = "item.";
 
@@ -162,10 +162,10 @@ public class ItemAliases
     {
         while (list.size() <= index)
         {
-            list.add(Integer.MIN_VALUE);
+            list.add(Integer.valueOf(Integer.MIN_VALUE));
         }
 
-        list.set(index, val);
+        list.set(index, Integer.valueOf(val));
     }
 
     private static int[] toArray(List<Integer> list)
@@ -174,7 +174,7 @@ public class ItemAliases
 
         for (int i = 0; i < aint.length; ++i)
         {
-            aint[i] = list.get(i);
+            aint[i] = ((Integer)list.get(i)).intValue();
         }
 
         return aint;

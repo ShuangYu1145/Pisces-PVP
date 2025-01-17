@@ -1,6 +1,7 @@
 package net.minecraft.block;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -65,9 +66,6 @@ public class BlockLadder extends Block
         }
     }
 
-    /**
-     * Used to determine ambient occlusion and culling when rebuilding chunks for render
-     */
     public boolean isOpaqueCube()
     {
         return false;
@@ -80,28 +78,9 @@ public class BlockLadder extends Block
 
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
     {
-        if (worldIn.getBlockState(pos.west()).getBlock().isNormalCube())
-        {
-            return true;
-        }
-        else if (worldIn.getBlockState(pos.east()).getBlock().isNormalCube())
-        {
-            return true;
-        }
-        else if (worldIn.getBlockState(pos.north()).getBlock().isNormalCube())
-        {
-            return true;
-        }
-        else
-        {
-            return worldIn.getBlockState(pos.south()).getBlock().isNormalCube();
-        }
+        return worldIn.getBlockState(pos.west()).getBlock().isNormalCube() ? true : (worldIn.getBlockState(pos.east()).getBlock().isNormalCube() ? true : (worldIn.getBlockState(pos.north()).getBlock().isNormalCube() ? true : worldIn.getBlockState(pos.south()).getBlock().isNormalCube()));
     }
 
-    /**
-     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
-     * IBlockstate
-     */
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         if (facing.getAxis().isHorizontal() && this.canBlockStay(worldIn, pos, facing))
@@ -122,12 +101,9 @@ public class BlockLadder extends Block
         }
     }
 
-    /**
-     * Called when a neighboring block changes.
-     */
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
-        EnumFacing enumfacing = state.getValue(FACING);
+        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
 
         if (!this.canBlockStay(worldIn, pos, enumfacing))
         {
@@ -148,9 +124,6 @@ public class BlockLadder extends Block
         return EnumWorldBlockLayer.CUTOUT;
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
         EnumFacing enumfacing = EnumFacing.getFront(meta);
@@ -163,16 +136,13 @@ public class BlockLadder extends Block
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(FACING).getIndex();
+        return ((EnumFacing)state.getValue(FACING)).getIndex();
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, FACING);
+        return new BlockState(this, new IProperty[] {FACING});
     }
 }

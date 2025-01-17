@@ -11,33 +11,21 @@ import net.minecraft.util.BlockPos;
 
 public class CommandSetDefaultSpawnpoint extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "setworldspawn";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.setworldspawn.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         BlockPos blockpos;
@@ -50,7 +38,7 @@ public class CommandSetDefaultSpawnpoint extends CommandBase
         {
             if (args.length != 3 || sender.getEntityWorld() == null)
             {
-                throw new WrongUsageException("commands.setworldspawn.usage");
+                throw new WrongUsageException("commands.setworldspawn.usage", new Object[0]);
             }
 
             blockpos = parseBlockPos(sender, args, 0, true);
@@ -58,7 +46,7 @@ public class CommandSetDefaultSpawnpoint extends CommandBase
 
         sender.getEntityWorld().setSpawnPoint(blockpos);
         MinecraftServer.getServer().getConfigurationManager().sendPacketToAllPlayers(new S05PacketSpawnPosition(blockpos));
-        notifyOperators(sender, this, "commands.setworldspawn.success", new Object[] {blockpos.getX(), blockpos.getY(), blockpos.getZ()});
+        notifyOperators(sender, this, "commands.setworldspawn.success", new Object[] {Integer.valueOf(blockpos.getX()), Integer.valueOf(blockpos.getY()), Integer.valueOf(blockpos.getZ())});
     }
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)

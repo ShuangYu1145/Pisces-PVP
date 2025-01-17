@@ -31,9 +31,6 @@ public class EntityEnderPearl extends EntityThrowable
         super(worldIn, x, y, z);
     }
 
-    /**
-     * Called when this EntityThrowable hits a block or entity.
-     */
     protected void onImpact(MovingObjectPosition p_70184_1_)
     {
         EntityLivingBase entitylivingbase = this.getThrower();
@@ -50,7 +47,7 @@ public class EntityEnderPearl extends EntityThrowable
 
         for (int i = 0; i < 32; ++i)
         {
-            this.worldObj.spawnParticle(EnumParticleTypes.PORTAL, this.posX, this.posY + this.rand.nextDouble() * 2.0D, this.posZ, this.rand.nextGaussian(), 0.0D, this.rand.nextGaussian());
+            this.worldObj.spawnParticle(EnumParticleTypes.PORTAL, this.posX, this.posY + this.rand.nextDouble() * 2.0D, this.posZ, this.rand.nextGaussian(), 0.0D, this.rand.nextGaussian(), new int[0]);
         }
 
         if (!this.worldObj.isRemote)
@@ -89,9 +86,6 @@ public class EntityEnderPearl extends EntityThrowable
         }
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         EntityLivingBase entitylivingbase = this.getThrower();

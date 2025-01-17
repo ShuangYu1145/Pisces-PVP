@@ -24,11 +24,11 @@ public class S26PacketMapChunkBulk implements Packet<INetHandlerPlayClient>
         this.xPositions = new int[i];
         this.zPositions = new int[i];
         this.chunksData = new S21PacketChunkData.Extracted[i];
-        this.isOverworld = !chunks.get(0).getWorld().provider.getHasNoSky();
+        this.isOverworld = !((Chunk)chunks.get(0)).getWorld().provider.getHasNoSky();
 
         for (int j = 0; j < i; ++j)
         {
-            Chunk chunk = chunks.get(j);
+            Chunk chunk = (Chunk)chunks.get(j);
             S21PacketChunkData.Extracted s21packetchunkdata$extracted = S21PacketChunkData.getExtractedData(chunk, true, this.isOverworld, 65535);
             this.xPositions[j] = chunk.xPosition;
             this.zPositions[j] = chunk.zPosition;
@@ -36,9 +36,6 @@ public class S26PacketMapChunkBulk implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Reads the raw packet data from the data stream.
-     */
     public void readPacketData(PacketBuffer buf) throws IOException
     {
         this.isOverworld = buf.readBoolean();
@@ -62,9 +59,6 @@ public class S26PacketMapChunkBulk implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Writes the raw packet data to the data stream.
-     */
     public void writePacketData(PacketBuffer buf) throws IOException
     {
         buf.writeBoolean(this.isOverworld);
@@ -83,9 +77,6 @@ public class S26PacketMapChunkBulk implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Passes this Packet on to the NetHandler for processing.
-     */
     public void processPacket(INetHandlerPlayClient handler)
     {
         handler.handleMapChunkBulk(this);

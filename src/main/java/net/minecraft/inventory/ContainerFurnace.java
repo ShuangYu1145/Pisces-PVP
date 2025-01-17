@@ -41,16 +41,13 @@ public class ContainerFurnace extends Container
         listener.sendAllWindowProperties(this, this.tileFurnace);
     }
 
-    /**
-     * Looks for changes made in the container, sends them to every listener.
-     */
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
 
         for (int i = 0; i < this.crafters.size(); ++i)
         {
-            ICrafting icrafting = this.crafters.get(i);
+            ICrafting icrafting = (ICrafting)this.crafters.get(i);
 
             if (this.cookTime != this.tileFurnace.getField(2))
             {
@@ -89,13 +86,10 @@ public class ContainerFurnace extends Container
         return this.tileFurnace.isUseableByPlayer(playerIn);
     }
 
-    /**
-     * Take a stack from the specified inventory slot.
-     */
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = null;
-        Slot slot = this.inventorySlots.get(index);
+        Slot slot = (Slot)this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack())
         {

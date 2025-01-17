@@ -2,6 +2,7 @@ package net.minecraft.block;
 
 import java.util.Random;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
@@ -33,9 +34,6 @@ public class BlockBanner extends BlockContainer
         this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
     }
 
-    /**
-     * Gets the localized name of this block. Used for the statistics page.
-     */
     public String getLocalizedName()
     {
         return StatCollector.translateToLocal("item.banner.white.name");
@@ -62,33 +60,21 @@ public class BlockBanner extends BlockContainer
         return true;
     }
 
-    /**
-     * Used to determine ambient occlusion and culling when rebuilding chunks for render
-     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
-    /**
-     * Return true if an entity can be spawned inside the block (used to get the player's bed spawn location)
-     */
     public boolean canSpawnInBlock()
     {
         return true;
     }
 
-    /**
-     * Returns a new instance of a block's tile entity class. Called on placing the block.
-     */
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
         return new TileEntityBanner();
     }
 
-    /**
-     * Get the Item that this Block should drop when harvested.
-     */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Items.banner;
@@ -99,9 +85,6 @@ public class BlockBanner extends BlockContainer
         return Items.banner;
     }
 
-    /**
-     * Spawns this Block's drops into the World as EntityItems.
-     */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
         TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -155,7 +138,7 @@ public class BlockBanner extends BlockContainer
 
         public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
         {
-            EnumFacing enumfacing = worldIn.getBlockState(pos).getValue(FACING);
+            EnumFacing enumfacing = (EnumFacing)worldIn.getBlockState(pos).getValue(FACING);
             float f = 0.0F;
             float f1 = 0.78125F;
             float f2 = 0.0F;
@@ -185,7 +168,7 @@ public class BlockBanner extends BlockContainer
 
         public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
         {
-            EnumFacing enumfacing = state.getValue(FACING);
+            EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
 
             if (!worldIn.getBlockState(pos.offset(enumfacing.getOpposite())).getBlock().getMaterial().isSolid())
             {
@@ -210,12 +193,12 @@ public class BlockBanner extends BlockContainer
 
         public int getMetaFromState(IBlockState state)
         {
-            return state.getValue(FACING).getIndex();
+            return ((EnumFacing)state.getValue(FACING)).getIndex();
         }
 
         protected BlockState createBlockState()
         {
-            return new BlockState(this, FACING);
+            return new BlockState(this, new IProperty[] {FACING});
         }
     }
 
@@ -223,7 +206,7 @@ public class BlockBanner extends BlockContainer
     {
         public BlockBannerStanding()
         {
-            this.setDefaultState(this.blockState.getBaseState().withProperty(ROTATION, 0));
+            this.setDefaultState(this.blockState.getBaseState().withProperty(ROTATION, Integer.valueOf(0)));
         }
 
         public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
@@ -239,17 +222,17 @@ public class BlockBanner extends BlockContainer
 
         public IBlockState getStateFromMeta(int meta)
         {
-            return this.getDefaultState().withProperty(ROTATION, meta);
+            return this.getDefaultState().withProperty(ROTATION, Integer.valueOf(meta));
         }
 
         public int getMetaFromState(IBlockState state)
         {
-            return state.getValue(ROTATION);
+            return ((Integer)state.getValue(ROTATION)).intValue();
         }
 
         protected BlockState createBlockState()
         {
-            return new BlockState(this, ROTATION);
+            return new BlockState(this, new IProperty[] {ROTATION});
         }
     }
 }

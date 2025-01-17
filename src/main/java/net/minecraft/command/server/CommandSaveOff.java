@@ -8,25 +8,16 @@ import net.minecraft.world.WorldServer;
 
 public class CommandSaveOff extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "save-off";
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.save-off.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         MinecraftServer minecraftserver = MinecraftServer.getServer();
@@ -52,7 +43,7 @@ public class CommandSaveOff extends CommandBase
         }
         else
         {
-            throw new CommandException("commands.save-off.alreadyOff");
+            throw new CommandException("commands.save-off.alreadyOff", new Object[0]);
         }
     }
 }

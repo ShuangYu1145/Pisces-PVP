@@ -27,13 +27,7 @@ public class GuiPlayerTabOverlay extends Gui
     private final GuiIngame guiIngame;
     private IChatComponent footer;
     private IChatComponent header;
-
-    /**
-     * The last time the playerlist was opened (went from not being renderd, to being rendered)
-     */
     private long lastTimeOpened;
-
-    /** Weither or not the playerlist is currently being rendered */
     private boolean isBeingRendered;
 
     public GuiPlayerTabOverlay(Minecraft mcIn, GuiIngame guiIngameIn)
@@ -42,18 +36,11 @@ public class GuiPlayerTabOverlay extends Gui
         this.guiIngame = guiIngameIn;
     }
 
-    /**
-     * Returns the name that should be renderd for the player supplied
-     */
     public String getPlayerName(NetworkPlayerInfo networkPlayerInfoIn)
     {
         return networkPlayerInfoIn.getDisplayName() != null ? networkPlayerInfoIn.getDisplayName().getFormattedText() : ScorePlayerTeam.formatPlayerName(networkPlayerInfoIn.getPlayerTeam(), networkPlayerInfoIn.getGameProfile().getName());
     }
 
-    /**
-     * Called by GuiIngame to update the information stored in the playerlist, does not actually render the list,
-     * however.
-     */
     public void updatePlayerList(boolean willBeRendered)
     {
         if (willBeRendered && !this.isBeingRendered)
@@ -64,13 +51,10 @@ public class GuiPlayerTabOverlay extends Gui
         this.isBeingRendered = willBeRendered;
     }
 
-    /**
-     * Renders the playerlist, its background, headers and footers.
-     */
     public void renderPlayerlist(int width, Scoreboard scoreboardIn, ScoreObjective scoreObjectiveIn)
     {
         NetHandlerPlayClient nethandlerplayclient = this.mc.thePlayer.sendQueue;
-        List<NetworkPlayerInfo> list = field_175252_a.sortedCopy(nethandlerplayclient.getPlayerInfoMap());
+        List<NetworkPlayerInfo> list = field_175252_a.<NetworkPlayerInfo>sortedCopy(nethandlerplayclient.getPlayerInfoMap());
         int i = 0;
         int j = 0;
 
@@ -172,7 +156,7 @@ public class GuiPlayerTabOverlay extends Gui
 
             if (k4 < list.size())
             {
-                NetworkPlayerInfo networkplayerinfo1 = list.get(k4);
+                NetworkPlayerInfo networkplayerinfo1 = (NetworkPlayerInfo)list.get(k4);
                 String s1 = this.getPlayerName(networkplayerinfo1);
                 GameProfile gameprofile = networkplayerinfo1.getGameProfile();
 

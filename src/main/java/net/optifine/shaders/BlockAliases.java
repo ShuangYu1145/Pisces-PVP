@@ -79,7 +79,7 @@ public class BlockAliases
             }
             else
             {
-                List<List<BlockAlias>> list = new ArrayList<>();
+                List<List<BlockAlias>> list = new ArrayList();
                 String s = "/shaders/block.properties";
                 InputStream inputstream = shaderPack.getResourceAsStream(s);
 
@@ -90,7 +90,7 @@ public class BlockAliases
 
                 loadModBlockAliases(list);
 
-                if (list.size() > 0)
+                if (((List)list).size() > 0)
                 {
                     blockAliases = toArrays(list);
                 }
@@ -134,7 +134,7 @@ public class BlockAliases
 
                 for (Object o : properties.keySet())
                 {
-                	String s = (String)o;
+                    String s = (String) o;
                     String s1 = properties.getProperty(s);
 
                     if (s.startsWith("layer."))
@@ -198,14 +198,14 @@ public class BlockAliases
 
             while (j >= blocksAliases.size())
             {
-                blocksAliases.add((List<BlockAlias>)null);
+                blocksAliases.add(null);
             }
 
-            List<BlockAlias> list = blocksAliases.get(j);
+            List<BlockAlias> list = (List)blocksAliases.get(j);
 
             if (list == null)
             {
-                list = new ArrayList<>();
+                list = new ArrayList();
                 blocksAliases.set(j, list);
             }
 
@@ -220,11 +220,11 @@ public class BlockAliases
 
         for (int i = 0; i < ablockalias.length; ++i)
         {
-            List<BlockAlias> list = listBlocksAliases.get(i);
+            List<BlockAlias> list = (List)listBlocksAliases.get(i);
 
             if (list != null)
             {
-                ablockalias[i] = list.toArray(new BlockAlias[list.size()]);
+                ablockalias[i] = (BlockAlias[])((BlockAlias[])list.toArray(new BlockAlias[list.size()]));
             }
         }
 

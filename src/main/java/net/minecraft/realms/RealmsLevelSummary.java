@@ -58,13 +58,6 @@ public class RealmsLevelSummary implements Comparable<RealmsLevelSummary>
 
     public int compareTo(RealmsLevelSummary p_compareTo_1_)
     {
-        if (this.levelSummary.getLastTimePlayed() < p_compareTo_1_.getLastPlayed())
-        {
-            return 1;
-        }
-        else
-        {
-            return this.levelSummary.getLastTimePlayed() > p_compareTo_1_.getLastPlayed() ? -1 : this.levelSummary.getFileName().compareTo(p_compareTo_1_.getLevelId());
-        }
+        return this.levelSummary.getLastTimePlayed() < p_compareTo_1_.getLastPlayed() ? 1 : (this.levelSummary.getLastTimePlayed() > p_compareTo_1_.getLastPlayed() ? -1 : this.levelSummary.getFileName().compareTo(p_compareTo_1_.getLevelId()));
     }
 }

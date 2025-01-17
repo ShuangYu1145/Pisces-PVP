@@ -20,30 +20,24 @@ import org.apache.logging.log4j.Logger;
 public class EntityItem extends Entity
 {
     private static final Logger logger = LogManager.getLogger();
-
-    /**
-     * The age of this EntityItem (used to animate it up and down as well as expire it)
-     */
     private int age;
     private int delayBeforeCanPickup;
-
-    /** The health of this EntityItem. (For example, damage for tools) */
-    private int health = 5;
+    private int health;
     private String thrower;
     private String owner;
-
-    /** The EntityItem's random initial float height. */
-    public float hoverStart = (float)(Math.random() * Math.PI * 2.0D);
+    public float hoverStart;
 
     public EntityItem(World worldIn, double x, double y, double z)
     {
         super(worldIn);
+        this.health = 5;
+        this.hoverStart = (float)(Math.random() * Math.PI * 2.0D);
         this.setSize(0.25F, 0.25F);
         this.setPosition(x, y, z);
         this.rotationYaw = (float)(Math.random() * 360.0D);
-        this.motionX = (double)((float)(Math.random() * (double)0.2F - (double)0.1F));
-        this.motionY = (double)0.2F;
-        this.motionZ = (double)((float)(Math.random() * (double)0.2F - (double)0.1F));
+        this.motionX = (double)((float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D));
+        this.motionY = 0.20000000298023224D;
+        this.motionZ = (double)((float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D));
     }
 
     public EntityItem(World worldIn, double x, double y, double z, ItemStack stack)
@@ -52,10 +46,6 @@ public class EntityItem extends Entity
         this.setEntityItemStack(stack);
     }
 
-    /**
-     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
-     * prevent them from trampling crops
-     */
     protected boolean canTriggerWalking()
     {
         return false;
@@ -64,6 +54,8 @@ public class EntityItem extends Entity
     public EntityItem(World worldIn)
     {
         super(worldIn);
+        this.health = 5;
+        this.hoverStart = (float)(Math.random() * Math.PI * 2.0D);
         this.setSize(0.25F, 0.25F);
         this.setEntityItemStack(new ItemStack(Blocks.air, 0));
     }
@@ -73,9 +65,6 @@ public class EntityItem extends Entity
         this.getDataWatcher().addObjectByDataType(10, 5);
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         if (this.getEntityItem() == null)
@@ -94,7 +83,7 @@ public class EntityItem extends Entity
             this.prevPosX = this.posX;
             this.prevPosY = this.posY;
             this.prevPosZ = this.posZ;
-            this.motionY -= (double)0.04F;
+            this.motionY -= 0.03999999910593033D;
             this.noClip = this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
             this.moveEntity(this.motionX, this.motionY, this.motionZ);
             boolean flag = (int)this.prevPosX != (int)this.posX || (int)this.prevPosY != (int)this.posY || (int)this.prevPosZ != (int)this.posZ;
@@ -103,7 +92,7 @@ public class EntityItem extends Entity
             {
                 if (this.worldObj.getBlockState(new BlockPos(this)).getBlock().getMaterial() == Material.lava)
                 {
-                    this.motionY = (double)0.2F;
+                    this.motionY = 0.20000000298023224D;
                     this.motionX = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
                     this.motionZ = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
                     this.playSound("random.fizz", 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
@@ -123,7 +112,7 @@ public class EntityItem extends Entity
             }
 
             this.motionX *= (double)f;
-            this.motionY *= (double)0.98F;
+            this.motionY *= 0.9800000190734863D;
             this.motionZ *= (double)f;
 
             if (this.onGround)
@@ -145,9 +134,6 @@ public class EntityItem extends Entity
         }
     }
 
-    /**
-     * Looks for other itemstacks nearby and tries to stack them together
-     */
     private void searchForOtherItemsNearby()
     {
         for (EntityItem entityitem : this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(0.5D, 0.0D, 0.5D)))
@@ -156,10 +142,6 @@ public class EntityItem extends Entity
         }
     }
 
-    /**
-     * Tries to merge this item with the item passed as the parameter. Returns true if successful. Either this item or
-     * the other item will  be removed from the world.
-     */
     private boolean combineItems(EntityItem other)
     {
         if (other == this)
@@ -229,18 +211,11 @@ public class EntityItem extends Entity
         }
     }
 
-    /**
-     * sets the age of the item so that it'll despawn one minute after it has been dropped (instead of five). Used when
-     * items are dropped from players in creative mode
-     */
     public void setAgeToCreativeDespawnTime()
     {
         this.age = 4800;
     }
 
-    /**
-     * Returns if this entity is in water and will end up adding the waters velocity to the entity
-     */
     public boolean handleWaterMovement()
     {
         if (this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox(), Material.water, this))
@@ -260,18 +235,11 @@ public class EntityItem extends Entity
         return this.inWater;
     }
 
-    /**
-     * Will deal the specified amount of damage to the entity if the entity isn't immune to fire damage. Args:
-     * amountDamage
-     */
     protected void dealFireDamage(int amount)
     {
         this.attackEntityFrom(DamageSource.inFire, (float)amount);
     }
 
-    /**
-     * Called when the entity is attacked.
-     */
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         if (this.isEntityInvulnerable(source))
@@ -296,9 +264,6 @@ public class EntityItem extends Entity
         }
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     public void writeEntityToNBT(NBTTagCompound tagCompound)
     {
         tagCompound.setShort("Health", (short)((byte)this.health));
@@ -321,9 +286,6 @@ public class EntityItem extends Entity
         }
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     public void readEntityFromNBT(NBTTagCompound tagCompund)
     {
         this.health = tagCompund.getShort("Health") & 255;
@@ -353,9 +315,6 @@ public class EntityItem extends Entity
         }
     }
 
-    /**
-     * Called by a player entity when they collide with an entity
-     */
     public void onCollideWithPlayer(EntityPlayer entityIn)
     {
         if (!this.worldObj.isRemote)
@@ -415,25 +374,16 @@ public class EntityItem extends Entity
         }
     }
 
-    /**
-     * Get the name of this object. For players this returns their username
-     */
     public String getName()
     {
         return this.hasCustomName() ? this.getCustomNameTag() : StatCollector.translateToLocal("item." + this.getEntityItem().getUnlocalizedName());
     }
 
-    /**
-     * If returns false, the item will not inflict any damage against entities.
-     */
     public boolean canAttackWithItem()
     {
         return false;
     }
 
-    /**
-     * Teleports the entity to another dimension. Params: Dimension number to teleport to
-     */
     public void travelToDimension(int dimensionId)
     {
         super.travelToDimension(dimensionId);
@@ -444,10 +394,6 @@ public class EntityItem extends Entity
         }
     }
 
-    /**
-     * Returns the ItemStack corresponding to the Entity (Note: if no item exists, will log an error but still return an
-     * ItemStack containing Block.stone)
-     */
     public ItemStack getEntityItem()
     {
         ItemStack itemstack = this.getDataWatcher().getWatchableObjectItemStack(10);
@@ -467,9 +413,6 @@ public class EntityItem extends Entity
         }
     }
 
-    /**
-     * Sets the ItemStack for this entity
-     */
     public void setEntityItemStack(ItemStack stack)
     {
         this.getDataWatcher().updateObject(10, stack);

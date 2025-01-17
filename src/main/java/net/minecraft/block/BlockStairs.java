@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.block.material.MapColor;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
@@ -27,8 +28,8 @@ import net.minecraft.world.World;
 public class BlockStairs extends Block
 {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-    public static final PropertyEnum<BlockStairs.EnumHalf> HALF = PropertyEnum.create("half", BlockStairs.EnumHalf.class);
-    public static final PropertyEnum<BlockStairs.EnumShape> SHAPE = PropertyEnum.create("shape", BlockStairs.EnumShape.class);
+    public static final PropertyEnum<BlockStairs.EnumHalf> HALF = PropertyEnum.<BlockStairs.EnumHalf>create("half", BlockStairs.EnumHalf.class);
+    public static final PropertyEnum<BlockStairs.EnumShape> SHAPE = PropertyEnum.<BlockStairs.EnumShape>create("shape", BlockStairs.EnumShape.class);
     private static final int[][] field_150150_a = new int[][] {{4, 5}, {5, 7}, {6, 7}, {4, 6}, {0, 1}, {1, 3}, {2, 3}, {0, 2}};
     private final Block modelBlock;
     private final IBlockState modelState;
@@ -60,9 +61,6 @@ public class BlockStairs extends Block
         }
     }
 
-    /**
-     * Used to determine ambient occlusion and culling when rebuilding chunks for render
-     */
     public boolean isOpaqueCube()
     {
         return false;
@@ -73,9 +71,6 @@ public class BlockStairs extends Block
         return false;
     }
 
-    /**
-     * Set the block bounds as the collision bounds for the stairs at the given position
-     */
     public void setBaseCollisionBounds(IBlockAccess worldIn, BlockPos pos)
     {
         if (worldIn.getBlockState(pos).getValue(HALF) == BlockStairs.EnumHalf.TOP)
@@ -88,17 +83,11 @@ public class BlockStairs extends Block
         }
     }
 
-    /**
-     * Checks if a block is stairs
-     */
     public static boolean isBlockStairs(Block blockIn)
     {
         return blockIn instanceof BlockStairs;
     }
 
-    /**
-     * Check whether there is a stair block at the given position and it has the same properties as the given BlockState
-     */
     public static boolean isSameStair(IBlockAccess worldIn, BlockPos pos, IBlockState state)
     {
         IBlockState iblockstate = worldIn.getBlockState(pos);
@@ -109,8 +98,8 @@ public class BlockStairs extends Block
     public int func_176307_f(IBlockAccess blockAccess, BlockPos pos)
     {
         IBlockState iblockstate = blockAccess.getBlockState(pos);
-        EnumFacing enumfacing = iblockstate.getValue(FACING);
-        BlockStairs.EnumHalf blockstairs$enumhalf = iblockstate.getValue(HALF);
+        EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(FACING);
+        BlockStairs.EnumHalf blockstairs$enumhalf = (BlockStairs.EnumHalf)iblockstate.getValue(HALF);
         boolean flag = blockstairs$enumhalf == BlockStairs.EnumHalf.TOP;
 
         if (enumfacing == EnumFacing.EAST)
@@ -120,7 +109,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block) && blockstairs$enumhalf == iblockstate1.getValue(HALF))
             {
-                EnumFacing enumfacing1 = iblockstate1.getValue(FACING);
+                EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(FACING);
 
                 if (enumfacing1 == EnumFacing.NORTH && !isSameStair(blockAccess, pos.south(), iblockstate))
                 {
@@ -140,7 +129,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block1) && blockstairs$enumhalf == iblockstate2.getValue(HALF))
             {
-                EnumFacing enumfacing2 = iblockstate2.getValue(FACING);
+                EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(FACING);
 
                 if (enumfacing2 == EnumFacing.NORTH && !isSameStair(blockAccess, pos.south(), iblockstate))
                 {
@@ -160,7 +149,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block2) && blockstairs$enumhalf == iblockstate3.getValue(HALF))
             {
-                EnumFacing enumfacing3 = iblockstate3.getValue(FACING);
+                EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(FACING);
 
                 if (enumfacing3 == EnumFacing.WEST && !isSameStair(blockAccess, pos.east(), iblockstate))
                 {
@@ -180,7 +169,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block3) && blockstairs$enumhalf == iblockstate4.getValue(HALF))
             {
-                EnumFacing enumfacing4 = iblockstate4.getValue(FACING);
+                EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(FACING);
 
                 if (enumfacing4 == EnumFacing.WEST && !isSameStair(blockAccess, pos.east(), iblockstate))
                 {
@@ -200,8 +189,8 @@ public class BlockStairs extends Block
     public int func_176305_g(IBlockAccess blockAccess, BlockPos pos)
     {
         IBlockState iblockstate = blockAccess.getBlockState(pos);
-        EnumFacing enumfacing = iblockstate.getValue(FACING);
-        BlockStairs.EnumHalf blockstairs$enumhalf = iblockstate.getValue(HALF);
+        EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(FACING);
+        BlockStairs.EnumHalf blockstairs$enumhalf = (BlockStairs.EnumHalf)iblockstate.getValue(HALF);
         boolean flag = blockstairs$enumhalf == BlockStairs.EnumHalf.TOP;
 
         if (enumfacing == EnumFacing.EAST)
@@ -211,7 +200,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block) && blockstairs$enumhalf == iblockstate1.getValue(HALF))
             {
-                EnumFacing enumfacing1 = iblockstate1.getValue(FACING);
+                EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(FACING);
 
                 if (enumfacing1 == EnumFacing.NORTH && !isSameStair(blockAccess, pos.north(), iblockstate))
                 {
@@ -231,7 +220,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block1) && blockstairs$enumhalf == iblockstate2.getValue(HALF))
             {
-                EnumFacing enumfacing2 = iblockstate2.getValue(FACING);
+                EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(FACING);
 
                 if (enumfacing2 == EnumFacing.NORTH && !isSameStair(blockAccess, pos.north(), iblockstate))
                 {
@@ -251,7 +240,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block2) && blockstairs$enumhalf == iblockstate3.getValue(HALF))
             {
-                EnumFacing enumfacing3 = iblockstate3.getValue(FACING);
+                EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(FACING);
 
                 if (enumfacing3 == EnumFacing.WEST && !isSameStair(blockAccess, pos.west(), iblockstate))
                 {
@@ -271,7 +260,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block3) && blockstairs$enumhalf == iblockstate4.getValue(HALF))
             {
-                EnumFacing enumfacing4 = iblockstate4.getValue(FACING);
+                EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(FACING);
 
                 if (enumfacing4 == EnumFacing.WEST && !isSameStair(blockAccess, pos.west(), iblockstate))
                 {
@@ -291,8 +280,8 @@ public class BlockStairs extends Block
     public boolean func_176306_h(IBlockAccess blockAccess, BlockPos pos)
     {
         IBlockState iblockstate = blockAccess.getBlockState(pos);
-        EnumFacing enumfacing = iblockstate.getValue(FACING);
-        BlockStairs.EnumHalf blockstairs$enumhalf = iblockstate.getValue(HALF);
+        EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(FACING);
+        BlockStairs.EnumHalf blockstairs$enumhalf = (BlockStairs.EnumHalf)iblockstate.getValue(HALF);
         boolean flag = blockstairs$enumhalf == BlockStairs.EnumHalf.TOP;
         float f = 0.5F;
         float f1 = 1.0F;
@@ -318,7 +307,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block) && blockstairs$enumhalf == iblockstate1.getValue(HALF))
             {
-                EnumFacing enumfacing1 = iblockstate1.getValue(FACING);
+                EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(FACING);
 
                 if (enumfacing1 == EnumFacing.NORTH && !isSameStair(blockAccess, pos.south(), iblockstate))
                 {
@@ -341,7 +330,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block1) && blockstairs$enumhalf == iblockstate2.getValue(HALF))
             {
-                EnumFacing enumfacing2 = iblockstate2.getValue(FACING);
+                EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(FACING);
 
                 if (enumfacing2 == EnumFacing.NORTH && !isSameStair(blockAccess, pos.south(), iblockstate))
                 {
@@ -364,7 +353,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block2) && blockstairs$enumhalf == iblockstate3.getValue(HALF))
             {
-                EnumFacing enumfacing3 = iblockstate3.getValue(FACING);
+                EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(FACING);
 
                 if (enumfacing3 == EnumFacing.WEST && !isSameStair(blockAccess, pos.east(), iblockstate))
                 {
@@ -385,7 +374,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block3) && blockstairs$enumhalf == iblockstate4.getValue(HALF))
             {
-                EnumFacing enumfacing4 = iblockstate4.getValue(FACING);
+                EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(FACING);
 
                 if (enumfacing4 == EnumFacing.WEST && !isSameStair(blockAccess, pos.east(), iblockstate))
                 {
@@ -407,8 +396,8 @@ public class BlockStairs extends Block
     public boolean func_176304_i(IBlockAccess blockAccess, BlockPos pos)
     {
         IBlockState iblockstate = blockAccess.getBlockState(pos);
-        EnumFacing enumfacing = iblockstate.getValue(FACING);
-        BlockStairs.EnumHalf blockstairs$enumhalf = iblockstate.getValue(HALF);
+        EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(FACING);
+        BlockStairs.EnumHalf blockstairs$enumhalf = (BlockStairs.EnumHalf)iblockstate.getValue(HALF);
         boolean flag = blockstairs$enumhalf == BlockStairs.EnumHalf.TOP;
         float f = 0.5F;
         float f1 = 1.0F;
@@ -432,7 +421,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block) && blockstairs$enumhalf == iblockstate1.getValue(HALF))
             {
-                EnumFacing enumfacing1 = iblockstate1.getValue(FACING);
+                EnumFacing enumfacing1 = (EnumFacing)iblockstate1.getValue(FACING);
 
                 if (enumfacing1 == EnumFacing.NORTH && !isSameStair(blockAccess, pos.north(), iblockstate))
                 {
@@ -457,7 +446,7 @@ public class BlockStairs extends Block
             {
                 f2 = 0.5F;
                 f3 = 1.0F;
-                EnumFacing enumfacing2 = iblockstate2.getValue(FACING);
+                EnumFacing enumfacing2 = (EnumFacing)iblockstate2.getValue(FACING);
 
                 if (enumfacing2 == EnumFacing.NORTH && !isSameStair(blockAccess, pos.north(), iblockstate))
                 {
@@ -482,7 +471,7 @@ public class BlockStairs extends Block
             {
                 f4 = 0.0F;
                 f5 = 0.5F;
-                EnumFacing enumfacing3 = iblockstate3.getValue(FACING);
+                EnumFacing enumfacing3 = (EnumFacing)iblockstate3.getValue(FACING);
 
                 if (enumfacing3 == EnumFacing.WEST && !isSameStair(blockAccess, pos.west(), iblockstate))
                 {
@@ -503,7 +492,7 @@ public class BlockStairs extends Block
 
             if (isBlockStairs(block3) && blockstairs$enumhalf == iblockstate4.getValue(HALF))
             {
-                EnumFacing enumfacing4 = iblockstate4.getValue(FACING);
+                EnumFacing enumfacing4 = (EnumFacing)iblockstate4.getValue(FACING);
 
                 if (enumfacing4 == EnumFacing.WEST && !isSameStair(blockAccess, pos.west(), iblockstate))
                 {
@@ -526,9 +515,6 @@ public class BlockStairs extends Block
         return flag1;
     }
 
-    /**
-     * Add all collision boxes of this Block to the list that intersect with the given mask.
-     */
     public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
     {
         this.setBaseCollisionBounds(worldIn, pos);
@@ -554,9 +540,6 @@ public class BlockStairs extends Block
         this.modelBlock.onBlockClicked(worldIn, pos, playerIn);
     }
 
-    /**
-     * Called when a player destroys this Block
-     */
     public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)
     {
         this.modelBlock.onBlockDestroyedByPlayer(worldIn, pos, state);
@@ -567,9 +550,6 @@ public class BlockStairs extends Block
         return this.modelBlock.getMixedBrightnessForBlock(worldIn, pos);
     }
 
-    /**
-     * Returns how much this block can resist explosions from the passed in entity.
-     */
     public float getExplosionResistance(Entity exploder)
     {
         return this.modelBlock.getExplosionResistance(exploder);
@@ -580,9 +560,6 @@ public class BlockStairs extends Block
         return this.modelBlock.getBlockLayer();
     }
 
-    /**
-     * How many world ticks before ticking
-     */
     public int tickRate(World worldIn)
     {
         return this.modelBlock.tickRate(worldIn);
@@ -598,9 +575,6 @@ public class BlockStairs extends Block
         return this.modelBlock.modifyAcceleration(worldIn, pos, entityIn, motion);
     }
 
-    /**
-     * Returns if this block is collidable (only used by Fire). Args: x, y, z
-     */
     public boolean isCollidable()
     {
         return this.modelBlock.isCollidable();
@@ -627,9 +601,6 @@ public class BlockStairs extends Block
         this.modelBlock.breakBlock(worldIn, pos, this.modelState);
     }
 
-    /**
-     * Triggered whenever an entity collides with this block (enters into the block)
-     */
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn)
     {
         this.modelBlock.onEntityCollidedWithBlock(worldIn, pos, entityIn);
@@ -645,41 +616,28 @@ public class BlockStairs extends Block
         return this.modelBlock.onBlockActivated(worldIn, pos, this.modelState, playerIn, EnumFacing.DOWN, 0.0F, 0.0F, 0.0F);
     }
 
-    /**
-     * Called when this Block is destroyed by an Explosion
-     */
     public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn)
     {
         this.modelBlock.onBlockDestroyedByExplosion(worldIn, pos, explosionIn);
     }
 
-    /**
-     * Get the MapColor for this Block and the given BlockState
-     */
     public MapColor getMapColor(IBlockState state)
     {
         return this.modelBlock.getMapColor(this.modelState);
     }
 
-    /**
-     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
-     * IBlockstate
-     */
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         IBlockState iblockstate = super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
         iblockstate = iblockstate.withProperty(FACING, placer.getHorizontalFacing()).withProperty(SHAPE, BlockStairs.EnumShape.STRAIGHT);
-        return facing != EnumFacing.DOWN && (facing == EnumFacing.UP || !((double)hitY > 0.5D)) ? iblockstate.withProperty(HALF, BlockStairs.EnumHalf.BOTTOM) : iblockstate.withProperty(HALF, BlockStairs.EnumHalf.TOP);
+        return facing != EnumFacing.DOWN && (facing == EnumFacing.UP || (double)hitY <= 0.5D) ? iblockstate.withProperty(HALF, BlockStairs.EnumHalf.BOTTOM) : iblockstate.withProperty(HALF, BlockStairs.EnumHalf.TOP);
     }
 
-    /**
-     * Ray traces through the blocks collision from start vector to end vector returning a ray trace hit.
-     */
     public MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end)
     {
         MovingObjectPosition[] amovingobjectposition = new MovingObjectPosition[8];
         IBlockState iblockstate = worldIn.getBlockState(pos);
-        int i = iblockstate.getValue(FACING).getHorizontalIndex();
+        int i = ((EnumFacing)iblockstate.getValue(FACING)).getHorizontalIndex();
         boolean flag = iblockstate.getValue(HALF) == BlockStairs.EnumHalf.TOP;
         int[] aint = field_150150_a[i + (flag ? 4 : 0)];
         this.hasRaytraced = true;
@@ -719,9 +677,6 @@ public class BlockStairs extends Block
         return movingobjectposition1;
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
         IBlockState iblockstate = this.getDefaultState().withProperty(HALF, (meta & 4) > 0 ? BlockStairs.EnumHalf.TOP : BlockStairs.EnumHalf.BOTTOM);
@@ -729,9 +684,6 @@ public class BlockStairs extends Block
         return iblockstate;
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
         int i = 0;
@@ -741,14 +693,10 @@ public class BlockStairs extends Block
             i |= 4;
         }
 
-        i = i | 5 - state.getValue(FACING).getIndex();
+        i = i | 5 - ((EnumFacing)state.getValue(FACING)).getIndex();
         return i;
     }
 
-    /**
-     * Get the actual Block state of this Block at the given position. This applies properties not visible in the
-     * metadata, such as fence connections.
-     */
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
     {
         if (this.func_176306_h(worldIn, pos))
@@ -789,7 +737,7 @@ public class BlockStairs extends Block
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, FACING, HALF, SHAPE);
+        return new BlockState(this, new IProperty[] {FACING, HALF, SHAPE});
     }
 
     public static enum EnumHalf implements IStringSerializable

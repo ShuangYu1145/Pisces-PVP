@@ -70,14 +70,11 @@ import net.optifine.shaders.ShadersRender;
 public class RenderItem implements IResourceManagerReloadListener
 {
     private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
-
-    /** False when the renderer is rendering the item's effects into a GUI */
     private boolean notRenderingEffectsInGUI = true;
-
-    /** Defines the zLevel of rendering of item on GUI. */
     public float zLevel;
     private final ItemModelMesher itemModelMesher;
     private final TextureManager textureManager;
+    private ModelResourceLocation modelLocation = null;
     private boolean renderItemGui = false;
     public ModelManager modelManager = null;
     private boolean renderModelHasEmissive = false;
@@ -90,7 +87,7 @@ public class RenderItem implements IResourceManagerReloadListener
 
         if (Reflector.ItemModelMesherForge_Constructor.exists())
         {
-            this.itemModelMesher = (ItemModelMesher)Reflector.newInstance(Reflector.ItemModelMesherForge_Constructor, modelManager);
+            this.itemModelMesher = (ItemModelMesher)Reflector.newInstance(Reflector.ItemModelMesherForge_Constructor, new Object[] {modelManager});
         }
         else
         {
@@ -100,11 +97,6 @@ public class RenderItem implements IResourceManagerReloadListener
         this.registerItems();
     }
 
-    /**
-     * False when the renderer is rendering the item's effects into a GUI
-     *  
-     * @param isNot If the renderer is not rendering the effects in a GUI
-     */
     public void isNotRenderingEffectsInGUI(boolean isNot)
     {
         this.notRenderingEffectsInGUI = isNot;
@@ -195,7 +187,7 @@ public class RenderItem implements IResourceManagerReloadListener
 
                 if (Config.isCustomItems())
                 {
-                    model = CustomItems.getCustomItemModel(stack, model, (ResourceLocation)null, false);
+                    model = CustomItems.getCustomItemModel(stack, model, this.modelLocation, false);
                 }
 
                 this.renderModelHasEmissive = false;
@@ -321,7 +313,7 @@ public class RenderItem implements IResourceManagerReloadListener
 
         for (int j = quads.size(); i < j; ++i)
         {
-            BakedQuad bakedquad = quads.get(i);
+            BakedQuad bakedquad = (BakedQuad)quads.get(i);
             int k = color;
 
             if (flag && bakedquad.hasTintIndex())
@@ -413,21 +405,18 @@ public class RenderItem implements IResourceManagerReloadListener
                 }
                 else if (Reflector.ForgeItem_getModel.exists())
                 {
-                    modelresourcelocation = (ModelResourceLocation)Reflector.call(item, Reflector.ForgeItem_getModel, stack, entityplayer, entityplayer.getItemInUseCount());
+                    modelresourcelocation = (ModelResourceLocation)Reflector.call(item, Reflector.ForgeItem_getModel, new Object[] {stack, entityplayer, Integer.valueOf(entityplayer.getItemInUseCount())});
                 }
 
                 if (modelresourcelocation != null)
                 {
                     ibakedmodel = this.itemModelMesher.getModelManager().getModel(modelresourcelocation);
-
-                    if (Config.isCustomItems())
-                    {
-                        ibakedmodel = CustomItems.getCustomItemModel(stack, ibakedmodel, modelresourcelocation, true);
-                    }
+                    this.modelLocation = modelresourcelocation;
                 }
             }
 
             this.renderItemModelTransform(stack, ibakedmodel, cameraTransformType);
+            this.modelLocation = null;
         }
     }
 
@@ -444,7 +433,7 @@ public class RenderItem implements IResourceManagerReloadListener
 
         if (Reflector.ForgeHooksClient_handleCameraTransforms.exists())
         {
-            model = (IBakedModel)Reflector.call(Reflector.ForgeHooksClient_handleCameraTransforms, model, cameraTransformType);
+            model = (IBakedModel)Reflector.call(Reflector.ForgeHooksClient_handleCameraTransforms, new Object[] {model, cameraTransformType});
         }
         else
         {
@@ -466,11 +455,6 @@ public class RenderItem implements IResourceManagerReloadListener
         this.textureManager.getTexture(TextureMap.locationBlocksTexture).restoreLastBlurMipmap();
     }
 
-    /**
-     * Return true if only one scale is negative
-     *  
-     * @param itemTranformVec The ItemTransformVec3f instance
-     */
     private boolean isThereOneNegativeScale(ItemTransformVec3f itemTranformVec)
     {
         return itemTranformVec.scale.x < 0.0F ^ itemTranformVec.scale.y < 0.0F ^ itemTranformVec.scale.z < 0.0F;
@@ -493,7 +477,7 @@ public class RenderItem implements IResourceManagerReloadListener
 
         if (Reflector.ForgeHooksClient_handleCameraTransforms.exists())
         {
-            ibakedmodel = (IBakedModel)Reflector.call(Reflector.ForgeHooksClient_handleCameraTransforms, ibakedmodel, ItemCameraTransforms.TransformType.GUI);
+            ibakedmodel = (IBakedModel)Reflector.call(Reflector.ForgeHooksClient_handleCameraTransforms, new Object[] {ibakedmodel, ItemCameraTransforms.TransformType.GUI});
         }
         else
         {
@@ -586,9 +570,6 @@ public class RenderItem implements IResourceManagerReloadListener
         this.renderItemOverlayIntoGUI(fr, stack, xPosition, yPosition, (String)null);
     }
 
-    /**
-     * Renders the stack size and/or damage bar for the given ItemStack.
-     */
     public void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, String text)
     {
         if (stack != null)
@@ -618,7 +599,7 @@ public class RenderItem implements IResourceManagerReloadListener
 
                 if (Reflector.ForgeItem_getDurabilityForDisplay.exists())
                 {
-                    double d0 = Reflector.callDouble(stack.getItem(), Reflector.ForgeItem_getDurabilityForDisplay, stack);
+                    double d0 = Reflector.callDouble(stack.getItem(), Reflector.ForgeItem_getDurabilityForDisplay, new Object[] {stack});
                     j1 = (int)Math.round(13.0D - d0 * 13.0D);
                     i = (int)Math.round(255.0D - d0 * 255.0D);
                 }
@@ -658,19 +639,6 @@ public class RenderItem implements IResourceManagerReloadListener
         }
     }
 
-    /**
-     * Draw with the WorldRenderer
-     *  
-     * @param renderer The WorldRenderer's instance
-     * @param x X position where the render begin
-     * @param y Y position where the render begin
-     * @param width The width of the render
-     * @param height The height of the render
-     * @param red Red component of the color
-     * @param green Green component of the color
-     * @param blue Blue component of the color
-     * @param alpha Alpha component of the color
-     */
     private void draw(WorldRenderer renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha)
     {
         renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
@@ -1230,7 +1198,7 @@ public class RenderItem implements IResourceManagerReloadListener
 
         if (Reflector.ModelLoader_onRegisterItems.exists())
         {
-            Reflector.call(Reflector.ModelLoader_onRegisterItems, this.itemModelMesher);
+            Reflector.call(Reflector.ModelLoader_onRegisterItems, new Object[] {this.itemModelMesher});
         }
     }
 

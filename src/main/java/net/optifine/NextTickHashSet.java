@@ -171,9 +171,13 @@ public class NextTickHashSet extends TreeSet
             {
                 return Iterators.emptyIterator();
             }
+            else if (list.size() == 1)
+            {
+                return (Iterator)list.get(0);
+            }
             else
             {
-                return list.size() == 1 ? (Iterator)list.get(0) : Iterators.concat(list.iterator());
+                return Iterators.concat(list.iterator());
             }
         }
     }

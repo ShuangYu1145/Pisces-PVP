@@ -9,13 +9,13 @@ import java.util.Map;
 
 public class RegionFileCache
 {
-    private static final Map<File, RegionFile> regionsByFilename = Maps.newHashMap();
+    private static final Map<File, RegionFile> regionsByFilename = Maps.<File, RegionFile>newHashMap();
 
     public static synchronized RegionFile createOrLoadRegionFile(File worldDir, int chunkX, int chunkZ)
     {
         File file1 = new File(worldDir, "region");
         File file2 = new File(file1, "r." + (chunkX >> 5) + "." + (chunkZ >> 5) + ".mca");
-        RegionFile regionfile = regionsByFilename.get(file2);
+        RegionFile regionfile = (RegionFile)regionsByFilename.get(file2);
 
         if (regionfile != null)
         {
@@ -39,9 +39,6 @@ public class RegionFileCache
         }
     }
 
-    /**
-     * clears region file references
-     */
     public static synchronized void clearRegionFileReferences()
     {
         for (RegionFile regionfile : regionsByFilename.values())
@@ -62,18 +59,12 @@ public class RegionFileCache
         regionsByFilename.clear();
     }
 
-    /**
-     * Returns an input stream for the specified chunk. Args: worldDir, chunkX, chunkZ
-     */
     public static DataInputStream getChunkInputStream(File worldDir, int chunkX, int chunkZ)
     {
         RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);
         return regionfile.getChunkDataInputStream(chunkX & 31, chunkZ & 31);
     }
 
-    /**
-     * Returns an output stream for the specified chunk. Args: worldDir, chunkX, chunkZ
-     */
     public static DataOutputStream getChunkOutputStream(File worldDir, int chunkX, int chunkZ)
     {
         RegionFile regionfile = createOrLoadRegionFile(worldDir, chunkX, chunkZ);

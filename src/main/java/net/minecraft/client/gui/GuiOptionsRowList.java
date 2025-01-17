@@ -7,7 +7,7 @@ import net.minecraft.client.settings.GameSettings;
 
 public class GuiOptionsRowList extends GuiListExtended
 {
-    private final List<GuiOptionsRowList.Row> field_148184_k = Lists.newArrayList();
+    private final List<GuiOptionsRowList.Row> field_148184_k = Lists.<GuiOptionsRowList.Row>newArrayList();
 
     public GuiOptionsRowList(Minecraft mcIn, int p_i45015_2_, int p_i45015_3_, int p_i45015_4_, int p_i45015_5_, int p_i45015_6_, GameSettings.Options... p_i45015_7_)
     {
@@ -37,12 +37,9 @@ public class GuiOptionsRowList extends GuiListExtended
         }
     }
 
-    /**
-     * Gets the IGuiListEntry object for the given index
-     */
     public GuiOptionsRowList.Row getListEntry(int index)
     {
-        return this.field_148184_k.get(index);
+        return (GuiOptionsRowList.Row)this.field_148184_k.get(index);
     }
 
     protected int getSize()
@@ -50,9 +47,6 @@ public class GuiOptionsRowList extends GuiListExtended
         return this.field_148184_k.size();
     }
 
-    /**
-     * Gets the width of the list
-     */
     public int getListWidth()
     {
         return 400;

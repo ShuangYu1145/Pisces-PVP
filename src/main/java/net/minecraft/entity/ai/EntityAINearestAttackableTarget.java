@@ -15,10 +15,8 @@ public class EntityAINearestAttackableTarget<T extends EntityLivingBase> extends
 {
     protected final Class<T> targetClass;
     private final int targetChance;
-
-    /** Instance of EntityAINearestAttackableTargetSorter. */
     protected final EntityAINearestAttackableTarget.Sorter theNearestAttackableTargetSorter;
-    protected Predicate<? super T> targetEntitySelector;
+    protected Predicate <? super T > targetEntitySelector;
     protected EntityLivingBase targetEntity;
 
     public EntityAINearestAttackableTarget(EntityCreature creature, Class<T> classTarget, boolean checkSight)
@@ -28,10 +26,10 @@ public class EntityAINearestAttackableTarget<T extends EntityLivingBase> extends
 
     public EntityAINearestAttackableTarget(EntityCreature creature, Class<T> classTarget, boolean checkSight, boolean onlyNearby)
     {
-        this(creature, classTarget, 10, checkSight, onlyNearby, (Predicate<T>)null);
+        this(creature, classTarget, 10, checkSight, onlyNearby, (Predicate <? super T >)null);
     }
 
-    public EntityAINearestAttackableTarget(EntityCreature creature, Class<T> classTarget, int chance, boolean checkSight, boolean onlyNearby, final Predicate<? super T> targetSelector)
+    public EntityAINearestAttackableTarget(EntityCreature creature, Class<T> classTarget, int chance, boolean checkSight, boolean onlyNearby, final Predicate <? super T > targetSelector)
     {
         super(creature, checkSight, onlyNearby);
         this.targetClass = classTarget;
@@ -54,7 +52,7 @@ public class EntityAINearestAttackableTarget<T extends EntityLivingBase> extends
 
                         if (p_apply_1_.isSneaking())
                         {
-                            d0 *= (double)0.8F;
+                            d0 *= 0.800000011920929D;
                         }
 
                         if (p_apply_1_.isInvisible())
@@ -81,9 +79,6 @@ public class EntityAINearestAttackableTarget<T extends EntityLivingBase> extends
         };
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     public boolean shouldExecute()
     {
         if (this.targetChance > 0 && this.taskOwner.getRNG().nextInt(this.targetChance) != 0)
@@ -93,7 +88,7 @@ public class EntityAINearestAttackableTarget<T extends EntityLivingBase> extends
         else
         {
             double d0 = this.getTargetDistance();
-            List<T> list = this.taskOwner.worldObj.getEntitiesWithinAABB(this.targetClass, this.taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), Predicates.and(this.targetEntitySelector, EntitySelectors.NOT_SPECTATING));
+            List<T> list = this.taskOwner.worldObj.<T>getEntitiesWithinAABB(this.targetClass, this.taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), Predicates.<T> and (this.targetEntitySelector, EntitySelectors.NOT_SPECTATING));
             Collections.sort(list, this.theNearestAttackableTargetSorter);
 
             if (list.isEmpty())
@@ -108,9 +103,6 @@ public class EntityAINearestAttackableTarget<T extends EntityLivingBase> extends
         }
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
     public void startExecuting()
     {
         this.taskOwner.setAttackTarget(this.targetEntity);
@@ -130,15 +122,7 @@ public class EntityAINearestAttackableTarget<T extends EntityLivingBase> extends
         {
             double d0 = this.theEntity.getDistanceSqToEntity(p_compare_1_);
             double d1 = this.theEntity.getDistanceSqToEntity(p_compare_2_);
-
-            if (d0 < d1)
-            {
-                return -1;
-            }
-            else
-            {
-                return d0 > d1 ? 1 : 0;
-            }
+            return d0 < d1 ? -1 : (d0 > d1 ? 1 : 0);
         }
     }
 }

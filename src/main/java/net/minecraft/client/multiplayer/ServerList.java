@@ -13,10 +13,8 @@ import org.apache.logging.log4j.Logger;
 public class ServerList
 {
     private static final Logger logger = LogManager.getLogger();
-
-    /** The Minecraft instance. */
     private final Minecraft mc;
-    private final List<ServerData> servers = Lists.newArrayList();
+    private final List<ServerData> servers = Lists.<ServerData>newArrayList();
 
     public ServerList(Minecraft mcIn)
     {
@@ -24,10 +22,6 @@ public class ServerList
         this.loadServerList();
     }
 
-    /**
-     * Loads a list of servers from servers.dat, by running ServerData.getServerDataFromNBTCompound on each NBT compound
-     * found in the "servers" tag list.
-     */
     public void loadServerList()
     {
         try
@@ -49,14 +43,10 @@ public class ServerList
         }
         catch (Exception exception)
         {
-            logger.error("Couldn't load server list", (Throwable)exception);
+            logger.error((String)"Couldn\'t load server list", (Throwable)exception);
         }
     }
 
-    /**
-     * Runs getNBTCompound on each ServerData instance, puts everything into a "servers" NBT list and writes it to
-     * servers.dat.
-     */
     public void saveServerList()
     {
         try
@@ -74,45 +64,30 @@ public class ServerList
         }
         catch (Exception exception)
         {
-            logger.error("Couldn't save server list", (Throwable)exception);
+            logger.error((String)"Couldn\'t save server list", (Throwable)exception);
         }
     }
 
-    /**
-     * Gets the ServerData instance stored for the given index in the list.
-     */
     public ServerData getServerData(int index)
     {
-        return this.servers.get(index);
+        return (ServerData)this.servers.get(index);
     }
 
-    /**
-     * Removes the ServerData instance stored for the given index in the list.
-     */
     public void removeServerData(int index)
     {
         this.servers.remove(index);
     }
 
-    /**
-     * Adds the given ServerData instance to the list.
-     */
     public void addServerData(ServerData server)
     {
         this.servers.add(server);
     }
 
-    /**
-     * Counts the number of ServerData instances in the list.
-     */
     public int countServers()
     {
         return this.servers.size();
     }
 
-    /**
-     * Takes two list indexes, and swaps their order around.
-     */
     public void swapServers(int p_78857_1_, int p_78857_2_)
     {
         ServerData serverdata = this.getServerData(p_78857_1_);

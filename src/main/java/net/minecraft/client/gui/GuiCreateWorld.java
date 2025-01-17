@@ -18,24 +18,11 @@ public class GuiCreateWorld extends GuiScreen
     private GuiTextField worldSeedField;
     private String saveDirName;
     private String gameMode = "survival";
-
-    /**
-     * Used to save away the game mode when the current "debug" world type is chosen (forcing it to spectator mode)
-     */
     private String savedGameMode;
     private boolean generateStructuresEnabled = true;
-
-    /** If cheats are allowed */
     private boolean allowCheats;
-
-    /**
-     * User explicitly clicked "Allow Cheats" at some point
-     * Prevents value changes due to changing game mode
-     */
     private boolean allowCheatsWasSetByUser;
     private boolean bonusChestEnabled;
-
-    /** Set to true when "hardcore" is the currently-selected gamemode */
     private boolean hardCoreMode;
     private boolean alreadyGenerated;
     private boolean inMoreWorldOptionsDisplay;
@@ -52,47 +39,38 @@ public class GuiCreateWorld extends GuiScreen
     private String worldName;
     private int selectedIndex;
     public String chunkProviderSettingsJson = "";
-
-    /** These filenames are known to be restricted on one or more OS's. */
     private static final String[] disallowedFilenames = new String[] {"CON", "COM", "PRN", "AUX", "CLOCK$", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
 
     public GuiCreateWorld(GuiScreen p_i46320_1_)
     {
         this.parentScreen = p_i46320_1_;
         this.worldSeed = "";
-        this.worldName = I18n.format("selectWorld.newWorld");
+        this.worldName = I18n.format("selectWorld.newWorld", new Object[0]);
     }
 
-    /**
-     * Called from the main game loop to update the screen.
-     */
     public void updateScreen()
     {
         this.worldNameField.updateCursorCounter();
         this.worldSeedField.updateCursorCounter();
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
     public void initGui()
     {
         Keyboard.enableRepeatEvents(true);
         this.buttonList.clear();
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 155, this.height - 28, 150, 20, I18n.format("selectWorld.create")));
-        this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height - 28, 150, 20, I18n.format("gui.cancel")));
-        this.buttonList.add(this.btnGameMode = new GuiButton(2, this.width / 2 - 75, 115, 150, 20, I18n.format("selectWorld.gameMode")));
-        this.buttonList.add(this.btnMoreOptions = new GuiButton(3, this.width / 2 - 75, 187, 150, 20, I18n.format("selectWorld.moreWorldOptions")));
-        this.buttonList.add(this.btnMapFeatures = new GuiButton(4, this.width / 2 - 155, 100, 150, 20, I18n.format("selectWorld.mapFeatures")));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 155, this.height - 28, 150, 20, I18n.format("selectWorld.create", new Object[0])));
+        this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height - 28, 150, 20, I18n.format("gui.cancel", new Object[0])));
+        this.buttonList.add(this.btnGameMode = new GuiButton(2, this.width / 2 - 75, 115, 150, 20, I18n.format("selectWorld.gameMode", new Object[0])));
+        this.buttonList.add(this.btnMoreOptions = new GuiButton(3, this.width / 2 - 75, 187, 150, 20, I18n.format("selectWorld.moreWorldOptions", new Object[0])));
+        this.buttonList.add(this.btnMapFeatures = new GuiButton(4, this.width / 2 - 155, 100, 150, 20, I18n.format("selectWorld.mapFeatures", new Object[0])));
         this.btnMapFeatures.visible = false;
-        this.buttonList.add(this.btnBonusItems = new GuiButton(7, this.width / 2 + 5, 151, 150, 20, I18n.format("selectWorld.bonusItems")));
+        this.buttonList.add(this.btnBonusItems = new GuiButton(7, this.width / 2 + 5, 151, 150, 20, I18n.format("selectWorld.bonusItems", new Object[0])));
         this.btnBonusItems.visible = false;
-        this.buttonList.add(this.btnMapType = new GuiButton(5, this.width / 2 + 5, 100, 150, 20, I18n.format("selectWorld.mapType")));
+        this.buttonList.add(this.btnMapType = new GuiButton(5, this.width / 2 + 5, 100, 150, 20, I18n.format("selectWorld.mapType", new Object[0])));
         this.btnMapType.visible = false;
-        this.buttonList.add(this.btnAllowCommands = new GuiButton(6, this.width / 2 - 155, 151, 150, 20, I18n.format("selectWorld.allowCommands")));
+        this.buttonList.add(this.btnAllowCommands = new GuiButton(6, this.width / 2 - 155, 151, 150, 20, I18n.format("selectWorld.allowCommands", new Object[0])));
         this.btnAllowCommands.visible = false;
-        this.buttonList.add(this.btnCustomizeType = new GuiButton(8, this.width / 2 + 5, 120, 150, 20, I18n.format("selectWorld.customizeType")));
+        this.buttonList.add(this.btnCustomizeType = new GuiButton(8, this.width / 2 + 5, 120, 150, 20, I18n.format("selectWorld.customizeType", new Object[0])));
         this.btnCustomizeType.visible = false;
         this.worldNameField = new GuiTextField(9, this.fontRendererObj, this.width / 2 - 100, 60, 200, 20);
         this.worldNameField.setFocused(true);
@@ -104,9 +82,6 @@ public class GuiCreateWorld extends GuiScreen
         this.updateDisplayState();
     }
 
-    /**
-     * Determine a save-directory name from the world name
-     */
     private void calcSaveDirName()
     {
         this.saveDirName = this.worldNameField.getText().trim();
@@ -124,56 +99,46 @@ public class GuiCreateWorld extends GuiScreen
         this.saveDirName = getUncollidingSaveDirName(this.mc.getSaveLoader(), this.saveDirName);
     }
 
-    /**
-     * Sets displayed GUI elements according to the current settings state
-     */
     private void updateDisplayState()
     {
-        this.btnGameMode.displayString = I18n.format("selectWorld.gameMode") + ": " + I18n.format("selectWorld.gameMode." + this.gameMode);
-        this.gameModeDesc1 = I18n.format("selectWorld.gameMode." + this.gameMode + ".line1");
-        this.gameModeDesc2 = I18n.format("selectWorld.gameMode." + this.gameMode + ".line2");
-        this.btnMapFeatures.displayString = I18n.format("selectWorld.mapFeatures") + " ";
+        this.btnGameMode.displayString = I18n.format("selectWorld.gameMode", new Object[0]) + ": " + I18n.format("selectWorld.gameMode." + this.gameMode, new Object[0]);
+        this.gameModeDesc1 = I18n.format("selectWorld.gameMode." + this.gameMode + ".line1", new Object[0]);
+        this.gameModeDesc2 = I18n.format("selectWorld.gameMode." + this.gameMode + ".line2", new Object[0]);
+        this.btnMapFeatures.displayString = I18n.format("selectWorld.mapFeatures", new Object[0]) + " ";
 
         if (this.generateStructuresEnabled)
         {
-            this.btnMapFeatures.displayString = this.btnMapFeatures.displayString + I18n.format("options.on");
+            this.btnMapFeatures.displayString = this.btnMapFeatures.displayString + I18n.format("options.on", new Object[0]);
         }
         else
         {
-            this.btnMapFeatures.displayString = this.btnMapFeatures.displayString + I18n.format("options.off");
+            this.btnMapFeatures.displayString = this.btnMapFeatures.displayString + I18n.format("options.off", new Object[0]);
         }
 
-        this.btnBonusItems.displayString = I18n.format("selectWorld.bonusItems") + " ";
+        this.btnBonusItems.displayString = I18n.format("selectWorld.bonusItems", new Object[0]) + " ";
 
         if (this.bonusChestEnabled && !this.hardCoreMode)
         {
-            this.btnBonusItems.displayString = this.btnBonusItems.displayString + I18n.format("options.on");
+            this.btnBonusItems.displayString = this.btnBonusItems.displayString + I18n.format("options.on", new Object[0]);
         }
         else
         {
-            this.btnBonusItems.displayString = this.btnBonusItems.displayString + I18n.format("options.off");
+            this.btnBonusItems.displayString = this.btnBonusItems.displayString + I18n.format("options.off", new Object[0]);
         }
 
-        this.btnMapType.displayString = I18n.format("selectWorld.mapType") + " " + I18n.format(WorldType.worldTypes[this.selectedIndex].getTranslateName());
-        this.btnAllowCommands.displayString = I18n.format("selectWorld.allowCommands") + " ";
+        this.btnMapType.displayString = I18n.format("selectWorld.mapType", new Object[0]) + " " + I18n.format(WorldType.worldTypes[this.selectedIndex].getTranslateName(), new Object[0]);
+        this.btnAllowCommands.displayString = I18n.format("selectWorld.allowCommands", new Object[0]) + " ";
 
         if (this.allowCheats && !this.hardCoreMode)
         {
-            this.btnAllowCommands.displayString = this.btnAllowCommands.displayString + I18n.format("options.on");
+            this.btnAllowCommands.displayString = this.btnAllowCommands.displayString + I18n.format("options.on", new Object[0]);
         }
         else
         {
-            this.btnAllowCommands.displayString = this.btnAllowCommands.displayString + I18n.format("options.off");
+            this.btnAllowCommands.displayString = this.btnAllowCommands.displayString + I18n.format("options.off", new Object[0]);
         }
     }
 
-    /**
-     * Ensures that a proposed directory name doesn't collide with existing names.
-     * Returns the name, possibly modified to avoid collisions.
-     *  
-     * @param saveLoader used to check against existing names
-     * @param name the name to check, and possibly adjust (via the method's return)
-     */
     public static String getUncollidingSaveDirName(ISaveFormat saveLoader, String name)
     {
         name = name.replaceAll("[\\./\"]", "_");
@@ -194,17 +159,11 @@ public class GuiCreateWorld extends GuiScreen
         return name;
     }
 
-    /**
-     * Called when the screen is unloaded. Used to disable keyboard repeat events
-     */
     public void onGuiClosed()
     {
         Keyboard.enableRepeatEvents(false);
     }
 
-    /**
-     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-     */
     protected void actionPerformed(GuiButton button) throws IOException
     {
         if (button.enabled)
@@ -362,37 +321,17 @@ public class GuiCreateWorld extends GuiScreen
         }
     }
 
-    /**
-     * Returns whether the currently-selected world type is actually acceptable for selection
-     * Used to hide the "debug" world type unless the shift key is depressed.
-     */
     private boolean canSelectCurWorldType()
     {
         WorldType worldtype = WorldType.worldTypes[this.selectedIndex];
-
-        if (worldtype != null && worldtype.getCanBeCreated())
-        {
-            return worldtype == WorldType.DEBUG_WORLD ? isShiftKeyDown() : true;
-        }
-        else
-        {
-            return false;
-        }
+        return worldtype != null && worldtype.getCanBeCreated() ? (worldtype == WorldType.DEBUG_WORLD ? isShiftKeyDown() : true) : false;
     }
 
-    /**
-     * Toggles between initial world-creation display, and "more options" display.
-     * Called when user clicks "More World Options..." or "Done" (same button, different labels depending on current
-     * display).
-     */
     private void toggleMoreWorldOptions()
     {
         this.showMoreWorldOptions(!this.inMoreWorldOptionsDisplay);
     }
 
-    /**
-     * Shows additional world-creation options if toggle is true, otherwise shows main world-creation elements
-     */
     private void showMoreWorldOptions(boolean toggle)
     {
         this.inMoreWorldOptionsDisplay = toggle;
@@ -436,18 +375,14 @@ public class GuiCreateWorld extends GuiScreen
 
         if (this.inMoreWorldOptionsDisplay)
         {
-            this.btnMoreOptions.displayString = I18n.format("gui.done");
+            this.btnMoreOptions.displayString = I18n.format("gui.done", new Object[0]);
         }
         else
         {
-            this.btnMoreOptions.displayString = I18n.format("selectWorld.moreWorldOptions");
+            this.btnMoreOptions.displayString = I18n.format("selectWorld.moreWorldOptions", new Object[0]);
         }
     }
 
-    /**
-     * Fired when a key is typed (except F11 which toggles full screen). This is the equivalent of
-     * KeyListener.keyTyped(KeyEvent e). Args : character (character on the key), keyCode (lwjgl Keyboard key code)
-     */
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
         if (this.worldNameField.isFocused() && !this.inMoreWorldOptionsDisplay)
@@ -463,16 +398,13 @@ public class GuiCreateWorld extends GuiScreen
 
         if (keyCode == 28 || keyCode == 156)
         {
-            this.actionPerformed(this.buttonList.get(0));
+            this.actionPerformed((GuiButton)this.buttonList.get(0));
         }
 
-        (this.buttonList.get(0)).enabled = this.worldNameField.getText().length() > 0;
+        ((GuiButton)this.buttonList.get(0)).enabled = this.worldNameField.getText().length() > 0;
         this.calcSaveDirName();
     }
 
-    /**
-     * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
-     */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -487,40 +419,37 @@ public class GuiCreateWorld extends GuiScreen
         }
     }
 
-    /**
-     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
-     */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, I18n.format("selectWorld.create"), this.width / 2, 20, -1);
+        this.drawCenteredString(this.fontRendererObj, I18n.format("selectWorld.create", new Object[0]), this.width / 2, 20, -1);
 
         if (this.inMoreWorldOptionsDisplay)
         {
-            this.drawString(this.fontRendererObj, I18n.format("selectWorld.enterSeed"), this.width / 2 - 100, 47, -6250336);
-            this.drawString(this.fontRendererObj, I18n.format("selectWorld.seedInfo"), this.width / 2 - 100, 85, -6250336);
+            this.drawString(this.fontRendererObj, I18n.format("selectWorld.enterSeed", new Object[0]), this.width / 2 - 100, 47, -6250336);
+            this.drawString(this.fontRendererObj, I18n.format("selectWorld.seedInfo", new Object[0]), this.width / 2 - 100, 85, -6250336);
 
             if (this.btnMapFeatures.visible)
             {
-                this.drawString(this.fontRendererObj, I18n.format("selectWorld.mapFeatures.info"), this.width / 2 - 150, 122, -6250336);
+                this.drawString(this.fontRendererObj, I18n.format("selectWorld.mapFeatures.info", new Object[0]), this.width / 2 - 150, 122, -6250336);
             }
 
             if (this.btnAllowCommands.visible)
             {
-                this.drawString(this.fontRendererObj, I18n.format("selectWorld.allowCommands.info"), this.width / 2 - 150, 172, -6250336);
+                this.drawString(this.fontRendererObj, I18n.format("selectWorld.allowCommands.info", new Object[0]), this.width / 2 - 150, 172, -6250336);
             }
 
             this.worldSeedField.drawTextBox();
 
             if (WorldType.worldTypes[this.selectedIndex].showWorldInfoNotice())
             {
-                this.fontRendererObj.drawSplitString(I18n.format(WorldType.worldTypes[this.selectedIndex].getTranslatedInfo()), this.btnMapType.xPosition + 2, this.btnMapType.yPosition + 22, this.btnMapType.getButtonWidth(), 10526880);
+                this.fontRendererObj.drawSplitString(I18n.format(WorldType.worldTypes[this.selectedIndex].getTranslatedInfo(), new Object[0]), this.btnMapType.xPosition + 2, this.btnMapType.yPosition + 22, this.btnMapType.getButtonWidth(), 10526880);
             }
         }
         else
         {
-            this.drawString(this.fontRendererObj, I18n.format("selectWorld.enterName"), this.width / 2 - 100, 47, -6250336);
-            this.drawString(this.fontRendererObj, I18n.format("selectWorld.resultFolder") + " " + this.saveDirName, this.width / 2 - 100, 85, -6250336);
+            this.drawString(this.fontRendererObj, I18n.format("selectWorld.enterName", new Object[0]), this.width / 2 - 100, 47, -6250336);
+            this.drawString(this.fontRendererObj, I18n.format("selectWorld.resultFolder", new Object[0]) + " " + this.saveDirName, this.width / 2 - 100, 85, -6250336);
             this.worldNameField.drawTextBox();
             this.drawString(this.fontRendererObj, this.gameModeDesc1, this.width / 2 - 100, 137, -6250336);
             this.drawString(this.fontRendererObj, this.gameModeDesc2, this.width / 2 - 100, 149, -6250336);
@@ -529,16 +458,9 @@ public class GuiCreateWorld extends GuiScreen
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
-    /**
-     * Set the initial values of a new world to create, from the values from an existing world.
-     *  
-     * Called after construction when a user selects the "Recreate" button.
-     *  
-     * @param original The world we're copying from
-     */
     public void recreateFromExistingWorld(WorldInfo original)
     {
-        this.worldName = I18n.format("selectWorld.newWorld.copyOf", original.getWorldName());
+        this.worldName = I18n.format("selectWorld.newWorld.copyOf", new Object[] {original.getWorldName()});
         this.worldSeed = original.getSeed() + "";
         this.selectedIndex = original.getTerrainType().getWorldTypeID();
         this.chunkProviderSettingsJson = original.getGeneratorOptions();

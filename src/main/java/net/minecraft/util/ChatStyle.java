@@ -14,9 +14,6 @@ import net.minecraft.event.HoverEvent;
 
 public class ChatStyle
 {
-    /**
-     * The parent of this ChatStyle.  Used for looking up values that this instance does not override.
-     */
     private ChatStyle parentStyle;
     private EnumChatFormatting color;
     private Boolean bold;
@@ -27,10 +24,6 @@ public class ChatStyle
     private ClickEvent chatClickEvent;
     private HoverEvent chatHoverEvent;
     private String insertion;
-
-    /**
-     * The base of the ChatStyle hierarchy.  All ChatStyle instances are implicitly children of this.
-     */
     private static final ChatStyle rootStyle = new ChatStyle()
     {
         public EnumChatFormatting getColor()
@@ -123,186 +116,116 @@ public class ChatStyle
         }
     };
 
-    /**
-     * Gets the effective color of this ChatStyle.
-     */
     public EnumChatFormatting getColor()
     {
         return this.color == null ? this.getParent().getColor() : this.color;
     }
 
-    /**
-     * Whether or not text of this ChatStyle should be in bold.
-     */
     public boolean getBold()
     {
-        return this.bold == null ? this.getParent().getBold() : this.bold;
+        return this.bold == null ? this.getParent().getBold() : this.bold.booleanValue();
     }
 
-    /**
-     * Whether or not text of this ChatStyle should be italicized.
-     */
     public boolean getItalic()
     {
-        return this.italic == null ? this.getParent().getItalic() : this.italic;
+        return this.italic == null ? this.getParent().getItalic() : this.italic.booleanValue();
     }
 
-    /**
-     * Whether or not to format text of this ChatStyle using strikethrough.
-     */
     public boolean getStrikethrough()
     {
-        return this.strikethrough == null ? this.getParent().getStrikethrough() : this.strikethrough;
+        return this.strikethrough == null ? this.getParent().getStrikethrough() : this.strikethrough.booleanValue();
     }
 
-    /**
-     * Whether or not text of this ChatStyle should be underlined.
-     */
     public boolean getUnderlined()
     {
-        return this.underlined == null ? this.getParent().getUnderlined() : this.underlined;
+        return this.underlined == null ? this.getParent().getUnderlined() : this.underlined.booleanValue();
     }
 
-    /**
-     * Whether or not text of this ChatStyle should be obfuscated.
-     */
     public boolean getObfuscated()
     {
-        return this.obfuscated == null ? this.getParent().getObfuscated() : this.obfuscated;
+        return this.obfuscated == null ? this.getParent().getObfuscated() : this.obfuscated.booleanValue();
     }
 
-    /**
-     * Whether or not this style is empty (inherits everything from the parent).
-     */
     public boolean isEmpty()
     {
         return this.bold == null && this.italic == null && this.strikethrough == null && this.underlined == null && this.obfuscated == null && this.color == null && this.chatClickEvent == null && this.chatHoverEvent == null;
     }
 
-    /**
-     * The effective chat click event.
-     */
     public ClickEvent getChatClickEvent()
     {
         return this.chatClickEvent == null ? this.getParent().getChatClickEvent() : this.chatClickEvent;
     }
 
-    /**
-     * The effective chat hover event.
-     */
     public HoverEvent getChatHoverEvent()
     {
         return this.chatHoverEvent == null ? this.getParent().getChatHoverEvent() : this.chatHoverEvent;
     }
 
-    /**
-     * Get the text to be inserted into Chat when the component is shift-clicked
-     */
     public String getInsertion()
     {
         return this.insertion == null ? this.getParent().getInsertion() : this.insertion;
     }
 
-    /**
-     * Sets the color for this ChatStyle to the given value.  Only use color values for this; set other values using the
-     * specific methods.
-     */
     public ChatStyle setColor(EnumChatFormatting color)
     {
         this.color = color;
         return this;
     }
 
-    /**
-     * Sets whether or not text of this ChatStyle should be in bold.  Set to false if, e.g., the parent style is bold
-     * and you want text of this style to be unbolded.
-     */
     public ChatStyle setBold(Boolean boldIn)
     {
         this.bold = boldIn;
         return this;
     }
 
-    /**
-     * Sets whether or not text of this ChatStyle should be italicized.  Set to false if, e.g., the parent style is
-     * italicized and you want to override that for this style.
-     */
     public ChatStyle setItalic(Boolean italic)
     {
         this.italic = italic;
         return this;
     }
 
-    /**
-     * Sets whether or not to format text of this ChatStyle using strikethrough.  Set to false if, e.g., the parent
-     * style uses strikethrough and you want to override that for this style.
-     */
     public ChatStyle setStrikethrough(Boolean strikethrough)
     {
         this.strikethrough = strikethrough;
         return this;
     }
 
-    /**
-     * Sets whether or not text of this ChatStyle should be underlined.  Set to false if, e.g., the parent style is
-     * underlined and you want to override that for this style.
-     */
     public ChatStyle setUnderlined(Boolean underlined)
     {
         this.underlined = underlined;
         return this;
     }
 
-    /**
-     * Sets whether or not text of this ChatStyle should be obfuscated.  Set to false if, e.g., the parent style is
-     * obfuscated and you want to override that for this style.
-     */
     public ChatStyle setObfuscated(Boolean obfuscated)
     {
         this.obfuscated = obfuscated;
         return this;
     }
 
-    /**
-     * Sets the event that should be run when text of this ChatStyle is clicked on.
-     */
     public ChatStyle setChatClickEvent(ClickEvent event)
     {
         this.chatClickEvent = event;
         return this;
     }
 
-    /**
-     * Sets the event that should be run when text of this ChatStyle is hovered over.
-     */
     public ChatStyle setChatHoverEvent(HoverEvent event)
     {
         this.chatHoverEvent = event;
         return this;
     }
 
-    /**
-     * Set a text to be inserted into Chat when the component is shift-clicked
-     */
     public ChatStyle setInsertion(String insertion)
     {
         this.insertion = insertion;
         return this;
     }
 
-    /**
-     * Sets the fallback ChatStyle to use if this ChatStyle does not override some value.  Without a parent, obvious
-     * defaults are used (bold: false, underlined: false, etc).
-     */
     public ChatStyle setParentStyle(ChatStyle parent)
     {
         this.parentStyle = parent;
         return this;
     }
 
-    /**
-     * Gets the equivalent text formatting code for this style, without the initial section sign (U+00A7) character.
-     */
     public String getFormattingCode()
     {
         if (this.isEmpty())
@@ -347,9 +270,6 @@ public class ChatStyle
         }
     }
 
-    /**
-     * Gets the immediate parent of this ChatStyle.
-     */
     private ChatStyle getParent()
     {
         return this.parentStyle == null ? rootStyle : this.parentStyle;
@@ -372,48 +292,58 @@ public class ChatStyle
         }
         else
         {
-            ChatStyle chatstyle = (ChatStyle)p_equals_1_;
-
-            if (this.getBold() == chatstyle.getBold() && this.getColor() == chatstyle.getColor() && this.getItalic() == chatstyle.getItalic() && this.getObfuscated() == chatstyle.getObfuscated() && this.getStrikethrough() == chatstyle.getStrikethrough() && this.getUnderlined() == chatstyle.getUnderlined())
+            boolean flag;
+            label0:
             {
-                if (this.getChatClickEvent() != null)
+                ChatStyle chatstyle = (ChatStyle)p_equals_1_;
+
+                if (this.getBold() == chatstyle.getBold() && this.getColor() == chatstyle.getColor() && this.getItalic() == chatstyle.getItalic() && this.getObfuscated() == chatstyle.getObfuscated() && this.getStrikethrough() == chatstyle.getStrikethrough() && this.getUnderlined() == chatstyle.getUnderlined())
                 {
-                    if (!this.getChatClickEvent().equals(chatstyle.getChatClickEvent()))
+                    label85:
                     {
-                        return false;
+                        if (this.getChatClickEvent() != null)
+                        {
+                            if (!this.getChatClickEvent().equals(chatstyle.getChatClickEvent()))
+                            {
+                                break label85;
+                            }
+                        }
+                        else if (chatstyle.getChatClickEvent() != null)
+                        {
+                            break label85;
+                        }
+
+                        if (this.getChatHoverEvent() != null)
+                        {
+                            if (!this.getChatHoverEvent().equals(chatstyle.getChatHoverEvent()))
+                            {
+                                break label85;
+                            }
+                        }
+                        else if (chatstyle.getChatHoverEvent() != null)
+                        {
+                            break label85;
+                        }
+
+                        if (this.getInsertion() != null)
+                        {
+                            if (this.getInsertion().equals(chatstyle.getInsertion()))
+                            {
+                                break label0;
+                            }
+                        }
+                        else if (chatstyle.getInsertion() == null)
+                        {
+                            break label0;
+                        }
                     }
-                }
-                else if (chatstyle.getChatClickEvent() != null)
-                {
-                    return false;
                 }
 
-                if (this.getChatHoverEvent() != null)
-                {
-                    if (!this.getChatHoverEvent().equals(chatstyle.getChatHoverEvent()))
-                    {
-                        return false;
-                    }
-                }
-                else if (chatstyle.getChatHoverEvent() != null)
-                {
-                    return false;
-                }
-
-                if (this.getInsertion() != null)
-                {
-                    if (this.getInsertion().equals(chatstyle.getInsertion()))
-                    {
-                        return true;
-                    }
-                }
-                else if (chatstyle.getInsertion() == null)
-                {
-                    return true;
-                }
+                flag = false;
+                return flag;
             }
-
-            return false;
+            flag = true;
+            return flag;
         }
     }
 
@@ -431,11 +361,6 @@ public class ChatStyle
         return i;
     }
 
-    /**
-     * Creates a shallow copy of this style.  Changes to this instance's values will not be reflected in the copy, but
-     * changes to the parent style's values WILL be reflected in both this instance and the copy, wherever either does
-     * not override a value.
-     */
     public ChatStyle createShallowCopy()
     {
         ChatStyle chatstyle = new ChatStyle();
@@ -452,18 +377,14 @@ public class ChatStyle
         return chatstyle;
     }
 
-    /**
-     * Creates a deep copy of this style.  No changes to this instance or its parent style will be reflected in the
-     * copy.
-     */
     public ChatStyle createDeepCopy()
     {
         ChatStyle chatstyle = new ChatStyle();
-        chatstyle.setBold(this.getBold());
-        chatstyle.setItalic(this.getItalic());
-        chatstyle.setStrikethrough(this.getStrikethrough());
-        chatstyle.setUnderlined(this.getUnderlined());
-        chatstyle.setObfuscated(this.getObfuscated());
+        chatstyle.setBold(Boolean.valueOf(this.getBold()));
+        chatstyle.setItalic(Boolean.valueOf(this.getItalic()));
+        chatstyle.setStrikethrough(Boolean.valueOf(this.getStrikethrough()));
+        chatstyle.setUnderlined(Boolean.valueOf(this.getUnderlined()));
+        chatstyle.setObfuscated(Boolean.valueOf(this.getObfuscated()));
         chatstyle.setColor(this.getColor());
         chatstyle.setChatClickEvent(this.getChatClickEvent());
         chatstyle.setChatHoverEvent(this.getChatHoverEvent());
@@ -488,32 +409,32 @@ public class ChatStyle
                 {
                     if (jsonobject.has("bold"))
                     {
-                        chatstyle.bold = jsonobject.get("bold").getAsBoolean();
+                        chatstyle.bold = Boolean.valueOf(jsonobject.get("bold").getAsBoolean());
                     }
 
                     if (jsonobject.has("italic"))
                     {
-                        chatstyle.italic = jsonobject.get("italic").getAsBoolean();
+                        chatstyle.italic = Boolean.valueOf(jsonobject.get("italic").getAsBoolean());
                     }
 
                     if (jsonobject.has("underlined"))
                     {
-                        chatstyle.underlined = jsonobject.get("underlined").getAsBoolean();
+                        chatstyle.underlined = Boolean.valueOf(jsonobject.get("underlined").getAsBoolean());
                     }
 
                     if (jsonobject.has("strikethrough"))
                     {
-                        chatstyle.strikethrough = jsonobject.get("strikethrough").getAsBoolean();
+                        chatstyle.strikethrough = Boolean.valueOf(jsonobject.get("strikethrough").getAsBoolean());
                     }
 
                     if (jsonobject.has("obfuscated"))
                     {
-                        chatstyle.obfuscated = jsonobject.get("obfuscated").getAsBoolean();
+                        chatstyle.obfuscated = Boolean.valueOf(jsonobject.get("obfuscated").getAsBoolean());
                     }
 
                     if (jsonobject.has("color"))
                     {
-                        chatstyle.color = p_deserialize_3_.deserialize(jsonobject.get("color"), EnumChatFormatting.class);
+                        chatstyle.color = (EnumChatFormatting)p_deserialize_3_.deserialize(jsonobject.get("color"), EnumChatFormatting.class);
                     }
 
                     if (jsonobject.has("insertion"))
@@ -547,7 +468,7 @@ public class ChatStyle
                         {
                             JsonPrimitive jsonprimitive2 = jsonobject2.getAsJsonPrimitive("action");
                             HoverEvent.Action hoverevent$action = jsonprimitive2 == null ? null : HoverEvent.Action.getValueByCanonicalName(jsonprimitive2.getAsString());
-                            IChatComponent ichatcomponent = p_deserialize_3_.deserialize(jsonobject2.get("value"), IChatComponent.class);
+                            IChatComponent ichatcomponent = (IChatComponent)p_deserialize_3_.deserialize(jsonobject2.get("value"), IChatComponent.class);
 
                             if (hoverevent$action != null && ichatcomponent != null && hoverevent$action.shouldAllowInChat())
                             {

@@ -12,33 +12,21 @@ import net.minecraft.util.ChatComponentTranslation;
 
 public class CommandClearInventory extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "clear";
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.clear.usage";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP entityplayermp = args.length == 0 ? getCommandSenderAsPlayer(sender) : getPlayer(sender, args[0]);
@@ -55,13 +43,13 @@ public class CommandClearInventory extends CommandBase
             }
             catch (NBTException nbtexception)
             {
-                throw new CommandException("commands.clear.tagError", nbtexception.getMessage());
+                throw new CommandException("commands.clear.tagError", new Object[] {nbtexception.getMessage()});
             }
         }
 
         if (args.length >= 2 && item == null)
         {
-            throw new CommandException("commands.clear.failure", entityplayermp.getName());
+            throw new CommandException("commands.clear.failure", new Object[] {entityplayermp.getName()});
         }
         else
         {
@@ -77,17 +65,17 @@ public class CommandClearInventory extends CommandBase
 
             if (k == 0)
             {
-                throw new CommandException("commands.clear.failure", entityplayermp.getName());
+                throw new CommandException("commands.clear.failure", new Object[] {entityplayermp.getName()});
             }
             else
             {
                 if (j == 0)
                 {
-                    sender.addChatMessage(new ChatComponentTranslation("commands.clear.testing", entityplayermp.getName(), k));
+                    sender.addChatMessage(new ChatComponentTranslation("commands.clear.testing", new Object[] {entityplayermp.getName(), Integer.valueOf(k)}));
                 }
                 else
                 {
-                    notifyOperators(sender, this, "commands.clear.success", new Object[] {entityplayermp.getName(), k});
+                    notifyOperators(sender, this, "commands.clear.success", new Object[] {entityplayermp.getName(), Integer.valueOf(k)});
                 }
             }
         }
@@ -95,14 +83,7 @@ public class CommandClearInventory extends CommandBase
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, this.func_147209_d());
-        }
-        else
-        {
-            return args.length == 2 ? getListOfStringsMatchingLastWord(args, Item.itemRegistry.getKeys()) : null;
-        }
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, this.func_147209_d()) : (args.length == 2 ? getListOfStringsMatchingLastWord(args, Item.itemRegistry.getKeys()) : null);
     }
 
     protected String[] func_147209_d()
@@ -110,9 +91,6 @@ public class CommandClearInventory extends CommandBase
         return MinecraftServer.getServer().getAllUsernames();
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return index == 0;

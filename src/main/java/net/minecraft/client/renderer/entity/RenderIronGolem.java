@@ -16,9 +16,6 @@ public class RenderIronGolem extends RenderLiving<EntityIronGolem>
         this.addLayer(new LayerIronGolemFlower(this));
     }
 
-    /**
-     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
-     */
     protected ResourceLocation getEntityTexture(EntityIronGolem entity)
     {
         return ironGolemTextures;
@@ -28,7 +25,7 @@ public class RenderIronGolem extends RenderLiving<EntityIronGolem>
     {
         super.rotateCorpse(bat, p_77043_2_, p_77043_3_, partialTicks);
 
-        if (!((double)bat.limbSwingAmount < 0.01D))
+        if ((double)bat.limbSwingAmount >= 0.01D)
         {
             float f = 13.0F;
             float f1 = bat.limbSwing - bat.limbSwingAmount * (1.0F - partialTicks) + 6.0F;

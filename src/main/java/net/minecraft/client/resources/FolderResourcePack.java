@@ -29,7 +29,7 @@ public class FolderResourcePack extends AbstractResourcePack
 
     public Set<String> getResourceDomains()
     {
-        Set<String> set = Sets.newHashSet();
+        Set<String> set = Sets.<String>newHashSet();
         File file1 = new File(this.resourcePackFile, "assets/");
 
         if (file1.isDirectory())

@@ -10,7 +10,6 @@ import net.minecraft.util.MathHelper;
 
 public class EntityAIVillagerInteract extends EntityAIWatchClosest2
 {
-    /** The delay before the villager throws an itemstack (in ticks) */
     private int interactionDelay;
     private EntityVillager villager;
 
@@ -20,9 +19,6 @@ public class EntityAIVillagerInteract extends EntityAIWatchClosest2
         this.villager = villagerIn;
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
     public void startExecuting()
     {
         super.startExecuting();
@@ -37,9 +33,6 @@ public class EntityAIVillagerInteract extends EntityAIWatchClosest2
         }
     }
 
-    /**
-     * Updates the task
-     */
     public void updateTask()
     {
         super.updateTask();
@@ -83,7 +76,7 @@ public class EntityAIVillagerInteract extends EntityAIWatchClosest2
 
                     if (itemstack1 != null)
                     {
-                        double d0 = this.villager.posY - (double)0.3F + (double)this.villager.getEyeHeight();
+                        double d0 = this.villager.posY - 0.30000001192092896D + (double)this.villager.getEyeHeight();
                         EntityItem entityitem = new EntityItem(this.villager.worldObj, this.villager.posX, d0, this.villager.posZ, itemstack1);
                         float f = 0.3F;
                         float f1 = this.villager.rotationYawHead;

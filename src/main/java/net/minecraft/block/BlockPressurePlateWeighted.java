@@ -2,6 +2,7 @@ package net.minecraft.block;
 
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -23,7 +24,7 @@ public class BlockPressurePlateWeighted extends BlockBasePressurePlate
     protected BlockPressurePlateWeighted(Material p_i46380_1_, int p_i46380_2_, MapColor p_i46380_3_)
     {
         super(p_i46380_1_, p_i46380_3_);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(POWER, 0));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(POWER, Integer.valueOf(0)));
         this.field_150068_a = p_i46380_2_;
     }
 
@@ -44,40 +45,31 @@ public class BlockPressurePlateWeighted extends BlockBasePressurePlate
 
     protected int getRedstoneStrength(IBlockState state)
     {
-        return state.getValue(POWER);
+        return ((Integer)state.getValue(POWER)).intValue();
     }
 
     protected IBlockState setRedstoneStrength(IBlockState state, int strength)
     {
-        return state.withProperty(POWER, strength);
+        return state.withProperty(POWER, Integer.valueOf(strength));
     }
 
-    /**
-     * How many world ticks before ticking
-     */
     public int tickRate(World worldIn)
     {
         return 10;
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(POWER, meta);
+        return this.getDefaultState().withProperty(POWER, Integer.valueOf(meta));
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(POWER);
+        return ((Integer)state.getValue(POWER)).intValue();
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, POWER);
+        return new BlockState(this, new IProperty[] {POWER});
     }
 }

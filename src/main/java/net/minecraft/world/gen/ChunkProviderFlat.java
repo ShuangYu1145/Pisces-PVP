@@ -30,7 +30,7 @@ public class ChunkProviderFlat implements IChunkProvider
     private Random random;
     private final IBlockState[] cachedBlockIDs = new IBlockState[256];
     private final FlatGeneratorInfo flatWorldGenInfo;
-    private final List<MapGenStructure> structureGenerators = Lists.newArrayList();
+    private final List<MapGenStructure> structureGenerators = Lists.<MapGenStructure>newArrayList();
     private final boolean hasDecoration;
     private final boolean hasDungeons;
     private WorldGenLakes waterLakeGenerator;
@@ -48,7 +48,7 @@ public class ChunkProviderFlat implements IChunkProvider
 
             if (map.containsKey("village"))
             {
-                Map<String, String> map1 = map.get("village");
+                Map<String, String> map1 = (Map)map.get("village");
 
                 if (!map1.containsKey("size"))
                 {
@@ -60,22 +60,22 @@ public class ChunkProviderFlat implements IChunkProvider
 
             if (map.containsKey("biome_1"))
             {
-                this.structureGenerators.add(new MapGenScatteredFeature(map.get("biome_1")));
+                this.structureGenerators.add(new MapGenScatteredFeature((Map)map.get("biome_1")));
             }
 
             if (map.containsKey("mineshaft"))
             {
-                this.structureGenerators.add(new MapGenMineshaft(map.get("mineshaft")));
+                this.structureGenerators.add(new MapGenMineshaft((Map)map.get("mineshaft")));
             }
 
             if (map.containsKey("stronghold"))
             {
-                this.structureGenerators.add(new MapGenStronghold(map.get("stronghold")));
+                this.structureGenerators.add(new MapGenStronghold((Map)map.get("stronghold")));
             }
 
             if (map.containsKey("oceanmonument"))
             {
-                this.structureGenerators.add(new StructureOceanMonument(map.get("oceanmonument")));
+                this.structureGenerators.add(new StructureOceanMonument((Map)map.get("oceanmonument")));
             }
         }
 
@@ -122,10 +122,6 @@ public class ChunkProviderFlat implements IChunkProvider
         this.hasDecoration = flag ? false : this.flatWorldGenInfo.getWorldFeatures().containsKey("decoration");
     }
 
-    /**
-     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
-     * specified chunk from the map seed and chunk seed
-     */
     public Chunk provideChunk(int x, int z)
     {
         ChunkPrimer chunkprimer = new ChunkPrimer();
@@ -164,17 +160,11 @@ public class ChunkProviderFlat implements IChunkProvider
         return chunk;
     }
 
-    /**
-     * Checks to see if a chunk exists at x, z
-     */
     public boolean chunkExists(int x, int z)
     {
         return true;
     }
 
-    /**
-     * Populates chunk with ores etc etc
-     */
     public void populate(IChunkProvider chunkProvider, int x, int z)
     {
         int i = x * 16;
@@ -232,42 +222,25 @@ public class ChunkProviderFlat implements IChunkProvider
         return false;
     }
 
-    /**
-     * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
-     * Return true if all chunks have been saved.
-     */
     public boolean saveChunks(boolean saveAllChunks, IProgressUpdate progressCallback)
     {
         return true;
     }
 
-    /**
-     * Save extra data not associated with any Chunk.  Not saved during autosave, only during world unload.  Currently
-     * unimplemented.
-     */
     public void saveExtraData()
     {
     }
 
-    /**
-     * Unloads chunks that are marked to be unloaded. This is not guaranteed to unload every such chunk.
-     */
     public boolean unloadQueuedChunks()
     {
         return false;
     }
 
-    /**
-     * Returns if the IChunkProvider supports saving.
-     */
     public boolean canSave()
     {
         return true;
     }
 
-    /**
-     * Converts the instance data to a readable string.
-     */
     public String makeString()
     {
         return "FlatLevelSource";

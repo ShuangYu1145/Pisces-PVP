@@ -14,38 +14,26 @@ import net.minecraft.world.World;
 
 public class CommandStats extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "stats";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.stats.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException("commands.stats.usage");
+            throw new WrongUsageException("commands.stats.usage", new Object[0]);
         }
         else
         {
@@ -59,7 +47,7 @@ public class CommandStats extends CommandBase
             {
                 if (!args[0].equals("block"))
                 {
-                    throw new WrongUsageException("commands.stats.usage");
+                    throw new WrongUsageException("commands.stats.usage", new Object[0]);
                 }
 
                 flag = true;
@@ -71,7 +59,7 @@ public class CommandStats extends CommandBase
             {
                 if (args.length < 5)
                 {
-                    throw new WrongUsageException("commands.stats.block.usage");
+                    throw new WrongUsageException("commands.stats.block.usage", new Object[0]);
                 }
 
                 i = 4;
@@ -80,7 +68,7 @@ public class CommandStats extends CommandBase
             {
                 if (args.length < 3)
                 {
-                    throw new WrongUsageException("commands.stats.entity.usage");
+                    throw new WrongUsageException("commands.stats.entity.usage", new Object[0]);
                 }
 
                 i = 2;
@@ -94,27 +82,27 @@ public class CommandStats extends CommandBase
                 {
                     if (i == 5)
                     {
-                        throw new WrongUsageException("commands.stats.block.set.usage");
+                        throw new WrongUsageException("commands.stats.block.set.usage", new Object[0]);
                     }
 
-                    throw new WrongUsageException("commands.stats.entity.set.usage");
+                    throw new WrongUsageException("commands.stats.entity.set.usage", new Object[0]);
                 }
             }
             else
             {
                 if (!"clear".equals(s))
                 {
-                    throw new WrongUsageException("commands.stats.usage");
+                    throw new WrongUsageException("commands.stats.usage", new Object[0]);
                 }
 
                 if (args.length < i + 1)
                 {
                     if (i == 5)
                     {
-                        throw new WrongUsageException("commands.stats.block.clear.usage");
+                        throw new WrongUsageException("commands.stats.block.clear.usage", new Object[0]);
                     }
 
-                    throw new WrongUsageException("commands.stats.entity.clear.usage");
+                    throw new WrongUsageException("commands.stats.entity.clear.usage", new Object[0]);
                 }
             }
 
@@ -122,7 +110,7 @@ public class CommandStats extends CommandBase
 
             if (commandresultstats$type == null)
             {
-                throw new CommandException("commands.stats.failed");
+                throw new CommandException("commands.stats.failed", new Object[0]);
             }
             else
             {
@@ -136,7 +124,7 @@ public class CommandStats extends CommandBase
 
                     if (tileentity == null)
                     {
-                        throw new CommandException("commands.stats.noCompatibleBlock", blockpos.getX(), blockpos.getY(), blockpos.getZ());
+                        throw new CommandException("commands.stats.noCompatibleBlock", new Object[] {Integer.valueOf(blockpos.getX()), Integer.valueOf(blockpos.getY()), Integer.valueOf(blockpos.getZ())});
                     }
 
                     if (tileentity instanceof TileEntityCommandBlock)
@@ -147,7 +135,7 @@ public class CommandStats extends CommandBase
                     {
                         if (!(tileentity instanceof TileEntitySign))
                         {
-                            throw new CommandException("commands.stats.noCompatibleBlock", blockpos.getX(), blockpos.getY(), blockpos.getZ());
+                            throw new CommandException("commands.stats.noCompatibleBlock", new Object[] {Integer.valueOf(blockpos.getX()), Integer.valueOf(blockpos.getY()), Integer.valueOf(blockpos.getZ())});
                         }
 
                         commandresultstats = ((TileEntitySign)tileentity).getStats();
@@ -166,7 +154,7 @@ public class CommandStats extends CommandBase
 
                     if (s1.length() == 0 || s2.length() == 0)
                     {
-                        throw new CommandException("commands.stats.failed");
+                        throw new CommandException("commands.stats.failed", new Object[0]);
                     }
 
                     CommandResultStats.setScoreBoardStat(commandresultstats, commandresultstats$type, s1, s2);
@@ -190,33 +178,7 @@ public class CommandStats extends CommandBase
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, new String[] {"entity", "block"});
-        }
-        else if (args.length == 2 && args[0].equals("entity"))
-        {
-            return getListOfStringsMatchingLastWord(args, this.func_175776_d());
-        }
-        else if (args.length >= 2 && args.length <= 4 && args[0].equals("block"))
-        {
-            return func_175771_a(args, 1, pos);
-        }
-        else if ((args.length != 3 || !args[0].equals("entity")) && (args.length != 5 || !args[0].equals("block")))
-        {
-            if ((args.length != 4 || !args[0].equals("entity")) && (args.length != 6 || !args[0].equals("block")))
-            {
-                return (args.length != 6 || !args[0].equals("entity")) && (args.length != 8 || !args[0].equals("block")) ? null : getListOfStringsMatchingLastWord(args, this.func_175777_e());
-            }
-            else
-            {
-                return getListOfStringsMatchingLastWord(args, CommandResultStats.Type.getTypeNames());
-            }
-        }
-        else
-        {
-            return getListOfStringsMatchingLastWord(args, new String[] {"set", "clear"});
-        }
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, new String[] {"entity", "block"}): (args.length == 2 && args[0].equals("entity") ? getListOfStringsMatchingLastWord(args, this.func_175776_d()) : (args.length >= 2 && args.length <= 4 && args[0].equals("block") ? func_175771_a(args, 1, pos) : ((args.length != 3 || !args[0].equals("entity")) && (args.length != 5 || !args[0].equals("block")) ? ((args.length != 4 || !args[0].equals("entity")) && (args.length != 6 || !args[0].equals("block")) ? ((args.length != 6 || !args[0].equals("entity")) && (args.length != 8 || !args[0].equals("block")) ? null : getListOfStringsMatchingLastWord(args, this.func_175777_e())) : getListOfStringsMatchingLastWord(args, CommandResultStats.Type.getTypeNames())) : getListOfStringsMatchingLastWord(args, new String[] {"set", "clear"}))));
     }
 
     protected String[] func_175776_d()
@@ -227,7 +189,7 @@ public class CommandStats extends CommandBase
     protected List<String> func_175777_e()
     {
         Collection<ScoreObjective> collection = MinecraftServer.getServer().worldServerForDimension(0).getScoreboard().getScoreObjectives();
-        List<String> list = Lists.newArrayList();
+        List<String> list = Lists.<String>newArrayList();
 
         for (ScoreObjective scoreobjective : collection)
         {
@@ -240,9 +202,6 @@ public class CommandStats extends CommandBase
         return list;
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return args.length > 0 && args[0].equals("entity") && index == 1;

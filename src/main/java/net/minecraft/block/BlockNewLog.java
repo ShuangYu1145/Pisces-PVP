@@ -3,6 +3,7 @@ package net.minecraft.block;
 import com.google.common.base.Predicate;
 import java.util.List;
 import net.minecraft.block.material.MapColor;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -12,7 +13,7 @@ import net.minecraft.item.ItemStack;
 
 public class BlockNewLog extends BlockLog
 {
-    public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class, new Predicate<BlockPlanks.EnumType>()
+    public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.<BlockPlanks.EnumType>create("variant", BlockPlanks.EnumType.class, new Predicate<BlockPlanks.EnumType>()
     {
         public boolean apply(BlockPlanks.EnumType p_apply_1_)
         {
@@ -25,12 +26,9 @@ public class BlockNewLog extends BlockLog
         this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockPlanks.EnumType.ACACIA).withProperty(LOG_AXIS, BlockLog.EnumAxis.Y));
     }
 
-    /**
-     * Get the MapColor for this Block and the given BlockState
-     */
     public MapColor getMapColor(IBlockState state)
     {
-        BlockPlanks.EnumType blockplanks$enumtype = state.getValue(VARIANT);
+        BlockPlanks.EnumType blockplanks$enumtype = (BlockPlanks.EnumType)state.getValue(VARIANT);
 
         switch ((BlockLog.EnumAxis)state.getValue(LOG_AXIS))
         {
@@ -53,18 +51,12 @@ public class BlockNewLog extends BlockLog
         }
     }
 
-    /**
-     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
-     */
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
         list.add(new ItemStack(itemIn, 1, BlockPlanks.EnumType.ACACIA.getMetadata() - 4));
         list.add(new ItemStack(itemIn, 1, BlockPlanks.EnumType.DARK_OAK.getMetadata() - 4));
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
         IBlockState iblockstate = this.getDefaultState().withProperty(VARIANT, BlockPlanks.EnumType.byMetadata((meta & 3) + 4));
@@ -90,13 +82,11 @@ public class BlockNewLog extends BlockLog
         return iblockstate;
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
+    @SuppressWarnings("incomplete-switch")
     public int getMetaFromState(IBlockState state)
     {
         int i = 0;
-        i = i | state.getValue(VARIANT).getMetadata() - 4;
+        i = i | ((BlockPlanks.EnumType)state.getValue(VARIANT)).getMetadata() - 4;
 
         switch ((BlockLog.EnumAxis)state.getValue(LOG_AXIS))
         {
@@ -117,20 +107,16 @@ public class BlockNewLog extends BlockLog
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, VARIANT, LOG_AXIS);
+        return new BlockState(this, new IProperty[] {VARIANT, LOG_AXIS});
     }
 
     protected ItemStack createStackedBlock(IBlockState state)
     {
-        return new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(VARIANT).getMetadata() - 4);
+        return new ItemStack(Item.getItemFromBlock(this), 1, ((BlockPlanks.EnumType)state.getValue(VARIANT)).getMetadata() - 4);
     }
 
-    /**
-     * Gets the metadata of the item this Block can drop. This method is called when the block gets destroyed. It
-     * returns the metadata of the dropped item based on the old metadata of the block.
-     */
     public int damageDropped(IBlockState state)
     {
-        return state.getValue(VARIANT).getMetadata() - 4;
+        return ((BlockPlanks.EnumType)state.getValue(VARIANT)).getMetadata() - 4;
     }
 }

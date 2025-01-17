@@ -7,33 +7,21 @@ import net.minecraft.world.WorldServer;
 
 public class CommandTime extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "time";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.time.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length > 1)
@@ -56,7 +44,7 @@ public class CommandTime extends CommandBase
                 }
 
                 this.setTime(sender, l);
-                notifyOperators(sender, this, "commands.time.set", new Object[] {l});
+                notifyOperators(sender, this, "commands.time.set", new Object[] {Integer.valueOf(l)});
                 return;
             }
 
@@ -64,7 +52,7 @@ public class CommandTime extends CommandBase
             {
                 int k = parseInt(args[1], 0);
                 this.addTime(sender, k);
-                notifyOperators(sender, this, "commands.time.added", new Object[] {k});
+                notifyOperators(sender, this, "commands.time.added", new Object[] {Integer.valueOf(k)});
                 return;
             }
 
@@ -74,7 +62,7 @@ public class CommandTime extends CommandBase
                 {
                     int j = (int)(sender.getEntityWorld().getWorldTime() % 2147483647L);
                     sender.setCommandStat(CommandResultStats.Type.QUERY_RESULT, j);
-                    notifyOperators(sender, this, "commands.time.query", new Object[] {j});
+                    notifyOperators(sender, this, "commands.time.query", new Object[] {Integer.valueOf(j)});
                     return;
                 }
 
@@ -82,34 +70,20 @@ public class CommandTime extends CommandBase
                 {
                     int i = (int)(sender.getEntityWorld().getTotalWorldTime() % 2147483647L);
                     sender.setCommandStat(CommandResultStats.Type.QUERY_RESULT, i);
-                    notifyOperators(sender, this, "commands.time.query", new Object[] {i});
+                    notifyOperators(sender, this, "commands.time.query", new Object[] {Integer.valueOf(i)});
                     return;
                 }
             }
         }
 
-        throw new WrongUsageException("commands.time.usage");
+        throw new WrongUsageException("commands.time.usage", new Object[0]);
     }
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, new String[] {"set", "add", "query"});
-        }
-        else if (args.length == 2 && args[0].equals("set"))
-        {
-            return getListOfStringsMatchingLastWord(args, new String[] {"day", "night"});
-        }
-        else
-        {
-            return args.length == 2 && args[0].equals("query") ? getListOfStringsMatchingLastWord(args, new String[] {"daytime", "gametime"}) : null;
-        }
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, new String[] {"set", "add", "query"}): (args.length == 2 && args[0].equals("set") ? getListOfStringsMatchingLastWord(args, new String[] {"day", "night"}): (args.length == 2 && args[0].equals("query") ? getListOfStringsMatchingLastWord(args, new String[] {"daytime", "gametime"}): null));
     }
 
-    /**
-     * Set the time in the server object.
-     */
     protected void setTime(ICommandSender sender, int time)
     {
         for (int i = 0; i < MinecraftServer.getServer().worldServers.length; ++i)
@@ -118,9 +92,6 @@ public class CommandTime extends CommandBase
         }
     }
 
-    /**
-     * Adds (or removes) time in the server object.
-     */
     protected void addTime(ICommandSender sender, int time)
     {
         for (int i = 0; i < MinecraftServer.getServer().worldServers.length; ++i)

@@ -20,9 +20,8 @@ import net.minecraft.world.World;
 
 public class EntityBoat extends Entity
 {
-    /** true if no player in boat */
-    private boolean isBoatEmpty = true;
-    private double speedMultiplier = 0.07D;
+    private boolean isBoatEmpty;
+    private double speedMultiplier;
     private int boatPosRotationIncrements;
     private double boatX;
     private double boatY;
@@ -36,14 +35,12 @@ public class EntityBoat extends Entity
     public EntityBoat(World worldIn)
     {
         super(worldIn);
+        this.isBoatEmpty = true;
+        this.speedMultiplier = 0.07D;
         this.preventEntitySpawning = true;
         this.setSize(1.5F, 0.6F);
     }
 
-    /**
-     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
-     * prevent them from trampling crops
-     */
     protected boolean canTriggerWalking()
     {
         return false;
@@ -56,26 +53,16 @@ public class EntityBoat extends Entity
         this.dataWatcher.addObject(19, new Float(0.0F));
     }
 
-    /**
-     * Returns a boundingBox used to collide the entity with other entities and blocks. This enables the entity to be
-     * pushable on contact, like boats or minecarts.
-     */
     public AxisAlignedBB getCollisionBox(Entity entityIn)
     {
         return entityIn.getEntityBoundingBox();
     }
 
-    /**
-     * Returns the collision bounding box for this entity
-     */
     public AxisAlignedBB getCollisionBoundingBox()
     {
         return this.getEntityBoundingBox();
     }
 
-    /**
-     * Returns true if this entity should push and be pushed by other entities when colliding.
-     */
     public boolean canBePushed()
     {
         return true;
@@ -93,17 +80,11 @@ public class EntityBoat extends Entity
         this.prevPosZ = p_i1705_6_;
     }
 
-    /**
-     * Returns the Y offset from the entity's position for any entity riding this one.
-     */
     public double getMountedYOffset()
     {
         return -0.3D;
     }
 
-    /**
-     * Called when the entity is attacked.
-     */
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         if (this.isEntityInvulnerable(source))
@@ -148,9 +129,6 @@ public class EntityBoat extends Entity
         }
     }
 
-    /**
-     * Setups the entity to do the hurt animation. Only used by packets in multiplayer.
-     */
     public void performHurtAnimation()
     {
         this.setForwardDirection(-this.getForwardDirection());
@@ -158,9 +136,6 @@ public class EntityBoat extends Entity
         this.setDamageTaken(this.getDamageTaken() * 11.0F);
     }
 
-    /**
-     * Returns true if other Entities should be prevented from moving through this Entity.
-     */
     public boolean canBeCollidedWith()
     {
         return !this.isDead;
@@ -194,7 +169,7 @@ public class EntityBoat extends Entity
                 double d2 = z - this.posZ;
                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
 
-                if (!(d3 > 1.0D))
+                if (d3 <= 1.0D)
                 {
                     return;
                 }
@@ -213,9 +188,6 @@ public class EntityBoat extends Entity
         }
     }
 
-    /**
-     * Sets the velocity to the args. Args: x, y, z
-     */
     public void setVelocity(double x, double y, double z)
     {
         this.velocityX = this.motionX = x;
@@ -223,9 +195,6 @@ public class EntityBoat extends Entity
         this.velocityZ = this.motionZ = z;
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         super.onUpdate();
@@ -274,13 +243,13 @@ public class EntityBoat extends Entity
                 {
                     double d7 = this.posX - d2 * d5 * 0.8D + d4 * d6;
                     double d8 = this.posZ - d4 * d5 * 0.8D - d2 * d6;
-                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, d7, this.posY - 0.125D, d8, this.motionX, this.motionY, this.motionZ);
+                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, d7, this.posY - 0.125D, d8, this.motionX, this.motionY, this.motionZ, new int[0]);
                 }
                 else
                 {
                     double d24 = this.posX + d2 + d4 * d5 * 0.7D;
                     double d25 = this.posZ + d4 - d2 * d5 * 0.7D;
-                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, d24, this.posY - 0.125D, d25, this.motionX, this.motionY, this.motionZ);
+                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, d24, this.posY - 0.125D, d25, this.motionX, this.motionY, this.motionZ, new int[0]);
                 }
             }
         }
@@ -313,9 +282,9 @@ public class EntityBoat extends Entity
                     this.motionZ *= 0.5D;
                 }
 
-                this.motionX *= (double)0.99F;
-                this.motionY *= (double)0.95F;
-                this.motionZ *= (double)0.99F;
+                this.motionX *= 0.9900000095367432D;
+                this.motionY *= 0.949999988079071D;
+                this.motionZ *= 0.9900000095367432D;
             }
         }
         else
@@ -323,7 +292,7 @@ public class EntityBoat extends Entity
             if (d0 < 1.0D)
             {
                 double d10 = d0 * 2.0D - 1.0D;
-                this.motionY += (double)0.04F * d10;
+                this.motionY += 0.03999999910593033D * d10;
             }
             else
             {
@@ -332,15 +301,15 @@ public class EntityBoat extends Entity
                     this.motionY /= 2.0D;
                 }
 
-                this.motionY += (double)0.007F;
+                this.motionY += 0.007000000216066837D;
             }
 
             if (this.riddenByEntity instanceof EntityLivingBase)
             {
                 EntityLivingBase entitylivingbase = (EntityLivingBase)this.riddenByEntity;
                 float f = this.riddenByEntity.rotationYaw + -entitylivingbase.moveStrafing * 90.0F;
-                this.motionX += -Math.sin((double)(f * (float)Math.PI / 180.0F)) * this.speedMultiplier * (double)entitylivingbase.moveForward * (double)0.05F;
-                this.motionZ += Math.cos((double)(f * (float)Math.PI / 180.0F)) * this.speedMultiplier * (double)entitylivingbase.moveForward * (double)0.05F;
+                this.motionX += -Math.sin((double)(f * (float)Math.PI / 180.0F)) * this.speedMultiplier * (double)entitylivingbase.moveForward * 0.05000000074505806D;
+                this.motionZ += Math.cos((double)(f * (float)Math.PI / 180.0F)) * this.speedMultiplier * (double)entitylivingbase.moveForward * 0.05000000074505806D;
             }
 
             double d11 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
@@ -427,9 +396,9 @@ public class EntityBoat extends Entity
             }
             else
             {
-                this.motionX *= (double)0.99F;
-                this.motionY *= (double)0.95F;
-                this.motionZ *= (double)0.99F;
+                this.motionX *= 0.9900000095367432D;
+                this.motionY *= 0.949999988079071D;
+                this.motionZ *= 0.9900000095367432D;
             }
 
             this.rotationPitch = 0.0F;
@@ -459,13 +428,13 @@ public class EntityBoat extends Entity
 
             if (!this.worldObj.isRemote)
             {
-                List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand((double)0.2F, 0.0D, (double)0.2F));
+                List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
 
                 if (list != null && !list.isEmpty())
                 {
                     for (int k2 = 0; k2 < list.size(); ++k2)
                     {
-                        Entity entity = list.get(k2);
+                        Entity entity = (Entity)list.get(k2);
 
                         if (entity != this.riddenByEntity && entity.canBePushed() && entity instanceof EntityBoat)
                         {
@@ -492,23 +461,14 @@ public class EntityBoat extends Entity
         }
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     protected void writeEntityToNBT(NBTTagCompound tagCompound)
     {
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     protected void readEntityFromNBT(NBTTagCompound tagCompund)
     {
     }
 
-    /**
-     * First layer of player interaction
-     */
     public boolean interactFirst(EntityPlayer playerIn)
     {
         if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer && this.riddenByEntity != playerIn)
@@ -561,57 +521,36 @@ public class EntityBoat extends Entity
         }
     }
 
-    /**
-     * Sets the damage taken from the last hit.
-     */
     public void setDamageTaken(float p_70266_1_)
     {
-        this.dataWatcher.updateObject(19, p_70266_1_);
+        this.dataWatcher.updateObject(19, Float.valueOf(p_70266_1_));
     }
 
-    /**
-     * Gets the damage taken from the last hit.
-     */
     public float getDamageTaken()
     {
         return this.dataWatcher.getWatchableObjectFloat(19);
     }
 
-    /**
-     * Sets the time to count down from since the last time entity was hit.
-     */
     public void setTimeSinceHit(int p_70265_1_)
     {
-        this.dataWatcher.updateObject(17, p_70265_1_);
+        this.dataWatcher.updateObject(17, Integer.valueOf(p_70265_1_));
     }
 
-    /**
-     * Gets the time since the last hit.
-     */
     public int getTimeSinceHit()
     {
         return this.dataWatcher.getWatchableObjectInt(17);
     }
 
-    /**
-     * Sets the forward direction of the entity.
-     */
     public void setForwardDirection(int p_70269_1_)
     {
-        this.dataWatcher.updateObject(18, p_70269_1_);
+        this.dataWatcher.updateObject(18, Integer.valueOf(p_70269_1_));
     }
 
-    /**
-     * Gets the forward direction of the entity.
-     */
     public int getForwardDirection()
     {
         return this.dataWatcher.getWatchableObjectInt(18);
     }
 
-    /**
-     * true if no player in boat
-     */
     public void setIsBoatEmpty(boolean p_70270_1_)
     {
         this.isBoatEmpty = p_70270_1_;

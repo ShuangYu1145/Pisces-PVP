@@ -15,18 +15,24 @@ public class S3EPacketTeams implements Packet<INetHandlerPlayClient>
     private String displayName = "";
     private String prefix = "";
     private String suffix = "";
-    private String nameTagVisibility = Team.EnumVisible.ALWAYS.internalName;
-    private int color = -1;
-    private Collection<String> players = Lists.newArrayList();
+    private String nameTagVisibility;
+    private int color;
+    private Collection<String> players;
     private int action;
     private int friendlyFlags;
 
     public S3EPacketTeams()
     {
+        this.nameTagVisibility = Team.EnumVisible.ALWAYS.internalName;
+        this.color = -1;
+        this.players = Lists.<String>newArrayList();
     }
 
     public S3EPacketTeams(ScorePlayerTeam teamIn, int actionIn)
     {
+        this.nameTagVisibility = Team.EnumVisible.ALWAYS.internalName;
+        this.color = -1;
+        this.players = Lists.<String>newArrayList();
         this.name = teamIn.getRegisteredName();
         this.action = actionIn;
 
@@ -48,6 +54,10 @@ public class S3EPacketTeams implements Packet<INetHandlerPlayClient>
 
     public S3EPacketTeams(ScorePlayerTeam teamIn, Collection<String> playersIn, int actionIn)
     {
+        this.nameTagVisibility = Team.EnumVisible.ALWAYS.internalName;
+        this.color = -1;
+        this.players = Lists.<String>newArrayList();
+
         if (actionIn != 3 && actionIn != 4)
         {
             throw new IllegalArgumentException("Method must be join or leave for player constructor");
@@ -64,9 +74,6 @@ public class S3EPacketTeams implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Reads the raw packet data from the data stream.
-     */
     public void readPacketData(PacketBuffer buf) throws IOException
     {
         this.name = buf.readStringFromBuffer(16);
@@ -93,9 +100,6 @@ public class S3EPacketTeams implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Writes the raw packet data to the data stream.
-     */
     public void writePacketData(PacketBuffer buf) throws IOException
     {
         buf.writeString(this.name);
@@ -122,9 +126,6 @@ public class S3EPacketTeams implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Passes this Packet on to the NetHandler for processing.
-     */
     public void processPacket(INetHandlerPlayClient handler)
     {
         handler.handleTeams(this);

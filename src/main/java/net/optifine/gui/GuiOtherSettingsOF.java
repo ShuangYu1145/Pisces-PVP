@@ -22,13 +22,9 @@ public class GuiOtherSettingsOF extends GuiScreen implements GuiYesNoCallback
         this.settings = gamesettings;
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
     public void initGui()
     {
-        this.title = I18n.format("of.options.otherTitle");
+        this.title = I18n.format("of.options.otherTitle", new Object[0]);
         this.buttonList.clear();
 
         for (int i = 0; i < enumOptions.length; ++i)
@@ -47,13 +43,10 @@ public class GuiOtherSettingsOF extends GuiScreen implements GuiYesNoCallback
             }
         }
 
-        this.buttonList.add(new GuiButton(210, this.width / 2 - 100, this.height / 6 + 168 + 11 - 44, I18n.format("of.options.other.reset")));
-        this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168 + 11, I18n.format("gui.done")));
+        this.buttonList.add(new GuiButton(210, this.width / 2 - 100, this.height / 6 + 168 + 11 - 44, I18n.format("of.options.other.reset", new Object[0])));
+        this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168 + 11, I18n.format("gui.done", new Object[0])));
     }
 
-    /**
-     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-     */
     protected void actionPerformed(GuiButton guibutton)
     {
         if (guibutton.enabled)
@@ -73,7 +66,7 @@ public class GuiOtherSettingsOF extends GuiScreen implements GuiYesNoCallback
             if (guibutton.id == 210)
             {
                 this.mc.gameSettings.saveOptions();
-                GuiYesNo guiyesno = new GuiYesNo(this, I18n.format("of.message.other.reset"), "", 9999);
+                GuiYesNo guiyesno = new GuiYesNo(this, I18n.format("of.message.other.reset", new Object[0]), "", 9999);
                 this.mc.displayGuiScreen(guiyesno);
             }
         }
@@ -89,9 +82,6 @@ public class GuiOtherSettingsOF extends GuiScreen implements GuiYesNoCallback
         this.mc.displayGuiScreen(this);
     }
 
-    /**
-     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
-     */
     public void drawScreen(int x, int y, float f)
     {
         this.drawDefaultBackground();

@@ -30,14 +30,14 @@ public class ModelBlock
     private final boolean gui3d;
     private final boolean ambientOcclusion;
     private ItemCameraTransforms cameraTransforms;
-    public String name = "";
+    public String name;
     protected final Map<String, String> textures;
     protected ModelBlock parent;
     protected ResourceLocation parentLocation;
 
     public static ModelBlock deserialize(Reader readerIn)
     {
-        return SERIALIZER.fromJson(readerIn, ModelBlock.class);
+        return (ModelBlock)SERIALIZER.fromJson(readerIn, ModelBlock.class);
     }
 
     public static ModelBlock deserialize(String jsonString)
@@ -52,11 +52,12 @@ public class ModelBlock
 
     protected ModelBlock(ResourceLocation parentLocationIn, Map<String, String> texturesIn, boolean ambientOcclusionIn, boolean gui3dIn, ItemCameraTransforms cameraTransformsIn)
     {
-        this(parentLocationIn, Collections.emptyList(), texturesIn, ambientOcclusionIn, gui3dIn, cameraTransformsIn);
+        this(parentLocationIn, Collections.<BlockPart>emptyList(), texturesIn, ambientOcclusionIn, gui3dIn, cameraTransformsIn);
     }
 
     private ModelBlock(ResourceLocation parentLocationIn, List<BlockPart> elementsIn, Map<String, String> texturesIn, boolean ambientOcclusionIn, boolean gui3dIn, ItemCameraTransforms cameraTransformsIn)
     {
+        this.name = "";
         this.elements = elementsIn;
         this.ambientOcclusion = ambientOcclusionIn;
         this.gui3d = gui3dIn;
@@ -94,7 +95,7 @@ public class ModelBlock
     {
         if (this.parentLocation != null)
         {
-            this.parent = p_178299_1_.get(this.parentLocation);
+            this.parent = (ModelBlock)p_178299_1_.get(this.parentLocation);
         }
     }
 
@@ -124,7 +125,7 @@ public class ModelBlock
             }
             else
             {
-                String s = this.textures.get(textureName.substring(1));
+                String s = (String)this.textures.get(textureName.substring(1));
 
                 if (s == null && this.hasParent())
                 {
@@ -149,7 +150,7 @@ public class ModelBlock
 
     private boolean startsWithHash(String hash)
     {
-        return hash.charAt(0) == '#';
+        return hash.charAt(0) == 35;
     }
 
     public ResourceLocation getParentLocation()
@@ -238,7 +239,7 @@ public class ModelBlock
                 if (jsonobject.has("display"))
                 {
                     JsonObject jsonobject1 = JsonUtils.getJsonObject(jsonobject, "display");
-                    itemcameratransforms = p_deserialize_3_.deserialize(jsonobject1, ItemCameraTransforms.class);
+                    itemcameratransforms = (ItemCameraTransforms)p_deserialize_3_.deserialize(jsonobject1, ItemCameraTransforms.class);
                 }
 
                 return flag1 ? new ModelBlock(new ResourceLocation(s), map, flag2, true, itemcameratransforms) : new ModelBlock(list, map, flag2, true, itemcameratransforms);
@@ -247,7 +248,7 @@ public class ModelBlock
 
         private Map<String, String> getTextures(JsonObject p_178329_1_)
         {
-            Map<String, String> map = Maps.newHashMap();
+            Map<String, String> map = Maps.<String, String>newHashMap();
 
             if (p_178329_1_.has("textures"))
             {
@@ -255,7 +256,7 @@ public class ModelBlock
 
                 for (Entry<String, JsonElement> entry : jsonobject.entrySet())
                 {
-                    map.put(entry.getKey(), entry.getValue().getAsString());
+                    map.put(entry.getKey(), ((JsonElement)entry.getValue()).getAsString());
                 }
             }
 
@@ -274,13 +275,13 @@ public class ModelBlock
 
         protected List<BlockPart> getModelElements(JsonDeserializationContext p_178325_1_, JsonObject p_178325_2_)
         {
-            List<BlockPart> list = Lists.newArrayList();
+            List<BlockPart> list = Lists.<BlockPart>newArrayList();
 
             if (p_178325_2_.has("elements"))
             {
                 for (JsonElement jsonelement : JsonUtils.getJsonArray(p_178325_2_, "elements"))
                 {
-                    list.add(p_178325_1_.deserialize(jsonelement, BlockPart.class));
+                    list.add((BlockPart)p_178325_1_.deserialize(jsonelement, BlockPart.class));
                 }
             }
 

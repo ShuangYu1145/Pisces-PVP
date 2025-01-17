@@ -30,9 +30,6 @@ public class S22PacketMultiBlockChange implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Reads the raw packet data from the data stream.
-     */
     public void readPacketData(PacketBuffer buf) throws IOException
     {
         this.chunkPosCoord = new ChunkCoordIntPair(buf.readInt(), buf.readInt());
@@ -40,13 +37,10 @@ public class S22PacketMultiBlockChange implements Packet<INetHandlerPlayClient>
 
         for (int i = 0; i < this.changedBlocks.length; ++i)
         {
-            this.changedBlocks[i] = new S22PacketMultiBlockChange.BlockUpdateData(buf.readShort(), Block.BLOCK_STATE_IDS.getByValue(buf.readVarIntFromBuffer()));
+            this.changedBlocks[i] = new S22PacketMultiBlockChange.BlockUpdateData(buf.readShort(), (IBlockState)Block.BLOCK_STATE_IDS.getByValue(buf.readVarIntFromBuffer()));
         }
     }
 
-    /**
-     * Writes the raw packet data to the data stream.
-     */
     public void writePacketData(PacketBuffer buf) throws IOException
     {
         buf.writeInt(this.chunkPosCoord.chunkXPos);
@@ -60,9 +54,6 @@ public class S22PacketMultiBlockChange implements Packet<INetHandlerPlayClient>
         }
     }
 
-    /**
-     * Passes this Packet on to the NetHandler for processing.
-     */
     public void processPacket(INetHandlerPlayClient handler)
     {
         handler.handleMultiBlockChange(this);

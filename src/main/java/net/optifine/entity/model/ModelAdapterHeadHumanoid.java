@@ -31,19 +31,7 @@ public class ModelAdapterHeadHumanoid extends ModelAdapter
         else
         {
             ModelHumanoidHead modelhumanoidhead = (ModelHumanoidHead)model;
-
-            if (modelPart.equals("head"))
-            {
-                return modelhumanoidhead.skeletonHead;
-            }
-            else if (modelPart.equals("head2"))
-            {
-                return !Reflector.ModelHumanoidHead_head.exists() ? null : (ModelRenderer)Reflector.getFieldValue(modelhumanoidhead, Reflector.ModelHumanoidHead_head);
-            }
-            else
-            {
-                return null;
-            }
+            return modelPart.equals("head") ? modelhumanoidhead.skeletonHead : (modelPart.equals("head2") ? (!Reflector.ModelHumanoidHead_head.exists() ? null : (ModelRenderer)Reflector.getFieldValue(modelhumanoidhead, Reflector.ModelHumanoidHead_head)) : null);
         }
     }
 

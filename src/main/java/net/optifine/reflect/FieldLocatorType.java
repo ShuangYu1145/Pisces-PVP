@@ -1,12 +1,12 @@
 package net.optifine.reflect;
 
 import java.lang.reflect.Field;
-import net.minecraft.src.Config;
+import net.optifine.Log;
 
 public class FieldLocatorType implements IFieldLocator
 {
-    private ReflectorClass reflectorClass = null;
-    private Class targetFieldType = null;
+    private ReflectorClass reflectorClass;
+    private Class targetFieldType;
     private int targetFieldIndex;
 
     public FieldLocatorType(ReflectorClass reflectorClass, Class targetFieldType)
@@ -16,6 +16,8 @@ public class FieldLocatorType implements IFieldLocator
 
     public FieldLocatorType(ReflectorClass reflectorClass, Class targetFieldType, int targetFieldIndex)
     {
+        this.reflectorClass = null;
+        this.targetFieldType = null;
         this.reflectorClass = reflectorClass;
         this.targetFieldType = targetFieldType;
         this.targetFieldIndex = targetFieldIndex;
@@ -52,7 +54,7 @@ public class FieldLocatorType implements IFieldLocator
                     }
                 }
 
-                Config.log("(Reflector) Field not present: " + oclass.getName() + ".(type: " + this.targetFieldType + ", index: " + this.targetFieldIndex + ")");
+                Log.log("(Reflector) Field not present: " + oclass.getName() + ".(type: " + this.targetFieldType + ", index: " + this.targetFieldIndex + ")");
                 return null;
             }
             catch (SecurityException securityexception)

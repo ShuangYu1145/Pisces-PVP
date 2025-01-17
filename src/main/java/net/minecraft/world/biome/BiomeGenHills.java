@@ -18,11 +18,12 @@ public class BiomeGenHills extends BiomeGenBase
     private int field_150635_aE = 0;
     private int field_150636_aF = 1;
     private int field_150637_aG = 2;
-    private int field_150638_aH = this.field_150635_aE;
+    private int field_150638_aH;
 
     protected BiomeGenHills(int id, boolean p_i45373_2_)
     {
         super(id);
+        this.field_150638_aH = this.field_150635_aE;
 
         if (p_i45373_2_)
         {
@@ -54,12 +55,12 @@ public class BiomeGenHills extends BiomeGenBase
             }
         }
 
-        for (int j1 = 0; j1 < 7; ++j1)
+        for (i = 0; i < 7; ++i)
         {
-            int k1 = rand.nextInt(16);
-            int l1 = rand.nextInt(64);
-            int i2 = rand.nextInt(16);
-            this.theWorldGenerator.generate(worldIn, rand, pos.add(k1, l1, i2));
+            int j1 = rand.nextInt(16);
+            int k1 = rand.nextInt(64);
+            int l1 = rand.nextInt(16);
+            this.theWorldGenerator.generate(worldIn, rand, pos.add(j1, k1, l1));
         }
     }
 
@@ -82,9 +83,6 @@ public class BiomeGenHills extends BiomeGenBase
         this.generateBiomeTerrain(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
     }
 
-    /**
-     * this creates a mutation specific to Hills biomes
-     */
     private BiomeGenHills mutateHills(BiomeGenBase p_150633_1_)
     {
         this.field_150638_aH = this.field_150637_aG;

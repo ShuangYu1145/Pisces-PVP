@@ -32,50 +32,22 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
     public double targetX;
     public double targetY;
     public double targetZ;
-
-    /**
-     * Ring buffer array for the last 64 Y-positions and yaw rotations. Used to calculate offsets for the animations.
-     */
     public double[][] ringBuffer = new double[64][3];
-
-    /**
-     * Index into the ring buffer. Incremented once per tick and restarts at 0 once it reaches the end of the buffer.
-     */
     public int ringBufferIndex = -1;
-
-    /** An array containing all body parts of this dragon */
     public EntityDragonPart[] dragonPartArray;
-
-    /** The head bounding box of a dragon */
     public EntityDragonPart dragonPartHead;
-
-    /** The body bounding box of a dragon */
     public EntityDragonPart dragonPartBody;
     public EntityDragonPart dragonPartTail1;
     public EntityDragonPart dragonPartTail2;
     public EntityDragonPart dragonPartTail3;
     public EntityDragonPart dragonPartWing1;
     public EntityDragonPart dragonPartWing2;
-
-    /** Animation time at previous tick. */
     public float prevAnimTime;
-
-    /**
-     * Animation time, used to control the speed of the animation cycles (wings flapping, jaw opening, etc.)
-     */
     public float animTime;
-
-    /** Force selecting a new flight target at next tick if set to true. */
     public boolean forceNewTarget;
-
-    /**
-     * Activated if the dragon is flying though obsidian, white stone or bedrock. Slows movement and animation speed.
-     */
     public boolean slowed;
     private Entity target;
     public int deathTicks;
-
-    /** The current endercrystal that is healing this dragon */
     public EntityEnderCrystal healingEnderCrystal;
 
     public EntityDragon(World worldIn)
@@ -101,10 +73,6 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         super.entityInit();
     }
 
-    /**
-     * Returns a double[3] array with movement offsets, used to calculate trailing tail/neck positions. [0] = yaw
-     * offset, [1] = y offset, [2] = unused, always 0. Parameters: buffer index offset, partial ticks.
-     */
     public double[] getMovementOffsets(int p_70974_1_, float p_70974_2_)
     {
         if (this.getHealth() <= 0.0F)
@@ -126,10 +94,6 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         return adouble;
     }
 
-    /**
-     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-     * use this to react to sunlight and start to burn.
-     */
     public void onLivingUpdate()
     {
         if (this.worldObj.isRemote)
@@ -150,7 +114,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
             float f11 = (this.rand.nextFloat() - 0.5F) * 8.0F;
             float f13 = (this.rand.nextFloat() - 0.5F) * 4.0F;
             float f14 = (this.rand.nextFloat() - 0.5F) * 8.0F;
-            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX + (double)f11, this.posY + 2.0D + (double)f13, this.posZ + (double)f14, 0.0D, 0.0D, 0.0D);
+            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX + (double)f11, this.posY + 2.0D + (double)f13, this.posZ + (double)f14, 0.0D, 0.0D, 0.0D, new int[0]);
         }
         else
         {
@@ -221,7 +185,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
                         double d3 = this.targetX - this.posX;
                         double d5 = this.targetZ - this.posZ;
                         double d7 = Math.sqrt(d3 * d3 + d5 * d5);
-                        double d8 = (double)0.4F + d7 / 80.0D - 1.0D;
+                        double d8 = 0.4000000059604645D + d7 / 80.0D - 1.0D;
 
                         if (d8 > 10.0D)
                         {
@@ -244,9 +208,9 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
                     d12 = d12 / (double)MathHelper.sqrt_double(d11 * d11 + d13 * d13);
                     float f17 = 0.6F;
                     d12 = MathHelper.clamp_double(d12, (double)(-f17), (double)f17);
-                    this.motionY += d12 * (double)0.1F;
+                    this.motionY += d12 * 0.10000000149011612D;
                     this.rotationYaw = MathHelper.wrapAngleTo180_float(this.rotationYaw);
-                    double d4 = 180.0D - MathHelper.atan2(d11, d13) * 180.0D / (double)(float)Math.PI;
+                    double d4 = 180.0D - MathHelper.atan2(d11, d13) * 180.0D / Math.PI;
                     double d6 = MathHelper.wrapAngleTo180_double(d4 - (double)this.rotationYaw);
 
                     if (d6 > 50.0D)
@@ -278,7 +242,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
                         d9 = 40.0D;
                     }
 
-                    this.randomYawVelocity = (float)((double)this.randomYawVelocity + d6 * ((double)0.7F / d9 / (double)f6));
+                    this.randomYawVelocity = (float)((double)this.randomYawVelocity + d6 * (0.699999988079071D / d9 / (double)f6));
                     this.rotationYaw += this.randomYawVelocity * 0.1F;
                     float f7 = (float)(2.0D / (d9 + 1.0D));
                     float f8 = 0.06F;
@@ -286,7 +250,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
 
                     if (this.slowed)
                     {
-                        this.moveEntity(this.motionX * (double)0.8F, this.motionY * (double)0.8F, this.motionZ * (double)0.8F);
+                        this.moveEntity(this.motionX * 0.800000011920929D, this.motionY * 0.800000011920929D, this.motionZ * 0.800000011920929D);
                     }
                     else
                     {
@@ -298,7 +262,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
                     f9 = 0.8F + 0.15F * f9;
                     this.motionX *= (double)f9;
                     this.motionZ *= (double)f9;
-                    this.motionY *= (double)0.91F;
+                    this.motionY *= 0.9100000262260437D;
                 }
 
                 this.renderYawOffset = this.rotationYaw;
@@ -376,9 +340,6 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         }
     }
 
-    /**
-     * Updates the state of the enderdragon's current endercrystal.
-     */
     private void updateDragonEnderCrystal()
     {
         if (this.healingEnderCrystal != null)
@@ -401,7 +362,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         if (this.rand.nextInt(10) == 0)
         {
             float f = 32.0F;
-            List<EntityEnderCrystal> list = this.worldObj.getEntitiesWithinAABB(EntityEnderCrystal.class, this.getEntityBoundingBox().expand((double)f, (double)f, (double)f));
+            List<EntityEnderCrystal> list = this.worldObj.<EntityEnderCrystal>getEntitiesWithinAABB(EntityEnderCrystal.class, this.getEntityBoundingBox().expand((double)f, (double)f, (double)f));
             EntityEnderCrystal entityendercrystal = null;
             double d0 = Double.MAX_VALUE;
 
@@ -420,9 +381,6 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         }
     }
 
-    /**
-     * Pushes all entities inside the list away from the enderdragon.
-     */
     private void collideWithEntities(List<Entity> p_70970_1_)
     {
         double d0 = (this.dragonPartBody.getEntityBoundingBox().minX + this.dragonPartBody.getEntityBoundingBox().maxX) / 2.0D;
@@ -435,19 +393,16 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
                 double d2 = entity.posX - d0;
                 double d3 = entity.posZ - d1;
                 double d4 = d2 * d2 + d3 * d3;
-                entity.addVelocity(d2 / d4 * 4.0D, (double)0.2F, d3 / d4 * 4.0D);
+                entity.addVelocity(d2 / d4 * 4.0D, 0.20000000298023224D, d3 / d4 * 4.0D);
             }
         }
     }
 
-    /**
-     * Attacks all entities inside this list, dealing 5 hearts of damage.
-     */
     private void attackEntitiesInList(List<Entity> p_70971_1_)
     {
         for (int i = 0; i < p_70971_1_.size(); ++i)
         {
-            Entity entity = p_70971_1_.get(i);
+            Entity entity = (Entity)p_70971_1_.get(i);
 
             if (entity instanceof EntityLivingBase)
             {
@@ -457,9 +412,6 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         }
     }
 
-    /**
-     * Sets a new target for the flight AI. It can be a random coordinate or a nearby player.
-     */
     private void setNewTarget()
     {
         this.forceNewTarget = false;
@@ -468,7 +420,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
 
         while (iterator.hasNext())
         {
-            if (iterator.next().isSpectator())
+            if (((EntityPlayer)iterator.next()).isSpectator())
             {
                 iterator.remove();
             }
@@ -476,7 +428,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
 
         if (this.rand.nextInt(2) == 0 && !list.isEmpty())
         {
-            this.target = list.get(this.rand.nextInt(list.size()));
+            this.target = (Entity)list.get(this.rand.nextInt(list.size()));
         }
         else
         {
@@ -502,17 +454,11 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         }
     }
 
-    /**
-     * Simplifies the value of a number by adding/subtracting 180 to the point that the number is between -180 and 180.
-     */
     private float simplifyAngle(double p_70973_1_)
     {
         return (float)MathHelper.wrapAngleTo180_double(p_70973_1_);
     }
 
-    /**
-     * Destroys all blocks that aren't associated with 'The End' inside the given bounding box.
-     */
     private boolean destroyBlocksInAABB(AxisAlignedBB p_70972_1_)
     {
         int i = MathHelper.floor_double(p_70972_1_.minX);
@@ -553,7 +499,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
             double d0 = p_70972_1_.minX + (p_70972_1_.maxX - p_70972_1_.minX) * (double)this.rand.nextFloat();
             double d1 = p_70972_1_.minY + (p_70972_1_.maxY - p_70972_1_.minY) * (double)this.rand.nextFloat();
             double d2 = p_70972_1_.minZ + (p_70972_1_.maxZ - p_70972_1_.minZ) * (double)this.rand.nextFloat();
-            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
         }
 
         return flag;
@@ -582,9 +528,6 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         return true;
     }
 
-    /**
-     * Called when the entity is attacked.
-     */
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         if (source instanceof EntityDamageSource && ((EntityDamageSource)source).getIsThornsDamage())
@@ -595,25 +538,16 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         return false;
     }
 
-    /**
-     * Provides a way to cause damage to an ender dragon.
-     */
     protected boolean attackDragonFrom(DamageSource source, float amount)
     {
         return super.attackEntityFrom(source, amount);
     }
 
-    /**
-     * Called by the /kill command.
-     */
     public void onKillCommand()
     {
         this.setDead();
     }
 
-    /**
-     * handles entity death timer, experience orb and particle creation
-     */
     protected void onDeathUpdate()
     {
         ++this.deathTicks;
@@ -623,7 +557,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
             float f = (this.rand.nextFloat() - 0.5F) * 8.0F;
             float f1 = (this.rand.nextFloat() - 0.5F) * 4.0F;
             float f2 = (this.rand.nextFloat() - 0.5F) * 8.0F;
-            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, this.posX + (double)f, this.posY + 2.0D + (double)f1, this.posZ + (double)f2, 0.0D, 0.0D, 0.0D);
+            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, this.posX + (double)f, this.posY + 2.0D + (double)f1, this.posZ + (double)f2, 0.0D, 0.0D, 0.0D, new int[0]);
         }
 
         boolean flag = this.worldObj.getGameRules().getBoolean("doMobLoot");
@@ -648,7 +582,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
             }
         }
 
-        this.moveEntity(0.0D, (double)0.1F, 0.0D);
+        this.moveEntity(0.0D, 0.10000000149011612D, 0.0D);
         this.renderYawOffset = this.rotationYaw += 20.0F;
 
         if (this.deathTicks == 200 && !this.worldObj.isRemote)
@@ -670,9 +604,6 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         }
     }
 
-    /**
-     * Generate the portal when the dragon dies
-     */
     private void generatePortal(BlockPos pos)
     {
         int i = 4;
@@ -687,7 +618,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
                 {
                     double d2 = (double)(k * k + l * l);
 
-                    if (!(d2 > 12.25D))
+                    if (d2 <= 12.25D)
                     {
                         BlockPos blockpos = pos.add(k, j, l);
 
@@ -727,24 +658,15 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         this.worldObj.setBlockState(pos.up(4), Blocks.dragon_egg.getDefaultState());
     }
 
-    /**
-     * Makes the entity despawn if requirements are reached
-     */
     protected void despawnEntity()
     {
     }
 
-    /**
-     * Return the Entity parts making up this Entity (currently only for dragons)
-     */
     public Entity[] getParts()
     {
         return this.dragonPartArray;
     }
 
-    /**
-     * Returns true if other Entities should be prevented from moving through this Entity.
-     */
     public boolean canBeCollidedWith()
     {
         return false;
@@ -755,25 +677,16 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
         return this.worldObj;
     }
 
-    /**
-     * Returns the sound this mob makes while it's alive.
-     */
     protected String getLivingSound()
     {
         return "mob.enderdragon.growl";
     }
 
-    /**
-     * Returns the sound this mob makes when it is hurt.
-     */
     protected String getHurtSound()
     {
         return "mob.enderdragon.hit";
     }
 
-    /**
-     * Returns the volume for the sounds this mob makes.
-     */
     protected float getSoundVolume()
     {
         return 5.0F;

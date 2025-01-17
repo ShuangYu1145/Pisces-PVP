@@ -38,7 +38,7 @@ public class BlockModelRenderer
     {
         if (Reflector.ForgeModContainer_forgeLightPipelineEnabled.exists())
         {
-            Reflector.setFieldValue(Reflector.ForgeModContainer_forgeLightPipelineEnabled, false);
+            Reflector.setFieldValue(Reflector.ForgeModContainer_forgeLightPipelineEnabled, Boolean.valueOf(false));
         }
     }
 
@@ -81,7 +81,7 @@ public class BlockModelRenderer
             CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Tesselating block model");
             CrashReportCategory crashreportcategory = crashreport.makeCategory("Block model being tesselated");
             CrashReportCategory.addBlockInfo(crashreportcategory, blockPosIn, blockStateIn);
-            crashreportcategory.addCrashSection("Using AO", flag);
+            crashreportcategory.addCrashSection("Using AO", Boolean.valueOf(flag));
             throw new ReportedException(crashreport);
         }
     }
@@ -567,8 +567,8 @@ public class BlockModelRenderer
 
     public static class AmbientOcclusionFace
     {
-        private final float[] vertexColorMultiplier = new float[4];
-        private final int[] vertexBrightness = new int[4];
+        private final float[] vertexColorMultiplier;
+        private final int[] vertexBrightness;
 
         public AmbientOcclusionFace()
         {
@@ -577,6 +577,8 @@ public class BlockModelRenderer
 
         public AmbientOcclusionFace(BlockModelRenderer p_i46235_1_)
         {
+            this.vertexColorMultiplier = new float[4];
+            this.vertexBrightness = new int[4];
         }
 
         public void setMaxBlockLight()

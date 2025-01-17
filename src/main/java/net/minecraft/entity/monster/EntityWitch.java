@@ -31,14 +31,7 @@ public class EntityWitch extends EntityMob implements IRangedAttackMob
 {
     private static final UUID MODIFIER_UUID = UUID.fromString("5CD17E52-A79A-43D3-A529-90FDE04B181E");
     private static final AttributeModifier MODIFIER = (new AttributeModifier(MODIFIER_UUID, "Drinking speed penalty", -0.25D, 0)).setSaved(false);
-
-    /** List of items a witch should drop on death. */
     private static final Item[] witchDrops = new Item[] {Items.glowstone_dust, Items.sugar, Items.redstone, Items.spider_eye, Items.glass_bottle, Items.gunpowder, Items.stick, Items.stick};
-
-    /**
-     * Timer used as interval for a witch's attack, decremented every tick if aggressive and when reaches zero the witch
-     * will throw a potion at the target entity.
-     */
     private int witchAttackTimer;
 
     public EntityWitch(World worldIn)
@@ -50,51 +43,36 @@ public class EntityWitch extends EntityMob implements IRangedAttackMob
         this.tasks.addTask(2, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(3, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false, new Class[0]));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
     }
 
     protected void entityInit()
     {
         super.entityInit();
-        this.getDataWatcher().addObject(21, (byte)0);
+        this.getDataWatcher().addObject(21, Byte.valueOf((byte)0));
     }
 
-    /**
-     * Returns the sound this mob makes while it's alive.
-     */
     protected String getLivingSound()
     {
         return null;
     }
 
-    /**
-     * Returns the sound this mob makes when it is hurt.
-     */
     protected String getHurtSound()
     {
         return null;
     }
 
-    /**
-     * Returns the sound this mob makes on death.
-     */
     protected String getDeathSound()
     {
         return null;
     }
 
-    /**
-     * Set whether this witch is aggressive at an entity.
-     */
     public void setAggressive(boolean aggressive)
     {
         this.getDataWatcher().updateObject(21, Byte.valueOf((byte)(aggressive ? 1 : 0)));
     }
 
-    /**
-     * Return whether this witch is aggressive at an entity.
-     */
     public boolean getAggressive()
     {
         return this.getDataWatcher().getWatchableObjectByte(21) == 1;
@@ -107,10 +85,6 @@ public class EntityWitch extends EntityMob implements IRangedAttackMob
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
 
-    /**
-     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-     * use this to react to sunlight and start to burn.
-     */
     public void onLivingUpdate()
     {
         if (!this.worldObj.isRemote)
@@ -190,7 +164,7 @@ public class EntityWitch extends EntityMob implements IRangedAttackMob
         {
             for (int i = 0; i < this.rand.nextInt(35) + 10; ++i)
             {
-                this.worldObj.spawnParticle(EnumParticleTypes.SPELL_WITCH, this.posX + this.rand.nextGaussian() * (double)0.13F, this.getEntityBoundingBox().maxY + 0.5D + this.rand.nextGaussian() * (double)0.13F, this.posZ + this.rand.nextGaussian() * (double)0.13F, 0.0D, 0.0D, 0.0D);
+                this.worldObj.spawnParticle(EnumParticleTypes.SPELL_WITCH, this.posX + this.rand.nextGaussian() * 0.12999999523162842D, this.getEntityBoundingBox().maxY + 0.5D + this.rand.nextGaussian() * 0.12999999523162842D, this.posZ + this.rand.nextGaussian() * 0.12999999523162842D, 0.0D, 0.0D, 0.0D, new int[0]);
             }
         }
         else
@@ -199,9 +173,6 @@ public class EntityWitch extends EntityMob implements IRangedAttackMob
         }
     }
 
-    /**
-     * Reduces damage, depending on potions
-     */
     protected float applyPotionDamageCalculations(DamageSource source, float damage)
     {
         damage = super.applyPotionDamageCalculations(source, damage);
@@ -219,13 +190,6 @@ public class EntityWitch extends EntityMob implements IRangedAttackMob
         return damage;
     }
 
-    /**
-     * Drop 0-2 items of this living's type
-     *  
-     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
-     * or tameable)
-     * @param lootingModifier level of enchanment to be applied to this drop
-     */
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         int i = this.rand.nextInt(3) + 1;
@@ -247,15 +211,12 @@ public class EntityWitch extends EntityMob implements IRangedAttackMob
         }
     }
 
-    /**
-     * Attack the specified entity using a ranged attack.
-     */
     public void attackEntityWithRangedAttack(EntityLivingBase target, float p_82196_2_)
     {
         if (!this.getAggressive())
         {
             EntityPotion entitypotion = new EntityPotion(this.worldObj, this, 32732);
-            double d0 = target.posY + (double)target.getEyeHeight() - (double)1.1F;
+            double d0 = target.posY + (double)target.getEyeHeight() - 1.100000023841858D;
             entitypotion.rotationPitch -= -20.0F;
             double d1 = target.posX + target.motionX - this.posX;
             double d2 = d0 - this.posY;

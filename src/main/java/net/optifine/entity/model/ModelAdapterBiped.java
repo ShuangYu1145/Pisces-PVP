@@ -20,35 +20,7 @@ public abstract class ModelAdapterBiped extends ModelAdapter
         else
         {
             ModelBiped modelbiped = (ModelBiped)model;
-
-            if (modelPart.equals("head"))
-            {
-                return modelbiped.bipedHead;
-            }
-            else if (modelPart.equals("headwear"))
-            {
-                return modelbiped.bipedHeadwear;
-            }
-            else if (modelPart.equals("body"))
-            {
-                return modelbiped.bipedBody;
-            }
-            else if (modelPart.equals("left_arm"))
-            {
-                return modelbiped.bipedLeftArm;
-            }
-            else if (modelPart.equals("right_arm"))
-            {
-                return modelbiped.bipedRightArm;
-            }
-            else if (modelPart.equals("left_leg"))
-            {
-                return modelbiped.bipedLeftLeg;
-            }
-            else
-            {
-                return modelPart.equals("right_leg") ? modelbiped.bipedRightLeg : null;
-            }
+            return modelPart.equals("head") ? modelbiped.bipedHead : (modelPart.equals("headwear") ? modelbiped.bipedHeadwear : (modelPart.equals("body") ? modelbiped.bipedBody : (modelPart.equals("left_arm") ? modelbiped.bipedLeftArm : (modelPart.equals("right_arm") ? modelbiped.bipedRightArm : (modelPart.equals("left_leg") ? modelbiped.bipedLeftLeg : (modelPart.equals("right_leg") ? modelbiped.bipedRightLeg : null))))));
         }
     }
 

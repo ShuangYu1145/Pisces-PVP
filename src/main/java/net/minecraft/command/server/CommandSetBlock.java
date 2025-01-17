@@ -19,38 +19,26 @@ import net.minecraft.world.World;
 
 public class CommandSetBlock extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "setblock";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.setblock.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 4)
         {
-            throw new WrongUsageException("commands.setblock.usage");
+            throw new WrongUsageException("commands.setblock.usage", new Object[0]);
         }
         else
         {
@@ -68,7 +56,7 @@ public class CommandSetBlock extends CommandBase
 
             if (!world.isBlockLoaded(blockpos))
             {
-                throw new CommandException("commands.setblock.outOfWorld");
+                throw new CommandException("commands.setblock.outOfWorld", new Object[0]);
             }
             else
             {
@@ -86,7 +74,7 @@ public class CommandSetBlock extends CommandBase
                     }
                     catch (NBTException nbtexception)
                     {
-                        throw new CommandException("commands.setblock.tagError", nbtexception.getMessage());
+                        throw new CommandException("commands.setblock.tagError", new Object[] {nbtexception.getMessage()});
                     }
                 }
 
@@ -104,7 +92,7 @@ public class CommandSetBlock extends CommandBase
                     }
                     else if (args[5].equals("keep") && !world.isAirBlock(blockpos))
                     {
-                        throw new CommandException("commands.setblock.noChange");
+                        throw new CommandException("commands.setblock.noChange", new Object[0]);
                     }
                 }
 
@@ -124,7 +112,7 @@ public class CommandSetBlock extends CommandBase
 
                 if (!world.setBlockState(blockpos, iblockstate, 2))
                 {
-                    throw new CommandException("commands.setblock.noChange");
+                    throw new CommandException("commands.setblock.noChange", new Object[0]);
                 }
                 else
                 {
@@ -151,17 +139,6 @@ public class CommandSetBlock extends CommandBase
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length > 0 && args.length <= 3)
-        {
-            return func_175771_a(args, 0, pos);
-        }
-        else if (args.length == 4)
-        {
-            return getListOfStringsMatchingLastWord(args, Block.blockRegistry.getKeys());
-        }
-        else
-        {
-            return args.length == 6 ? getListOfStringsMatchingLastWord(args, new String[] {"replace", "destroy", "keep"}) : null;
-        }
+        return args.length > 0 && args.length <= 3 ? func_175771_a(args, 0, pos) : (args.length == 4 ? getListOfStringsMatchingLastWord(args, Block.blockRegistry.getKeys()) : (args.length == 6 ? getListOfStringsMatchingLastWord(args, new String[] {"replace", "destroy", "keep"}): null));
     }
 }

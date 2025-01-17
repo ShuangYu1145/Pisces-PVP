@@ -17,7 +17,7 @@ public class TextureMetadataSectionSerializer extends BaseMetadataSectionSeriali
         JsonObject jsonobject = p_deserialize_1_.getAsJsonObject();
         boolean flag = JsonUtils.getBoolean(jsonobject, "blur", false);
         boolean flag1 = JsonUtils.getBoolean(jsonobject, "clamp", false);
-        List<Integer> list = Lists.newArrayList();
+        List<Integer> list = Lists.<Integer>newArrayList();
 
         if (jsonobject.has("mipmaps"))
         {
@@ -33,7 +33,7 @@ public class TextureMetadataSectionSerializer extends BaseMetadataSectionSeriali
                     {
                         try
                         {
-                            list.add(jsonelement.getAsInt());
+                            list.add(Integer.valueOf(jsonelement.getAsInt()));
                         }
                         catch (NumberFormatException numberformatexception)
                         {
@@ -55,9 +55,6 @@ public class TextureMetadataSectionSerializer extends BaseMetadataSectionSeriali
         return new TextureMetadataSection(flag, flag1, list);
     }
 
-    /**
-     * The name of this section type as it appears in JSON.
-     */
     public String getSectionName()
     {
         return "texture";

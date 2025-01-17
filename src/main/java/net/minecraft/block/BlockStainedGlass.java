@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -17,7 +18,7 @@ import net.minecraft.world.World;
 
 public class BlockStainedGlass extends BlockBreakable
 {
-    public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
+    public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.<EnumDyeColor>create("color", EnumDyeColor.class);
 
     public BlockStainedGlass(Material materialIn)
     {
@@ -26,18 +27,11 @@ public class BlockStainedGlass extends BlockBreakable
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
-    /**
-     * Gets the metadata of the item this Block can drop. This method is called when the block gets destroyed. It
-     * returns the metadata of the dropped item based on the old metadata of the block.
-     */
     public int damageDropped(IBlockState state)
     {
-        return state.getValue(COLOR).getMetadata();
+        return ((EnumDyeColor)state.getValue(COLOR)).getMetadata();
     }
 
-    /**
-     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
-     */
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
         for (EnumDyeColor enumdyecolor : EnumDyeColor.values())
@@ -46,12 +40,9 @@ public class BlockStainedGlass extends BlockBreakable
         }
     }
 
-    /**
-     * Get the MapColor for this Block and the given BlockState
-     */
     public MapColor getMapColor(IBlockState state)
     {
-        return state.getValue(COLOR).getMapColor();
+        return ((EnumDyeColor)state.getValue(COLOR)).getMapColor();
     }
 
     public EnumWorldBlockLayer getBlockLayer()
@@ -59,9 +50,6 @@ public class BlockStainedGlass extends BlockBreakable
         return EnumWorldBlockLayer.TRANSLUCENT;
     }
 
-    /**
-     * Returns the quantity of items to drop on block destruction.
-     */
     public int quantityDropped(Random random)
     {
         return 0;
@@ -77,9 +65,6 @@ public class BlockStainedGlass extends BlockBreakable
         return false;
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
         return this.getDefaultState().withProperty(COLOR, EnumDyeColor.byMetadata(meta));
@@ -101,16 +86,13 @@ public class BlockStainedGlass extends BlockBreakable
         }
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(COLOR).getMetadata();
+        return ((EnumDyeColor)state.getValue(COLOR)).getMetadata();
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, COLOR);
+        return new BlockState(this, new IProperty[] {COLOR});
     }
 }

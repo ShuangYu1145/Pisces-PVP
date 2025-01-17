@@ -40,10 +40,6 @@ public abstract class EntityFireball extends Entity
     {
     }
 
-    /**
-     * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge
-     * length * 64 * renderDistanceWeight Args: distance
-     */
     public boolean isInRangeToRenderDist(double distance)
     {
         double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 4.0D;
@@ -86,9 +82,6 @@ public abstract class EntityFireball extends Entity
         this.accelerationZ = accelZ / d0 * 0.1D;
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         if (this.worldObj.isRemote || (this.shootingEntity == null || !this.shootingEntity.isDead) && this.worldObj.isBlockLoaded(new BlockPos(this)))
@@ -139,7 +132,7 @@ public abstract class EntityFireball extends Entity
 
             for (int i = 0; i < list.size(); ++i)
             {
-                Entity entity1 = list.get(i);
+                Entity entity1 = (Entity)list.get(i);
 
                 if (entity1.canBeCollidedWith() && (!entity1.isEntityEqual(this.shootingEntity) || this.ticksInAir >= 25))
                 {
@@ -174,9 +167,9 @@ public abstract class EntityFireball extends Entity
             this.posY += this.motionY;
             this.posZ += this.motionZ;
             float f1 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
-            this.rotationYaw = (float)(MathHelper.atan2(this.motionZ, this.motionX) * 180.0D / (double)(float)Math.PI) + 90.0F;
+            this.rotationYaw = (float)(MathHelper.atan2(this.motionZ, this.motionX) * 180.0D / Math.PI) + 90.0F;
 
-            for (this.rotationPitch = (float)(MathHelper.atan2((double)f1, this.motionY) * 180.0D / (double)(float)Math.PI) - 90.0F; this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
+            for (this.rotationPitch = (float)(MathHelper.atan2((double)f1, this.motionY) * 180.0D / Math.PI) - 90.0F; this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
             {
                 ;
             }
@@ -205,7 +198,7 @@ public abstract class EntityFireball extends Entity
                 for (int j = 0; j < 4; ++j)
                 {
                     float f3 = 0.25F;
-                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * (double)f3, this.posY - this.motionY * (double)f3, this.posZ - this.motionZ * (double)f3, this.motionX, this.motionY, this.motionZ);
+                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * (double)f3, this.posY - this.motionY * (double)f3, this.posZ - this.motionZ * (double)f3, this.motionX, this.motionY, this.motionZ, new int[0]);
                 }
 
                 f2 = 0.8F;
@@ -217,7 +210,7 @@ public abstract class EntityFireball extends Entity
             this.motionX *= (double)f2;
             this.motionY *= (double)f2;
             this.motionZ *= (double)f2;
-            this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
+            this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
             this.setPosition(this.posX, this.posY, this.posZ);
         }
         else
@@ -226,36 +219,24 @@ public abstract class EntityFireball extends Entity
         }
     }
 
-    /**
-     * Return the motion factor for this projectile. The factor is multiplied by the original motion.
-     */
     protected float getMotionFactor()
     {
         return 0.95F;
     }
 
-    /**
-     * Called when this EntityFireball hits a block or entity.
-     */
     protected abstract void onImpact(MovingObjectPosition movingObject);
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     public void writeEntityToNBT(NBTTagCompound tagCompound)
     {
         tagCompound.setShort("xTile", (short)this.xTile);
         tagCompound.setShort("yTile", (short)this.yTile);
         tagCompound.setShort("zTile", (short)this.zTile);
-        ResourceLocation resourcelocation = Block.blockRegistry.getNameForObject(this.inTile);
+        ResourceLocation resourcelocation = (ResourceLocation)Block.blockRegistry.getNameForObject(this.inTile);
         tagCompound.setString("inTile", resourcelocation == null ? "" : resourcelocation.toString());
         tagCompound.setByte("inGround", (byte)(this.inGround ? 1 : 0));
         tagCompound.setTag("direction", this.newDoubleNBTList(new double[] {this.motionX, this.motionY, this.motionZ}));
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     public void readEntityFromNBT(NBTTagCompound tagCompund)
     {
         this.xTile = tagCompund.getShort("xTile");
@@ -286,9 +267,6 @@ public abstract class EntityFireball extends Entity
         }
     }
 
-    /**
-     * Returns true if other Entities should be prevented from moving through this Entity.
-     */
     public boolean canBeCollidedWith()
     {
         return true;
@@ -299,9 +277,6 @@ public abstract class EntityFireball extends Entity
         return 1.0F;
     }
 
-    /**
-     * Called when the entity is attacked.
-     */
     public boolean attackEntityFrom(DamageSource source, float amount)
     {
         if (this.isEntityInvulnerable(source))
@@ -340,9 +315,6 @@ public abstract class EntityFireball extends Entity
         }
     }
 
-    /**
-     * Gets how bright this entity is.
-     */
     public float getBrightness(float partialTicks)
     {
         return 1.0F;

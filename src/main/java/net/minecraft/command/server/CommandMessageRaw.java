@@ -16,38 +16,26 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class CommandMessageRaw extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "tellraw";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.tellraw.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 2)
         {
-            throw new WrongUsageException("commands.tellraw.usage");
+            throw new WrongUsageException("commands.tellraw.usage", new Object[0]);
         }
         else
         {
@@ -62,7 +50,7 @@ public class CommandMessageRaw extends CommandBase
             catch (JsonParseException jsonparseexception)
             {
                 Throwable throwable = ExceptionUtils.getRootCause(jsonparseexception);
-                throw new SyntaxErrorException("commands.tellraw.jsonException", throwable == null ? "" : throwable.getMessage());
+                throw new SyntaxErrorException("commands.tellraw.jsonException", new Object[] {throwable == null ? "" : throwable.getMessage()});
             }
         }
     }
@@ -72,9 +60,6 @@ public class CommandMessageRaw extends CommandBase
         return args.length == 1 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : null;
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return index == 0;

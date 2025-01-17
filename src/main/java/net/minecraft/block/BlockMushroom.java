@@ -61,9 +61,6 @@ public class BlockMushroom extends BlockBush implements IGrowable
         return super.canPlaceBlockAt(worldIn, pos) && this.canBlockStay(worldIn, pos, this.getDefaultState());
     }
 
-    /**
-     * is the block grass, dirt or farmland
-     */
     protected boolean canPlaceBlockOn(Block ground)
     {
         return ground.isFullBlock();
@@ -74,19 +71,7 @@ public class BlockMushroom extends BlockBush implements IGrowable
         if (pos.getY() >= 0 && pos.getY() < 256)
         {
             IBlockState iblockstate = worldIn.getBlockState(pos.down());
-
-            if (iblockstate.getBlock() == Blocks.mycelium)
-            {
-                return true;
-            }
-            else if (iblockstate.getBlock() == Blocks.dirt && iblockstate.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.PODZOL)
-            {
-                return true;
-            }
-            else
-            {
-                return worldIn.getLight(pos) < 13 && this.canPlaceBlockOn(iblockstate.getBlock());
-            }
+            return iblockstate.getBlock() == Blocks.mycelium ? true : (iblockstate.getBlock() == Blocks.dirt && iblockstate.getValue(BlockDirt.VARIANT) == BlockDirt.DirtType.PODZOL ? true : worldIn.getLight(pos) < 13 && this.canPlaceBlockOn(iblockstate.getBlock()));
         }
         else
         {
@@ -119,9 +104,6 @@ public class BlockMushroom extends BlockBush implements IGrowable
         }
     }
 
-    /**
-     * Whether this IGrowable can grow
-     */
     public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)
     {
         return true;

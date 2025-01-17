@@ -20,38 +20,26 @@ import net.minecraft.world.World;
 
 public class CommandSummon extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "summon";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.summon.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException("commands.summon.usage");
+            throw new WrongUsageException("commands.summon.usage", new Object[0]);
         }
         else
         {
@@ -74,7 +62,7 @@ public class CommandSummon extends CommandBase
 
             if (!world.isBlockLoaded(blockpos))
             {
-                throw new CommandException("commands.summon.outOfWorld");
+                throw new CommandException("commands.summon.outOfWorld", new Object[0]);
             }
             else if ("LightningBolt".equals(s))
             {
@@ -97,7 +85,7 @@ public class CommandSummon extends CommandBase
                     }
                     catch (NBTException nbtexception)
                     {
-                        throw new CommandException("commands.summon.tagError", nbtexception.getMessage());
+                        throw new CommandException("commands.summon.tagError", new Object[] {nbtexception.getMessage()});
                     }
                 }
 
@@ -110,12 +98,12 @@ public class CommandSummon extends CommandBase
                 }
                 catch (RuntimeException var19)
                 {
-                    throw new CommandException("commands.summon.failed");
+                    throw new CommandException("commands.summon.failed", new Object[0]);
                 }
 
                 if (entity2 == null)
                 {
-                    throw new CommandException("commands.summon.failed");
+                    throw new CommandException("commands.summon.failed", new Object[0]);
                 }
                 else
                 {
@@ -151,13 +139,6 @@ public class CommandSummon extends CommandBase
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, EntityList.getEntityNameList());
-        }
-        else
-        {
-            return args.length > 1 && args.length <= 4 ? func_175771_a(args, 1, pos) : null;
-        }
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, EntityList.getEntityNameList()) : (args.length > 1 && args.length <= 4 ? func_175771_a(args, 1, pos) : null);
     }
 }

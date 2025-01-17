@@ -7,38 +7,26 @@ import net.minecraft.util.BlockPos;
 
 public class CommandSetSpawnpoint extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "spawnpoint";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.spawnpoint.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length > 1 && args.length < 4)
         {
-            throw new WrongUsageException("commands.spawnpoint.usage");
+            throw new WrongUsageException("commands.spawnpoint.usage", new Object[0]);
         }
         else
         {
@@ -48,26 +36,16 @@ public class CommandSetSpawnpoint extends CommandBase
             if (entityplayermp.worldObj != null)
             {
                 entityplayermp.setSpawnPoint(blockpos, true);
-                notifyOperators(sender, this, "commands.spawnpoint.success", new Object[] {entityplayermp.getName(), blockpos.getX(), blockpos.getY(), blockpos.getZ()});
+                notifyOperators(sender, this, "commands.spawnpoint.success", new Object[] {entityplayermp.getName(), Integer.valueOf(blockpos.getX()), Integer.valueOf(blockpos.getY()), Integer.valueOf(blockpos.getZ())});
             }
         }
     }
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
-        }
-        else
-        {
-            return args.length > 1 && args.length <= 4 ? func_175771_a(args, 1, pos) : null;
-        }
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : (args.length > 1 && args.length <= 4 ? func_175771_a(args, 1, pos) : null);
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return index == 0;

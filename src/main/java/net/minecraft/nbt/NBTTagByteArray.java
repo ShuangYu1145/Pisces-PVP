@@ -7,7 +7,6 @@ import java.util.Arrays;
 
 public class NBTTagByteArray extends NBTBase
 {
-    /** The byte array stored in the tag. */
     private byte[] data;
 
     NBTTagByteArray()
@@ -19,9 +18,6 @@ public class NBTTagByteArray extends NBTBase
         this.data = data;
     }
 
-    /**
-     * Write the actual data contents of the tag, implemented in NBT extension classes
-     */
     void write(DataOutput output) throws IOException
     {
         output.writeInt(this.data.length);
@@ -37,12 +33,9 @@ public class NBTTagByteArray extends NBTBase
         input.readFully(this.data);
     }
 
-    /**
-     * Gets the type byte for the tag.
-     */
     public byte getId()
     {
-        return 7;
+        return (byte)7;
     }
 
     public String toString()
@@ -50,9 +43,6 @@ public class NBTTagByteArray extends NBTBase
         return "[" + this.data.length + " bytes]";
     }
 
-    /**
-     * Creates a clone of the tag.
-     */
     public NBTBase copy()
     {
         byte[] abyte = new byte[this.data.length];

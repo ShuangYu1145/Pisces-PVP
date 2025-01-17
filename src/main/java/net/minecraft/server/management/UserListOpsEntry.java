@@ -23,9 +23,6 @@ public class UserListOpsEntry extends UserListEntry<GameProfile>
         this.bypassesPlayerLimit = p_i1150_1_.has("bypassesPlayerLimit") && p_i1150_1_.get("bypassesPlayerLimit").getAsBoolean();
     }
 
-    /**
-     * Gets the permission level of the user, as defined in the "level" attribute of the ops.json file
-     */
     public int getPermissionLevel()
     {
         return this.permissionLevel;
@@ -40,11 +37,11 @@ public class UserListOpsEntry extends UserListEntry<GameProfile>
     {
         if (this.getValue() != null)
         {
-            data.addProperty("uuid", this.getValue().getId() == null ? "" : this.getValue().getId().toString());
-            data.addProperty("name", this.getValue().getName());
+            data.addProperty("uuid", ((GameProfile)this.getValue()).getId() == null ? "" : ((GameProfile)this.getValue()).getId().toString());
+            data.addProperty("name", ((GameProfile)this.getValue()).getName());
             super.onSerialization(data);
-            data.addProperty("level", this.permissionLevel);
-            data.addProperty("bypassesPlayerLimit", this.bypassesPlayerLimit);
+            data.addProperty("level", (Number)Integer.valueOf(this.permissionLevel));
+            data.addProperty("bypassesPlayerLimit", Boolean.valueOf(this.bypassesPlayerLimit));
         }
     }
 

@@ -3,36 +3,32 @@ package net.optifine.reflect;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.src.Config;
+import net.optifine.Log;
 
-public class ReflectorMethod
+public class ReflectorMethod implements IResolvable
 {
-    private ReflectorClass reflectorClass = null;
-    private String targetMethodName = null;
-    private Class[] targetMethodParameterTypes = null;
-    private boolean checked = false;
-    private Method targetMethod = null;
+    private ReflectorClass reflectorClass;
+    private String targetMethodName;
+    private Class[] targetMethodParameterTypes;
+    private boolean checked;
+    private Method targetMethod;
 
     public ReflectorMethod(ReflectorClass reflectorClass, String targetMethodName)
     {
-        this(reflectorClass, targetMethodName, (Class[])null, false);
+        this(reflectorClass, targetMethodName, (Class[])null);
     }
 
     public ReflectorMethod(ReflectorClass reflectorClass, String targetMethodName, Class[] targetMethodParameterTypes)
     {
-        this(reflectorClass, targetMethodName, targetMethodParameterTypes, false);
-    }
-
-    public ReflectorMethod(ReflectorClass reflectorClass, String targetMethodName, Class[] targetMethodParameterTypes, boolean lazyResolve)
-    {
+        this.reflectorClass = null;
+        this.targetMethodName = null;
+        this.targetMethodParameterTypes = null;
+        this.checked = false;
+        this.targetMethod = null;
         this.reflectorClass = reflectorClass;
         this.targetMethodName = targetMethodName;
         this.targetMethodParameterTypes = targetMethodParameterTypes;
-
-        if (!lazyResolve)
-        {
-            Method method = this.getTargetMethod();
-        }
+        ReflectorResolver.register(this);
     }
 
     public Method getTargetMethod()
@@ -60,18 +56,18 @@ public class ReflectorMethod
 
                         if (amethod.length <= 0)
                         {
-                            Config.log("(Reflector) Method not present: " + oclass.getName() + "." + this.targetMethodName);
+                            Log.log("(Reflector) Method not present: " + oclass.getName() + "." + this.targetMethodName);
                             return null;
                         }
 
                         if (amethod.length > 1)
                         {
-                            Config.warn("(Reflector) More than one method found: " + oclass.getName() + "." + this.targetMethodName);
+                            Log.warn("(Reflector) More than one method found: " + oclass.getName() + "." + this.targetMethodName);
 
                             for (int i = 0; i < amethod.length; ++i)
                             {
                                 Method method = amethod[i];
-                                Config.warn("(Reflector)  - " + method);
+                                Log.warn("(Reflector)  - " + method);
                             }
 
                             return null;
@@ -86,7 +82,7 @@ public class ReflectorMethod
 
                     if (this.targetMethod == null)
                     {
-                        Config.log("(Reflector) Method not present: " + oclass.getName() + "." + this.targetMethodName);
+                        Log.log("(Reflector) Method not present: " + oclass.getName() + "." + this.targetMethodName);
                         return null;
                     }
                     else
@@ -106,14 +102,7 @@ public class ReflectorMethod
 
     public boolean exists()
     {
-        if (this.checked)
-        {
-            return this.targetMethod != null;
-        }
-        else
-        {
-            return this.getTargetMethod() != null;
-        }
+        return this.checked ? this.targetMethod != null : this.getTargetMethod() != null;
     }
 
     public Class getReturnType()
@@ -126,6 +115,71 @@ public class ReflectorMethod
     {
         this.checked = true;
         this.targetMethod = null;
+    }
+
+    public Object call(Object... params)
+    {
+        return Reflector.call(this, params);
+    }
+
+    public boolean callBoolean(Object... params)
+    {
+        return Reflector.callBoolean(this, params);
+    }
+
+    public int callInt(Object... params)
+    {
+        return Reflector.callInt(this, params);
+    }
+
+    public float callFloat(Object... params)
+    {
+        return Reflector.callFloat(this, params);
+    }
+
+    public double callDouble(Object... params)
+    {
+        return Reflector.callDouble(this, params);
+    }
+
+    public String callString(Object... params)
+    {
+        return Reflector.callString(this, params);
+    }
+
+    public Object call(Object param)
+    {
+        return Reflector.call(this, new Object[] {param});
+    }
+
+    public boolean callBoolean(Object param)
+    {
+        return Reflector.callBoolean(this, new Object[] {param});
+    }
+
+    public int callInt(Object param)
+    {
+        return Reflector.callInt(this, new Object[] {param});
+    }
+
+    public float callFloat(Object param)
+    {
+        return Reflector.callFloat(this, new Object[] {param});
+    }
+
+    public double callDouble(Object param)
+    {
+        return Reflector.callDouble(this, new Object[] {param});
+    }
+
+    public String callString1(Object param)
+    {
+        return Reflector.callString(this, new Object[] {param});
+    }
+
+    public void callVoid(Object... params)
+    {
+        Reflector.callVoid(this, params);
     }
 
     public static Method getMethod(Class cls, String methodName, Class[] paramTypes)
@@ -165,7 +219,12 @@ public class ReflectorMethod
             }
         }
 
-        Method[] amethod1 = (Method[]) list.toArray(new Method[list.size()]);
+        Method[] amethod1 = (Method[])((Method[])list.toArray(new Method[list.size()]));
         return amethod1;
+    }
+
+    public void resolve()
+    {
+        Method method = this.getTargetMethod();
     }
 }

@@ -1,6 +1,7 @@
 package net.minecraft.block;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
@@ -24,21 +25,18 @@ public class BlockTrapDoor extends Block
 {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     public static final PropertyBool OPEN = PropertyBool.create("open");
-    public static final PropertyEnum<BlockTrapDoor.DoorHalf> HALF = PropertyEnum.create("half", BlockTrapDoor.DoorHalf.class);
+    public static final PropertyEnum<BlockTrapDoor.DoorHalf> HALF = PropertyEnum.<BlockTrapDoor.DoorHalf>create("half", BlockTrapDoor.DoorHalf.class);
 
     protected BlockTrapDoor(Material materialIn)
     {
         super(materialIn);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(OPEN, false).withProperty(HALF, BlockTrapDoor.DoorHalf.BOTTOM));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(OPEN, Boolean.valueOf(false)).withProperty(HALF, BlockTrapDoor.DoorHalf.BOTTOM));
         float f = 0.5F;
         float f1 = 1.0F;
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         this.setCreativeTab(CreativeTabs.tabRedstone);
     }
 
-    /**
-     * Used to determine ambient occlusion and culling when rebuilding chunks for render
-     */
     public boolean isOpaqueCube()
     {
         return false;
@@ -51,7 +49,7 @@ public class BlockTrapDoor extends Block
 
     public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
     {
-        return !worldIn.getBlockState(pos).getValue(OPEN);
+        return !((Boolean)worldIn.getBlockState(pos).getValue(OPEN)).booleanValue();
     }
 
     public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)
@@ -71,9 +69,6 @@ public class BlockTrapDoor extends Block
         this.setBounds(worldIn.getBlockState(pos));
     }
 
-    /**
-     * Sets the block's bounds for rendering it as an item
-     */
     public void setBlockBoundsForItemRender()
     {
         float f = 0.1875F;
@@ -85,8 +80,8 @@ public class BlockTrapDoor extends Block
         if (state.getBlock() == this)
         {
             boolean flag = state.getValue(HALF) == BlockTrapDoor.DoorHalf.TOP;
-            Boolean obool = state.getValue(OPEN);
-            EnumFacing enumfacing = state.getValue(FACING);
+            Boolean obool = (Boolean)state.getValue(OPEN);
+            EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
             float f = 0.1875F;
 
             if (flag)
@@ -98,7 +93,7 @@ public class BlockTrapDoor extends Block
                 this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.1875F, 1.0F);
             }
 
-            if (obool)
+            if (obool.booleanValue())
             {
                 if (enumfacing == EnumFacing.NORTH)
                 {
@@ -133,19 +128,16 @@ public class BlockTrapDoor extends Block
         {
             state = state.cycleProperty(OPEN);
             worldIn.setBlockState(pos, state, 2);
-            worldIn.playAuxSFXAtEntity(playerIn, state.getValue(OPEN) ? 1003 : 1006, pos, 0);
+            worldIn.playAuxSFXAtEntity(playerIn, ((Boolean)state.getValue(OPEN)).booleanValue() ? 1003 : 1006, pos, 0);
             return true;
         }
     }
 
-    /**
-     * Called when a neighboring block changes.
-     */
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
         if (!worldIn.isRemote)
         {
-            BlockPos blockpos = pos.offset(state.getValue(FACING).getOpposite());
+            BlockPos blockpos = pos.offset(((EnumFacing)state.getValue(FACING)).getOpposite());
 
             if (!isValidSupportBlock(worldIn.getBlockState(blockpos).getBlock()))
             {
@@ -158,11 +150,11 @@ public class BlockTrapDoor extends Block
 
                 if (flag || neighborBlock.canProvidePower())
                 {
-                    boolean flag1 = state.getValue(OPEN);
+                    boolean flag1 = ((Boolean)state.getValue(OPEN)).booleanValue();
 
                     if (flag1 != flag)
                     {
-                        worldIn.setBlockState(pos, state.withProperty(OPEN, flag), 2);
+                        worldIn.setBlockState(pos, state.withProperty(OPEN, Boolean.valueOf(flag)), 2);
                         worldIn.playAuxSFXAtEntity((EntityPlayer)null, flag ? 1003 : 1006, pos, 0);
                     }
                 }
@@ -170,35 +162,25 @@ public class BlockTrapDoor extends Block
         }
     }
 
-    /**
-     * Ray traces through the blocks collision from start vector to end vector returning a ray trace hit.
-     */
     public MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end)
     {
         this.setBlockBoundsBasedOnState(worldIn, pos);
         return super.collisionRayTrace(worldIn, pos, start, end);
     }
 
-    /**
-     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
-     * IBlockstate
-     */
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         IBlockState iblockstate = this.getDefaultState();
 
         if (facing.getAxis().isHorizontal())
         {
-            iblockstate = iblockstate.withProperty(FACING, facing).withProperty(OPEN, false);
+            iblockstate = iblockstate.withProperty(FACING, facing).withProperty(OPEN, Boolean.valueOf(false));
             iblockstate = iblockstate.withProperty(HALF, hitY > 0.5F ? BlockTrapDoor.DoorHalf.TOP : BlockTrapDoor.DoorHalf.BOTTOM);
         }
 
         return iblockstate;
     }
 
-    /**
-     * Check whether this Block can be placed on the given side
-     */
     public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)
     {
         return !side.getAxis().isVertical() && isValidSupportBlock(worldIn.getBlockState(pos.offset(side.getOpposite())).getBlock());
@@ -252,23 +234,17 @@ public class BlockTrapDoor extends Block
         return EnumWorldBlockLayer.CUTOUT;
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(OPEN, (meta & 4) != 0).withProperty(HALF, (meta & 8) == 0 ? BlockTrapDoor.DoorHalf.BOTTOM : BlockTrapDoor.DoorHalf.TOP);
+        return this.getDefaultState().withProperty(FACING, getFacing(meta)).withProperty(OPEN, Boolean.valueOf((meta & 4) != 0)).withProperty(HALF, (meta & 8) == 0 ? BlockTrapDoor.DoorHalf.BOTTOM : BlockTrapDoor.DoorHalf.TOP);
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
         int i = 0;
-        i = i | getMetaForFacing(state.getValue(FACING));
+        i = i | getMetaForFacing((EnumFacing)state.getValue(FACING));
 
-        if (state.getValue(OPEN))
+        if (((Boolean)state.getValue(OPEN)).booleanValue())
         {
             i |= 4;
         }
@@ -283,7 +259,7 @@ public class BlockTrapDoor extends Block
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, FACING, OPEN, HALF);
+        return new BlockState(this, new IProperty[] {FACING, OPEN, HALF});
     }
 
     public static enum DoorHalf implements IStringSerializable

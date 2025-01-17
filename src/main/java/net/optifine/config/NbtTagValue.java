@@ -41,7 +41,7 @@ public class NbtTagValue
     public NbtTagValue(String tag, String value)
     {
         String[] astring = Config.tokenize(tag, ".");
-        this.parents = Arrays.copyOfRange(astring, 0, astring.length - 1);
+        this.parents = (String[])Arrays.copyOfRange(astring, 0, astring.length - 1);
         this.name = astring[astring.length - 1];
 
         if (value.startsWith("!"))
@@ -87,14 +87,7 @@ public class NbtTagValue
 
     public boolean matches(NBTTagCompound nbt)
     {
-        if (this.negative)
-        {
-            return !this.matchesCompound(nbt);
-        }
-        else
-        {
-            return this.matchesCompound(nbt);
-        }
+        return this.negative ? !this.matchesCompound(nbt) : this.matchesCompound(nbt);
     }
 
     public boolean matchesCompound(NBTTagCompound nbt)
@@ -130,9 +123,13 @@ public class NbtTagValue
                 {
                     return false;
                 }
+                else if (this.matchesBase(nbtbase))
+                {
+                    return true;
+                }
                 else
                 {
-                    return this.matchesBase(nbtbase);
+                    return false;
                 }
             }
         }

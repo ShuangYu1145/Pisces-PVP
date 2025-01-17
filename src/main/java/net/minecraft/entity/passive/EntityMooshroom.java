@@ -18,9 +18,6 @@ public class EntityMooshroom extends EntityCow
         this.spawnableBlock = Blocks.mycelium;
     }
 
-    /**
-     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
-     */
     public boolean interact(EntityPlayer player)
     {
         ItemStack itemstack = player.inventory.getCurrentItem();
@@ -43,7 +40,7 @@ public class EntityMooshroom extends EntityCow
         if (itemstack != null && itemstack.getItem() == Items.shears && this.getGrowingAge() >= 0)
         {
             this.setDead();
-            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY + (double)(this.height / 2.0F), this.posZ, 0.0D, 0.0D, 0.0D);
+            this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY + (double)(this.height / 2.0F), this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
 
             if (!this.worldObj.isRemote)
             {

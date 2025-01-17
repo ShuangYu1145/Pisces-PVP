@@ -16,7 +16,7 @@ public class RegistrySimple<K, V> implements IRegistry<K, V>
 
     protected Map<K, V> createUnderlyingMap()
     {
-        return Maps.newHashMap();
+        return Maps.<K, V>newHashMap();
     }
 
     public V getObject(K name)
@@ -24,9 +24,6 @@ public class RegistrySimple<K, V> implements IRegistry<K, V>
         return this.registryObjects.get(name);
     }
 
-    /**
-     * Register an object on this registry.
-     */
     public void putObject(K key, V value)
     {
         Validate.notNull(key);
@@ -34,7 +31,7 @@ public class RegistrySimple<K, V> implements IRegistry<K, V>
 
         if (this.registryObjects.containsKey(key))
         {
-            logger.debug("Adding duplicate key '" + key + "' to registry");
+            logger.debug("Adding duplicate key \'" + key + "\' to registry");
         }
 
         this.registryObjects.put(key, value);
@@ -42,12 +39,9 @@ public class RegistrySimple<K, V> implements IRegistry<K, V>
 
     public Set<K> getKeys()
     {
-        return Collections.unmodifiableSet(this.registryObjects.keySet());
+        return Collections.<K>unmodifiableSet(this.registryObjects.keySet());
     }
 
-    /**
-     * Does this registry contain an entry for the given key?
-     */
     public boolean containsKey(K key)
     {
         return this.registryObjects.containsKey(key);

@@ -1,6 +1,7 @@
 package net.minecraft.block;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -24,7 +25,7 @@ public class BlockTNT extends Block
     public BlockTNT()
     {
         super(Material.tnt);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(EXPLODE, false));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(EXPLODE, Boolean.valueOf(false)));
         this.setCreativeTab(CreativeTabs.tabRedstone);
     }
 
@@ -34,26 +35,20 @@ public class BlockTNT extends Block
 
         if (worldIn.isBlockPowered(pos))
         {
-            this.onBlockDestroyedByPlayer(worldIn, pos, state.withProperty(EXPLODE, true));
+            this.onBlockDestroyedByPlayer(worldIn, pos, state.withProperty(EXPLODE, Boolean.valueOf(true)));
             worldIn.setBlockToAir(pos);
         }
     }
 
-    /**
-     * Called when a neighboring block changes.
-     */
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
         if (worldIn.isBlockPowered(pos))
         {
-            this.onBlockDestroyedByPlayer(worldIn, pos, state.withProperty(EXPLODE, true));
+            this.onBlockDestroyedByPlayer(worldIn, pos, state.withProperty(EXPLODE, Boolean.valueOf(true)));
             worldIn.setBlockToAir(pos);
         }
     }
 
-    /**
-     * Called when this Block is destroyed by an Explosion
-     */
     public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn)
     {
         if (!worldIn.isRemote)
@@ -64,9 +59,6 @@ public class BlockTNT extends Block
         }
     }
 
-    /**
-     * Called when a player destroys this Block
-     */
     public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)
     {
         this.explode(worldIn, pos, state, (EntityLivingBase)null);
@@ -76,7 +68,7 @@ public class BlockTNT extends Block
     {
         if (!worldIn.isRemote)
         {
-            if (state.getValue(EXPLODE))
+            if (((Boolean)state.getValue(EXPLODE)).booleanValue())
             {
                 EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(worldIn, (double)((float)pos.getX() + 0.5F), (double)pos.getY(), (double)((float)pos.getZ() + 0.5F), igniter);
                 worldIn.spawnEntityInWorld(entitytntprimed);
@@ -93,7 +85,7 @@ public class BlockTNT extends Block
 
             if (item == Items.flint_and_steel || item == Items.fire_charge)
             {
-                this.explode(worldIn, pos, state.withProperty(EXPLODE, true), playerIn);
+                this.explode(worldIn, pos, state.withProperty(EXPLODE, Boolean.valueOf(true)), playerIn);
                 worldIn.setBlockToAir(pos);
 
                 if (item == Items.flint_and_steel)
@@ -112,9 +104,6 @@ public class BlockTNT extends Block
         return super.onBlockActivated(worldIn, pos, state, playerIn, side, hitX, hitY, hitZ);
     }
 
-    /**
-     * Called When an Entity Collided with the Block
-     */
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     {
         if (!worldIn.isRemote && entityIn instanceof EntityArrow)
@@ -123,38 +112,29 @@ public class BlockTNT extends Block
 
             if (entityarrow.isBurning())
             {
-                this.explode(worldIn, pos, worldIn.getBlockState(pos).withProperty(EXPLODE, true), entityarrow.shootingEntity instanceof EntityLivingBase ? (EntityLivingBase)entityarrow.shootingEntity : null);
+                this.explode(worldIn, pos, worldIn.getBlockState(pos).withProperty(EXPLODE, Boolean.valueOf(true)), entityarrow.shootingEntity instanceof EntityLivingBase ? (EntityLivingBase)entityarrow.shootingEntity : null);
                 worldIn.setBlockToAir(pos);
             }
         }
     }
 
-    /**
-     * Return whether this block can drop from an explosion.
-     */
     public boolean canDropFromExplosion(Explosion explosionIn)
     {
         return false;
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(EXPLODE, (meta & 1) > 0);
+        return this.getDefaultState().withProperty(EXPLODE, Boolean.valueOf((meta & 1) > 0));
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(EXPLODE) ? 1 : 0;
+        return ((Boolean)state.getValue(EXPLODE)).booleanValue() ? 1 : 0;
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, EXPLODE);
+        return new BlockState(this, new IProperty[] {EXPLODE});
     }
 }

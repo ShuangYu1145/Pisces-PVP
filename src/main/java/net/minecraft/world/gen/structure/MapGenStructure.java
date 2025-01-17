@@ -20,18 +20,15 @@ import net.minecraft.world.gen.MapGenBase;
 public abstract class MapGenStructure extends MapGenBase
 {
     private MapGenStructureData structureData;
-    protected Map<Long, StructureStart> structureMap = Maps.newHashMap();
+    protected Map<Long, StructureStart> structureMap = Maps.<Long, StructureStart>newHashMap();
 
     public abstract String getStructureName();
 
-    /**
-     * Recursively called by generate()
-     */
     protected final void recursiveGenerate(World worldIn, final int chunkX, final int chunkZ, int p_180701_4_, int p_180701_5_, ChunkPrimer chunkPrimerIn)
     {
         this.initializeStructureData(worldIn);
 
-        if (!this.structureMap.containsKey(ChunkCoordIntPair.chunkXZ2Int(chunkX, chunkZ)))
+        if (!this.structureMap.containsKey(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(chunkX, chunkZ))))
         {
             this.rand.nextInt();
 
@@ -40,7 +37,7 @@ public abstract class MapGenStructure extends MapGenBase
                 if (this.canSpawnStructureAtCoords(chunkX, chunkZ))
                 {
                     StructureStart structurestart = this.getStructureStart(chunkX, chunkZ);
-                    this.structureMap.put(ChunkCoordIntPair.chunkXZ2Int(chunkX, chunkZ), structurestart);
+                    this.structureMap.put(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(chunkX, chunkZ)), structurestart);
                     this.setStructureStart(chunkX, chunkZ, structurestart);
                 }
             }
@@ -55,7 +52,7 @@ public abstract class MapGenStructure extends MapGenBase
                         return MapGenStructure.this.canSpawnStructureAtCoords(chunkX, chunkZ) ? "True" : "False";
                     }
                 });
-                crashreportcategory.addCrashSection("Chunk location", String.format("%d,%d", chunkX, chunkZ));
+                crashreportcategory.addCrashSection("Chunk location", String.format("%d,%d", new Object[] {Integer.valueOf(chunkX), Integer.valueOf(chunkZ)}));
                 crashreportcategory.addCrashSectionCallable("Chunk pos hash", new Callable<String>()
                 {
                     public String call() throws Exception
@@ -104,7 +101,7 @@ public abstract class MapGenStructure extends MapGenBase
 
     protected StructureStart func_175797_c(BlockPos pos)
     {
-        label31:
+        label24:
 
         for (StructureStart structurestart : this.structureMap.values())
         {
@@ -116,10 +113,10 @@ public abstract class MapGenStructure extends MapGenBase
                 {
                     if (!iterator.hasNext())
                     {
-                        continue label31;
+                        continue label24;
                     }
 
-                    StructureComponent structurecomponent = iterator.next();
+                    StructureComponent structurecomponent = (StructureComponent)iterator.next();
 
                     if (structurecomponent.getBoundingBox().isVecInside(pos))
                     {
@@ -167,7 +164,7 @@ public abstract class MapGenStructure extends MapGenBase
         {
             if (structurestart.isSizeableStructure())
             {
-                StructureComponent structurecomponent = structurestart.getComponents().get(0);
+                StructureComponent structurecomponent = (StructureComponent)structurestart.getComponents().get(0);
                 BlockPos blockpos1 = structurecomponent.getBoundingBoxCenter();
                 double d1 = blockpos1.distanceSq(pos);
 
@@ -247,7 +244,7 @@ public abstract class MapGenStructure extends MapGenBase
 
                             if (structurestart != null)
                             {
-                                this.structureMap.put(ChunkCoordIntPair.chunkXZ2Int(i, j), structurestart);
+                                this.structureMap.put(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(i, j)), structurestart);
                             }
                         }
                     }

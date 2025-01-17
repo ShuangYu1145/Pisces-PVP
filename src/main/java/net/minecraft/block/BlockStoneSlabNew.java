@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 public abstract class BlockStoneSlabNew extends BlockSlab
 {
     public static final PropertyBool SEAMLESS = PropertyBool.create("seamless");
-    public static final PropertyEnum<BlockStoneSlabNew.EnumType> VARIANT = PropertyEnum.create("variant", BlockStoneSlabNew.EnumType.class);
+    public static final PropertyEnum<BlockStoneSlabNew.EnumType> VARIANT = PropertyEnum.<BlockStoneSlabNew.EnumType>create("variant", BlockStoneSlabNew.EnumType.class);
 
     public BlockStoneSlabNew()
     {
@@ -30,7 +30,7 @@ public abstract class BlockStoneSlabNew extends BlockSlab
 
         if (this.isDouble())
         {
-            iblockstate = iblockstate.withProperty(SEAMLESS, false);
+            iblockstate = iblockstate.withProperty(SEAMLESS, Boolean.valueOf(false));
         }
         else
         {
@@ -41,17 +41,11 @@ public abstract class BlockStoneSlabNew extends BlockSlab
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
-    /**
-     * Gets the localized name of this block. Used for the statistics page.
-     */
     public String getLocalizedName()
     {
         return StatCollector.translateToLocal(this.getUnlocalizedName() + ".red_sandstone.name");
     }
 
-    /**
-     * Get the Item that this Block should drop when harvested.
-     */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Item.getItemFromBlock(Blocks.stone_slab2);
@@ -62,9 +56,6 @@ public abstract class BlockStoneSlabNew extends BlockSlab
         return Item.getItemFromBlock(Blocks.stone_slab2);
     }
 
-    /**
-     * Returns the slab block name with the type associated with it
-     */
     public String getUnlocalizedName(int meta)
     {
         return super.getUnlocalizedName() + "." + BlockStoneSlabNew.EnumType.byMetadata(meta).getUnlocalizedName();
@@ -80,9 +71,6 @@ public abstract class BlockStoneSlabNew extends BlockSlab
         return BlockStoneSlabNew.EnumType.byMetadata(stack.getMetadata() & 7);
     }
 
-    /**
-     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
-     */
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
         if (itemIn != Item.getItemFromBlock(Blocks.double_stone_slab2))
@@ -94,16 +82,13 @@ public abstract class BlockStoneSlabNew extends BlockSlab
         }
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
         IBlockState iblockstate = this.getDefaultState().withProperty(VARIANT, BlockStoneSlabNew.EnumType.byMetadata(meta & 7));
 
         if (this.isDouble())
         {
-            iblockstate = iblockstate.withProperty(SEAMLESS, (meta & 8) != 0);
+            iblockstate = iblockstate.withProperty(SEAMLESS, Boolean.valueOf((meta & 8) != 0));
         }
         else
         {
@@ -113,17 +98,14 @@ public abstract class BlockStoneSlabNew extends BlockSlab
         return iblockstate;
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
         int i = 0;
-        i = i | state.getValue(VARIANT).getMetadata();
+        i = i | ((BlockStoneSlabNew.EnumType)state.getValue(VARIANT)).getMetadata();
 
         if (this.isDouble())
         {
-            if (state.getValue(SEAMLESS))
+            if (((Boolean)state.getValue(SEAMLESS)).booleanValue())
             {
                 i |= 8;
             }
@@ -138,24 +120,17 @@ public abstract class BlockStoneSlabNew extends BlockSlab
 
     protected BlockState createBlockState()
     {
-        return this.isDouble() ? new BlockState(this, SEAMLESS, VARIANT) : new BlockState(this, HALF, VARIANT);
+        return this.isDouble() ? new BlockState(this, new IProperty[] {SEAMLESS, VARIANT}): new BlockState(this, new IProperty[] {HALF, VARIANT});
     }
 
-    /**
-     * Get the MapColor for this Block and the given BlockState
-     */
     public MapColor getMapColor(IBlockState state)
     {
-        return state.getValue(VARIANT).func_181068_c();
+        return ((BlockStoneSlabNew.EnumType)state.getValue(VARIANT)).func_181068_c();
     }
 
-    /**
-     * Gets the metadata of the item this Block can drop. This method is called when the block gets destroyed. It
-     * returns the metadata of the dropped item based on the old metadata of the block.
-     */
     public int damageDropped(IBlockState state)
     {
-        return state.getValue(VARIANT).getMetadata();
+        return ((BlockStoneSlabNew.EnumType)state.getValue(VARIANT)).getMetadata();
     }
 
     public static enum EnumType implements IStringSerializable

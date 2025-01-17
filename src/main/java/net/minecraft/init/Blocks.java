@@ -235,14 +235,9 @@ public class Blocks
     public static final BlockSlab double_stone_slab2;
     public static final BlockSlab stone_slab2;
 
-    /**
-     * Returns the Block in the blockRegistry with the specified name.
-     *  
-     * @param blockName The block's name to register
-     */
     private static Block getRegisteredBlock(String blockName)
     {
-        return Block.blockRegistry.getObject(new ResourceLocation(blockName));
+        return (Block)Block.blockRegistry.getObject(new ResourceLocation(blockName));
     }
 
     static

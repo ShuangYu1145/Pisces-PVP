@@ -2,6 +2,7 @@ package net.minecraft.client.resources.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumTypeAdapterFactory;
@@ -11,12 +12,8 @@ import net.minecraft.util.RegistrySimple;
 
 public class IMetadataSerializer
 {
-    private final IRegistry<String, IMetadataSerializer.Registration<? extends IMetadataSection>> metadataSectionSerializerRegistry = new RegistrySimple<>();
+    private final IRegistry < String, IMetadataSerializer.Registration <? extends IMetadataSection >> metadataSectionSerializerRegistry = new RegistrySimple();
     private final GsonBuilder gsonBuilder = new GsonBuilder();
-
-    /**
-     * Cached Gson instance. Set to null when more sections are registered, and then re-created from the builder.
-     */
     private Gson gson;
 
     public IMetadataSerializer()
@@ -28,7 +25,7 @@ public class IMetadataSerializer
 
     public <T extends IMetadataSection> void registerMetadataSectionType(IMetadataSectionSerializer<T> metadataSectionSerializer, Class<T> clazz)
     {
-        this.metadataSectionSerializerRegistry.putObject(metadataSectionSerializer.getSectionName(), new IMetadataSerializer.Registration<>(metadataSectionSerializer, clazz));
+        this.metadataSectionSerializerRegistry.putObject(metadataSectionSerializer.getSectionName(), new IMetadataSerializer.Registration(metadataSectionSerializer, clazz));
         this.gsonBuilder.registerTypeAdapter(clazz, metadataSectionSerializer);
         this.gson = null;
     }
@@ -45,26 +42,23 @@ public class IMetadataSerializer
         }
         else if (!json.get(sectionName).isJsonObject())
         {
-            throw new IllegalArgumentException("Invalid metadata for '" + sectionName + "' - expected object, found " + json.get(sectionName));
+            throw new IllegalArgumentException("Invalid metadata for \'" + sectionName + "\' - expected object, found " + json.get(sectionName));
         }
         else
         {
-            IMetadataSerializer.Registration<?> registration = this.metadataSectionSerializerRegistry.getObject(sectionName);
+            IMetadataSerializer.Registration<?> registration = (IMetadataSerializer.Registration)this.metadataSectionSerializerRegistry.getObject(sectionName);
 
             if (registration == null)
             {
-                throw new IllegalArgumentException("Don't know how to handle metadata section '" + sectionName + "'");
+                throw new IllegalArgumentException("Don\'t know how to handle metadata section \'" + sectionName + "\'");
             }
             else
             {
-                return (T)(this.getGson().fromJson(json.getAsJsonObject(sectionName), registration.clazz));
+                return (T)((IMetadataSection)this.getGson().fromJson((JsonElement)json.getAsJsonObject(sectionName), registration.clazz));
             }
         }
     }
 
-    /**
-     * Returns a Gson instance with type adapters registered for metadata sections.
-     */
     private Gson getGson()
     {
         if (this.gson == null)

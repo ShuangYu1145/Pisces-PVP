@@ -46,18 +46,12 @@ public abstract class AbstractClientPlayer extends EntityPlayer
         PlayerConfigurations.getPlayerConfiguration(this);
     }
 
-    /**
-     * Returns true if the player is in spectator mode.
-     */
     public boolean isSpectator()
     {
         NetworkPlayerInfo networkplayerinfo = Minecraft.getMinecraft().getNetHandler().getPlayerInfo(this.getGameProfile().getId());
         return networkplayerinfo != null && networkplayerinfo.getGameType() == WorldSettings.GameType.SPECTATOR;
     }
 
-    /**
-     * Checks if this instance of AbstractClientPlayer has any associated player data.
-     */
     public boolean hasPlayerInfo()
     {
         return this.getPlayerInfo() != null;
@@ -73,18 +67,12 @@ public abstract class AbstractClientPlayer extends EntityPlayer
         return this.playerInfo;
     }
 
-    /**
-     * Returns true if the player has an associated skin.
-     */
     public boolean hasSkin()
     {
         NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
         return networkplayerinfo != null && networkplayerinfo.hasLocationSkin();
     }
 
-    /**
-     * Returns true if the player instance has an associated skin.
-     */
     public ResourceLocation getLocationSkin()
     {
         NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
@@ -124,16 +112,13 @@ public abstract class AbstractClientPlayer extends EntityPlayer
 
         if (itextureobject == null)
         {
-            itextureobject = new ThreadDownloadImageData((File)null, String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", StringUtils.stripControlCodes(username)), DefaultPlayerSkin.getDefaultSkin(getOfflineUUID(username)), new ImageBufferDownload());
+            itextureobject = new ThreadDownloadImageData((File)null, String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", new Object[] {StringUtils.stripControlCodes(username)}), DefaultPlayerSkin.getDefaultSkin(getOfflineUUID(username)), new ImageBufferDownload());
             texturemanager.loadTexture(resourceLocationIn, itextureobject);
         }
 
         return (ThreadDownloadImageData)itextureobject;
     }
 
-    /**
-     * Returns true if the username has an associated skin.
-     */
     public static ResourceLocation getLocationSkin(String username)
     {
         return new ResourceLocation("skins/" + StringUtils.stripControlCodes(username));
@@ -179,7 +164,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer
             f *= 1.0F - f1 * 0.15F;
         }
 
-        return Reflector.ForgeHooksClient_getOffsetFOV.exists() ? Reflector.callFloat(Reflector.ForgeHooksClient_getOffsetFOV, this, f) : f;
+        return Reflector.ForgeHooksClient_getOffsetFOV.exists() ? Reflector.callFloat(Reflector.ForgeHooksClient_getOffsetFOV, new Object[] {this, Float.valueOf(f)}): f;
     }
 
     public String getNameClear()
@@ -200,15 +185,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer
     public boolean hasElytraCape()
     {
         ResourceLocation resourcelocation = this.getLocationCape();
-
-        if (resourcelocation == null)
-        {
-            return false;
-        }
-        else
-        {
-            return resourcelocation == this.locationOfCape ? this.elytraOfCape : true;
-        }
+        return resourcelocation == null ? false : (resourcelocation == this.locationOfCape ? this.elytraOfCape : true);
     }
 
     public void setElytraOfCape(boolean p_setElytraOfCape_1_)
@@ -231,9 +208,6 @@ public abstract class AbstractClientPlayer extends EntityPlayer
         this.reloadCapeTimeMs = p_setReloadCapeTimeMs_1_;
     }
 
-    /**
-     * interpolated look vector
-     */
     public Vec3 getLook(float partialTicks)
     {
         return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);

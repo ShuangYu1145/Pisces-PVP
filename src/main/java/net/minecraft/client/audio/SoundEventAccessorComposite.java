@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class SoundEventAccessorComposite implements ISoundEventAccessor<SoundPoolEntry>
 {
-    private final List<ISoundEventAccessor<SoundPoolEntry>> soundPool = Lists.newArrayList();
+    private final List<ISoundEventAccessor<SoundPoolEntry>> soundPool = Lists.<ISoundEventAccessor<SoundPoolEntry>>newArrayList();
     private final Random rnd = new Random();
     private final ResourceLocation soundLocation;
     private final SoundCategory category;
@@ -48,7 +48,7 @@ public class SoundEventAccessorComposite implements ISoundEventAccessor<SoundPoo
 
                 if (j < 0)
                 {
-                    SoundPoolEntry soundpoolentry = isoundeventaccessor.cloneEntry();
+                    SoundPoolEntry soundpoolentry = (SoundPoolEntry)isoundeventaccessor.cloneEntry();
                     soundpoolentry.setPitch(soundpoolentry.getPitch() * this.eventPitch);
                     soundpoolentry.setVolume(soundpoolentry.getVolume() * this.eventVolume);
                     return soundpoolentry;

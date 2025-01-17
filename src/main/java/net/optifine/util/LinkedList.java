@@ -8,91 +8,84 @@ public class LinkedList<T>
     private LinkedList.Node<T> last;
     private int size;
 
-    public void addFirst(LinkedList.Node<T> node)
-    {
-        this.checkNoParent(node);
+    public void addFirst(LinkedList.Node<T> tNode) {
+        this.checkNoParent(tNode);
 
         if (this.isEmpty())
         {
-            this.first = node;
-            this.last = node;
-        }
-        else
-        {
-            LinkedList.Node<T> nodeNext = this.first;
-            node.setNext(nodeNext);
-            node.setPrev(node);
-            this.first = node;
+            this.first = tNode;
+            this.last = tNode;
+        } else {
+            LinkedList.Node<T> node = this.first;
+            tNode.setNext(node);
+            node.setPrev(tNode);
+            this.first = tNode;
         }
 
-        node.setParent(this);
+        tNode.setParent(this);
         ++this.size;
     }
 
-    public void addLast(LinkedList.Node<T> node)
-    {
-        this.checkNoParent(node);
+    public void addLast(LinkedList.Node<T> tNode) {
+        this.checkNoParent(tNode);
 
         if (this.isEmpty())
         {
-            this.first = node;
-            this.last = node;
-        }
-        else
-        {
-            LinkedList.Node<T> nodePrev = this.last;
-            node.setPrev(nodePrev);
-            node.setNext(node);
-            this.last = node;
+            this.first = tNode;
+            this.last = tNode;
+        } else {
+            LinkedList.Node<T> node = this.last;
+            tNode.setPrev(node);
+            node.setNext(tNode);
+            this.last = tNode;
         }
 
-        node.setParent(this);
+        tNode.setParent(this);
         ++this.size;
     }
 
-    public void addAfter(final Node<T> nodePrev, final Node<T> node) {
+    public void addAfter(LinkedList.Node<T> nodePrev, LinkedList.Node<T> tNode) {
         if (nodePrev == null) {
-            this.addFirst(node);
-            return;
+            this.addFirst(tNode);
+        } else if (nodePrev == this.last) {
+            this.addLast(tNode);
+        } else {
+            this.checkParent(nodePrev);
+            this.checkNoParent(tNode);
+            LinkedList.Node<T> nodeNext = nodePrev.getNext();
+            nodePrev.setNext(tNode);
+            tNode.setPrev(nodePrev);
+            nodeNext.setPrev(tNode);
+            tNode.setNext(nodeNext);
+            tNode.setParent(this);
+            ++this.size;
         }
-        if (nodePrev == this.last) {
-            this.addLast(node);
-            return;
-        }
-        this.checkParent(nodePrev);
-        this.checkNoParent(node);
-        final Node<T> nodeNext = nodePrev.getNext();
-        (nodePrev).setNext(node);
-        (node).setPrev(nodePrev);
-        (nodeNext).setPrev(node);
-        (node).setNext(nodeNext);
-         node.setParent(this);
-        ++this.size;
     }
 
-    public Node<T> remove(final Node<T> node) {
-        this.checkParent(node);
-        final Node<T> prev = node.getPrev();
-        final Node<T> next = node.getNext();
+    public LinkedList.Node<T> remove(LinkedList.Node<T> tNode) {
+        this.checkParent(tNode);
+        LinkedList.Node<T> prev = tNode.getPrev();
+        LinkedList.Node<T> next = tNode.getNext();
+
         if (prev != null) {
-            (prev).setNext(next);
-        }
-        else {
+            prev.setNext(next);
+        } else {
             this.first = next;
         }
+
         if (next != null) {
-            (next).setPrev(prev);
-        }
-        else {
+            next.setPrev(prev);
+        } else {
             this.last = prev;
         }
-        (node).setPrev(null);
-        (node).setNext(null);
-        (node).setParent(null);
+
+        tNode.setPrev(null);
+        tNode.setNext(null);
+        tNode.setParent(null);
         --this.size;
-        return node;
+        return tNode;
     }
-    
+
     public void moveAfter(LinkedList.Node<T> nodePrev, LinkedList.Node<T> node)
     {
         this.remove(node);
@@ -169,6 +162,10 @@ public class LinkedList<T>
 
                 return node;
             }
+            public void remove()
+            {
+                throw new UnsupportedOperationException("remove");
+            }
         };
         return iterator;
     }
@@ -197,15 +194,15 @@ public class LinkedList<T>
     {
         StringBuffer stringbuffer = new StringBuffer();
 
-//        for (LinkedList.Node<T> node : this)
-//        {
-//            if (stringbuffer.length() > 0)
-//            {
-//                stringbuffer.append(", ");
-//            }
-//
-//            stringbuffer.append(node.getItem());
-//        }
+        for (Iterator<Node<T>> it = iterator(); it.hasNext(); ) {
+            Node<T> node = it.next();
+            if (stringbuffer.length() > 0)
+            {
+                stringbuffer.append(", ");
+            }
+
+            stringbuffer.append(node.getItem());
+        }
 
         return "" + this.size + " [" + stringbuffer.toString() + "]";
     }

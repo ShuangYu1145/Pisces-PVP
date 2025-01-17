@@ -61,7 +61,7 @@ public class BlockWorkbench extends Block
 
         public IChatComponent getDisplayName()
         {
-            return new ChatComponentTranslation(Blocks.crafting_table.getUnlocalizedName() + ".name");
+            return new ChatComponentTranslation(Blocks.crafting_table.getUnlocalizedName() + ".name", new Object[0]);
         }
 
         public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)

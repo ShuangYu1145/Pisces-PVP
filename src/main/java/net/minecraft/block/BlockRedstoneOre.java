@@ -30,9 +30,6 @@ public class BlockRedstoneOre extends Block
         this.isOn = isOn;
     }
 
-    /**
-     * How many world ticks before ticking
-     */
     public int tickRate(World worldIn)
     {
         return 30;
@@ -44,9 +41,6 @@ public class BlockRedstoneOre extends Block
         super.onBlockClicked(worldIn, pos, playerIn);
     }
 
-    /**
-     * Triggered whenever an entity collides with this block (enters into the block)
-     */
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, Entity entityIn)
     {
         this.activate(worldIn, pos);
@@ -77,33 +71,21 @@ public class BlockRedstoneOre extends Block
         }
     }
 
-    /**
-     * Get the Item that this Block should drop when harvested.
-     */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Items.redstone;
     }
 
-    /**
-     * Get the quantity dropped based on the given fortune level
-     */
     public int quantityDroppedWithBonus(int fortune, Random random)
     {
         return this.quantityDropped(random) + random.nextInt(fortune + 1);
     }
 
-    /**
-     * Returns the quantity of items to drop on block destruction.
-     */
     public int quantityDropped(Random random)
     {
         return 4 + random.nextInt(2);
     }
 
-    /**
-     * Spawns this Block's drops into the World as EntityItems.
-     */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
         super.dropBlockAsItemWithChance(worldIn, pos, state, chance, fortune);
@@ -166,7 +148,7 @@ public class BlockRedstoneOre extends Block
 
             if (d1 < (double)pos.getX() || d1 > (double)(pos.getX() + 1) || d2 < 0.0D || d2 > (double)(pos.getY() + 1) || d3 < (double)pos.getZ() || d3 > (double)(pos.getZ() + 1))
             {
-                worldIn.spawnParticle(EnumParticleTypes.REDSTONE, d1, d2, d3, 0.0D, 0.0D, 0.0D);
+                worldIn.spawnParticle(EnumParticleTypes.REDSTONE, d1, d2, d3, 0.0D, 0.0D, 0.0D, new int[0]);
             }
         }
     }

@@ -12,23 +12,17 @@ import net.minecraft.world.World;
 
 public class CommandResultStats
 {
-    /** The number of result command result types that are possible. */
     private static final int NUM_RESULT_TYPES = CommandResultStats.Type.values().length;
     private static final String[] STRING_RESULT_TYPES = new String[NUM_RESULT_TYPES];
+    private String[] entitiesID;
+    private String[] objectives;
 
-    /**
-     * List of entityID who set a stat, username for a player, UUID for all entities
-     */
-    private String[] entitiesID = STRING_RESULT_TYPES;
+    public CommandResultStats()
+    {
+        this.entitiesID = STRING_RESULT_TYPES;
+        this.objectives = STRING_RESULT_TYPES;
+    }
 
-    /** List of all the Objectives names */
-    private String[] objectives = STRING_RESULT_TYPES;
-
-    /**
-     * Set the score on the ScoreBoard
-     *  
-     * @param scorePoint The score to set to the score board
-     */
     public void setCommandStatScore(final ICommandSender sender, CommandResultStats.Type resultTypeIn, int scorePoint)
     {
         String s = this.entitiesID[resultTypeIn.getTypeID()];
@@ -151,12 +145,6 @@ public class CommandResultStats
         }
     }
 
-    /**
-     * Set a stat in the scoreboard
-     *  
-     * @param entityID The username of the player or the UUID of an Entity
-     * @param objectiveName The name of the Objective
-     */
     public static void setScoreBoardStat(CommandResultStats stats, CommandResultStats.Type resultType, String entityID, String objectiveName)
     {
         if (entityID != null && entityID.length() != 0 && objectiveName != null && objectiveName.length() != 0)
@@ -176,9 +164,6 @@ public class CommandResultStats
         }
     }
 
-    /**
-     * Remove a stat from the scoreboard
-     */
     private static void removeScoreBoardStat(CommandResultStats resultStatsIn, CommandResultStats.Type resultTypeIn)
     {
         if (resultStatsIn.entitiesID != STRING_RESULT_TYPES && resultStatsIn.objectives != STRING_RESULT_TYPES)
@@ -204,9 +189,6 @@ public class CommandResultStats
         }
     }
 
-    /**
-     * Add all stats in the CommandResultStats
-     */
     public void addAllStats(CommandResultStats resultStatsIn)
     {
         for (CommandResultStats.Type commandresultstats$type : CommandResultStats.Type.values())

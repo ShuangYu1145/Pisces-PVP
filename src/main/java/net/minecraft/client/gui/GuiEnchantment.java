@@ -24,23 +24,10 @@ import org.lwjgl.util.glu.Project;
 
 public class GuiEnchantment extends GuiContainer
 {
-    /** The ResourceLocation containing the Enchantment GUI texture location */
     private static final ResourceLocation ENCHANTMENT_TABLE_GUI_TEXTURE = new ResourceLocation("textures/gui/container/enchanting_table.png");
-
-    /**
-     * The ResourceLocation containing the texture for the Book rendered above the enchantment table
-     */
     private static final ResourceLocation ENCHANTMENT_TABLE_BOOK_TEXTURE = new ResourceLocation("textures/entity/enchanting_table_book.png");
-
-    /**
-     * The ModelBook instance used for rendering the book on the Enchantment table
-     */
     private static final ModelBook MODEL_BOOK = new ModelBook();
-
-    /** The player inventory currently bound to this GuiEnchantment instance. */
     private final InventoryPlayer playerInventory;
-
-    /** A Random instance for use with the enchantment gui */
     private Random random = new Random();
     private ContainerEnchantment container;
     public int field_147073_u;
@@ -61,27 +48,18 @@ public class GuiEnchantment extends GuiContainer
         this.field_175380_I = p_i45502_3_;
     }
 
-    /**
-     * Draw the foreground layer for the GuiContainer (everything in front of the items). Args : mouseX, mouseY
-     */
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         this.fontRendererObj.drawString(this.field_175380_I.getDisplayName().getUnformattedText(), 12, 5, 4210752);
         this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
     }
 
-    /**
-     * Called from the main game loop to update the screen.
-     */
     public void updateScreen()
     {
         super.updateScreen();
         this.func_147068_g();
     }
 
-    /**
-     * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
-     */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -100,9 +78,6 @@ public class GuiEnchantment extends GuiContainer
         }
     }
 
-    /**
-     * Args : renderPartialTicks, mouseX, mouseY
-     */
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
     {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -226,9 +201,6 @@ public class GuiEnchantment extends GuiContainer
         }
     }
 
-    /**
-     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
-     */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -243,12 +215,12 @@ public class GuiEnchantment extends GuiContainer
 
             if (this.isPointInRegion(60, 14 + 19 * j, 108, 17, mouseX, mouseY) && k > 0 && l >= 0)
             {
-                List<String> list = Lists.newArrayList();
+                List<String> list = Lists.<String>newArrayList();
 
                 if (l >= 0 && Enchantment.getEnchantmentById(l & 255) != null)
                 {
                     String s = Enchantment.getEnchantmentById(l & 255).getTranslatedName((l & 65280) >> 8);
-                    list.add(EnumChatFormatting.WHITE.toString() + EnumChatFormatting.ITALIC.toString() + I18n.format("container.enchant.clue", s));
+                    list.add(EnumChatFormatting.WHITE.toString() + EnumChatFormatting.ITALIC.toString() + I18n.format("container.enchant.clue", new Object[] {s}));
                 }
 
                 if (!flag)
@@ -268,11 +240,11 @@ public class GuiEnchantment extends GuiContainer
 
                         if (i1 == 1)
                         {
-                            s1 = I18n.format("container.enchant.lapis.one");
+                            s1 = I18n.format("container.enchant.lapis.one", new Object[0]);
                         }
                         else
                         {
-                            s1 = I18n.format("container.enchant.lapis.many", i1);
+                            s1 = I18n.format("container.enchant.lapis.many", new Object[] {Integer.valueOf(i1)});
                         }
 
                         if (i >= i1)
@@ -286,11 +258,11 @@ public class GuiEnchantment extends GuiContainer
 
                         if (i1 == 1)
                         {
-                            s1 = I18n.format("container.enchant.level.one");
+                            s1 = I18n.format("container.enchant.level.one", new Object[0]);
                         }
                         else
                         {
-                            s1 = I18n.format("container.enchant.level.many", i1);
+                            s1 = I18n.format("container.enchant.level.many", new Object[] {Integer.valueOf(i1)});
                         }
 
                         list.add(EnumChatFormatting.GRAY.toString() + "" + s1);
@@ -315,7 +287,7 @@ public class GuiEnchantment extends GuiContainer
             {
                 this.field_147082_x += (float)(this.random.nextInt(4) - this.random.nextInt(4));
 
-                if (!(this.field_147071_v <= this.field_147082_x + 1.0F) || !(this.field_147071_v >= this.field_147082_x - 1.0F))
+                if (this.field_147071_v > this.field_147082_x + 1.0F || this.field_147071_v < this.field_147082_x - 1.0F)
                 {
                     break;
                 }

@@ -11,33 +11,21 @@ import net.minecraft.util.BlockPos;
 
 public class CommandDeOp extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "deop";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 3;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.deop.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length == 1 && args[0].length() > 0)
@@ -47,7 +35,7 @@ public class CommandDeOp extends CommandBase
 
             if (gameprofile == null)
             {
-                throw new CommandException("commands.deop.failed", args[0]);
+                throw new CommandException("commands.deop.failed", new Object[] {args[0]});
             }
             else
             {
@@ -57,7 +45,7 @@ public class CommandDeOp extends CommandBase
         }
         else
         {
-            throw new WrongUsageException("commands.deop.usage");
+            throw new WrongUsageException("commands.deop.usage", new Object[0]);
         }
     }
 

@@ -3,6 +3,7 @@ package net.minecraft.block;
 import com.google.common.cache.LoadingCache;
 import java.util.Random;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.BlockWorldState;
@@ -22,7 +23,7 @@ import net.minecraft.world.World;
 
 public class BlockPortal extends BlockBreakable
 {
-    public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class, EnumFacing.Axis.X, EnumFacing.Axis.Z);
+    public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.<EnumFacing.Axis>create("axis", EnumFacing.Axis.class, new EnumFacing.Axis[] {EnumFacing.Axis.X, EnumFacing.Axis.Z});
 
     public BlockPortal()
     {
@@ -64,7 +65,7 @@ public class BlockPortal extends BlockBreakable
 
     public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
     {
-        EnumFacing.Axis enumfacing$axis = worldIn.getBlockState(pos).getValue(AXIS);
+        EnumFacing.Axis enumfacing$axis = (EnumFacing.Axis)worldIn.getBlockState(pos).getValue(AXIS);
         float f = 0.125F;
         float f1 = 0.125F;
 
@@ -83,14 +84,7 @@ public class BlockPortal extends BlockBreakable
 
     public static int getMetaForAxis(EnumFacing.Axis axis)
     {
-        if (axis == EnumFacing.Axis.X)
-        {
-            return 1;
-        }
-        else
-        {
-            return axis == EnumFacing.Axis.Z ? 2 : 0;
-        }
+        return axis == EnumFacing.Axis.X ? 1 : (axis == EnumFacing.Axis.Z ? 2 : 0);
     }
 
     public boolean isFullCube()
@@ -123,12 +117,9 @@ public class BlockPortal extends BlockBreakable
         }
     }
 
-    /**
-     * Called when a neighboring block changes.
-     */
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
-        EnumFacing.Axis enumfacing$axis = state.getValue(AXIS);
+        EnumFacing.Axis enumfacing$axis = (EnumFacing.Axis)state.getValue(AXIS);
 
         if (enumfacing$axis == EnumFacing.Axis.X)
         {
@@ -157,7 +148,7 @@ public class BlockPortal extends BlockBreakable
 
         if (worldIn.getBlockState(pos).getBlock() == this)
         {
-            enumfacing$axis = iblockstate.getValue(AXIS);
+            enumfacing$axis = (EnumFacing.Axis)iblockstate.getValue(AXIS);
 
             if (enumfacing$axis == null)
             {
@@ -181,28 +172,9 @@ public class BlockPortal extends BlockBreakable
         boolean flag3 = worldIn.getBlockState(pos.south()).getBlock() == this && worldIn.getBlockState(pos.south(2)).getBlock() != this;
         boolean flag4 = flag || flag1 || enumfacing$axis == EnumFacing.Axis.X;
         boolean flag5 = flag2 || flag3 || enumfacing$axis == EnumFacing.Axis.Z;
-
-        if (flag4 && side == EnumFacing.WEST)
-        {
-            return true;
-        }
-        else if (flag4 && side == EnumFacing.EAST)
-        {
-            return true;
-        }
-        else if (flag5 && side == EnumFacing.NORTH)
-        {
-            return true;
-        }
-        else
-        {
-            return flag5 && side == EnumFacing.SOUTH;
-        }
+        return flag4 && side == EnumFacing.WEST ? true : (flag4 && side == EnumFacing.EAST ? true : (flag5 && side == EnumFacing.NORTH ? true : flag5 && side == EnumFacing.SOUTH));
     }
 
-    /**
-     * Returns the quantity of items to drop on block destruction.
-     */
     public int quantityDropped(Random random)
     {
         return 0;
@@ -213,9 +185,6 @@ public class BlockPortal extends BlockBreakable
         return EnumWorldBlockLayer.TRANSLUCENT;
     }
 
-    /**
-     * Called When an Entity Collided with the Block
-     */
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     {
         if (entityIn.ridingEntity == null && entityIn.riddenByEntity == null)
@@ -252,7 +221,7 @@ public class BlockPortal extends BlockBreakable
                 d5 = (double)(rand.nextFloat() * 2.0F * (float)j);
             }
 
-            worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5);
+            worldIn.spawnParticle(EnumParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5, new int[0]);
         }
     }
 
@@ -261,25 +230,19 @@ public class BlockPortal extends BlockBreakable
         return null;
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
         return this.getDefaultState().withProperty(AXIS, (meta & 3) == 2 ? EnumFacing.Axis.Z : EnumFacing.Axis.X);
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return getMetaForAxis(state.getValue(AXIS));
+        return getMetaForAxis((EnumFacing.Axis)state.getValue(AXIS));
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, AXIS);
+        return new BlockState(this, new IProperty[] {AXIS});
     }
 
     public BlockPattern.PatternHelper func_181089_f(World p_181089_1_, BlockPos p_181089_2_)
@@ -418,7 +381,7 @@ public class BlockPortal extends BlockBreakable
 
         protected int func_150858_a()
         {
-            label56:
+            label24:
 
             for (this.field_150862_g = 0; this.field_150862_g < 21; ++this.field_150862_g)
             {
@@ -429,7 +392,7 @@ public class BlockPortal extends BlockBreakable
 
                     if (!this.func_150857_a(block))
                     {
-                        break label56;
+                        break label24;
                     }
 
                     if (block == Blocks.portal)
@@ -443,7 +406,7 @@ public class BlockPortal extends BlockBreakable
 
                         if (block != Blocks.obsidian)
                         {
-                            break label56;
+                            break label24;
                         }
                     }
                     else if (i == this.field_150868_h - 1)
@@ -452,7 +415,7 @@ public class BlockPortal extends BlockBreakable
 
                         if (block != Blocks.obsidian)
                         {
-                            break label56;
+                            break label24;
                         }
                     }
                 }

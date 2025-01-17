@@ -18,9 +18,6 @@ public class EntityAIOcelotAttack extends EntityAIBase
         this.setMutexBits(3);
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     public boolean shouldExecute()
     {
         EntityLivingBase entitylivingbase = this.theEntity.getAttackTarget();
@@ -36,37 +33,17 @@ public class EntityAIOcelotAttack extends EntityAIBase
         }
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
     public boolean continueExecuting()
     {
-        if (!this.theVictim.isEntityAlive())
-        {
-            return false;
-        }
-        else if (this.theEntity.getDistanceSqToEntity(this.theVictim) > 225.0D)
-        {
-            return false;
-        }
-        else
-        {
-            return !this.theEntity.getNavigator().noPath() || this.shouldExecute();
-        }
+        return !this.theVictim.isEntityAlive() ? false : (this.theEntity.getDistanceSqToEntity(this.theVictim) > 225.0D ? false : !this.theEntity.getNavigator().noPath() || this.shouldExecute());
     }
 
-    /**
-     * Resets the task
-     */
     public void resetTask()
     {
         this.theVictim = null;
         this.theEntity.getNavigator().clearPathEntity();
     }
 
-    /**
-     * Updates the task
-     */
     public void updateTask()
     {
         this.theEntity.getLookHelper().setLookPositionWithEntity(this.theVictim, 30.0F, 30.0F);
@@ -86,7 +63,7 @@ public class EntityAIOcelotAttack extends EntityAIBase
         this.theEntity.getNavigator().tryMoveToEntityLiving(this.theVictim, d2);
         this.attackCountdown = Math.max(this.attackCountdown - 1, 0);
 
-        if (!(d1 > d0))
+        if (d1 <= d0)
         {
             if (this.attackCountdown <= 0)
             {

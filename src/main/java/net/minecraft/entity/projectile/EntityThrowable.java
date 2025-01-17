@@ -27,8 +27,6 @@ public abstract class EntityThrowable extends Entity implements IProjectile
     private Block inTile;
     protected boolean inGround;
     public int throwableShake;
-
-    /** The entity that threw this throwable item. */
     private EntityLivingBase thrower;
     private String throwerName;
     private int ticksInGround;
@@ -44,10 +42,6 @@ public abstract class EntityThrowable extends Entity implements IProjectile
     {
     }
 
-    /**
-     * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge
-     * length * 64 * renderDistanceWeight Args: distance
-     */
     public boolean isInRangeToRenderDist(double distance)
     {
         double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 4.0D;
@@ -68,7 +62,7 @@ public abstract class EntityThrowable extends Entity implements IProjectile
         this.setSize(0.25F, 0.25F);
         this.setLocationAndAngles(throwerIn.posX, throwerIn.posY + (double)throwerIn.getEyeHeight(), throwerIn.posZ, throwerIn.rotationYaw, throwerIn.rotationPitch);
         this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
-        this.posY -= (double)0.1F;
+        this.posY -= 0.10000000149011612D;
         this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
         this.setPosition(this.posX, this.posY, this.posZ);
         float f = 0.4F;
@@ -96,18 +90,15 @@ public abstract class EntityThrowable extends Entity implements IProjectile
         return 0.0F;
     }
 
-    /**
-     * Similar to setArrowHeading, it's point the throwable entity to a x, y, z direction.
-     */
     public void setThrowableHeading(double x, double y, double z, float velocity, float inaccuracy)
     {
         float f = MathHelper.sqrt_double(x * x + y * y + z * z);
         x = x / (double)f;
         y = y / (double)f;
         z = z / (double)f;
-        x = x + this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy;
-        y = y + this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy;
-        z = z + this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy;
+        x = x + this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy;
+        y = y + this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy;
+        z = z + this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy;
         x = x * (double)velocity;
         y = y * (double)velocity;
         z = z * (double)velocity;
@@ -115,14 +106,11 @@ public abstract class EntityThrowable extends Entity implements IProjectile
         this.motionY = y;
         this.motionZ = z;
         float f1 = MathHelper.sqrt_double(x * x + z * z);
-        this.prevRotationYaw = this.rotationYaw = (float)(MathHelper.atan2(x, z) * 180.0D / (double)(float)Math.PI);
-        this.prevRotationPitch = this.rotationPitch = (float)(MathHelper.atan2(y, (double)f1) * 180.0D / (double)(float)Math.PI);
+        this.prevRotationYaw = this.rotationYaw = (float)(MathHelper.atan2(x, z) * 180.0D / Math.PI);
+        this.prevRotationPitch = this.rotationPitch = (float)(MathHelper.atan2(y, (double)f1) * 180.0D / Math.PI);
         this.ticksInGround = 0;
     }
 
-    /**
-     * Sets the velocity to the args. Args: x, y, z
-     */
     public void setVelocity(double x, double y, double z)
     {
         this.motionX = x;
@@ -132,14 +120,11 @@ public abstract class EntityThrowable extends Entity implements IProjectile
         if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
         {
             float f = MathHelper.sqrt_double(x * x + z * z);
-            this.prevRotationYaw = this.rotationYaw = (float)(MathHelper.atan2(x, z) * 180.0D / (double)(float)Math.PI);
-            this.prevRotationPitch = this.rotationPitch = (float)(MathHelper.atan2(y, (double)f) * 180.0D / (double)(float)Math.PI);
+            this.prevRotationYaw = this.rotationYaw = (float)(MathHelper.atan2(x, z) * 180.0D / Math.PI);
+            this.prevRotationPitch = this.rotationPitch = (float)(MathHelper.atan2(y, (double)f) * 180.0D / Math.PI);
         }
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         this.lastTickPosX = this.posX;
@@ -198,7 +183,7 @@ public abstract class EntityThrowable extends Entity implements IProjectile
 
             for (int j = 0; j < list.size(); ++j)
             {
-                Entity entity1 = list.get(j);
+                Entity entity1 = (Entity)list.get(j);
 
                 if (entity1.canBeCollidedWith() && (entity1 != entitylivingbase || this.ticksInAir >= 5))
                 {
@@ -241,9 +226,9 @@ public abstract class EntityThrowable extends Entity implements IProjectile
         this.posY += this.motionY;
         this.posZ += this.motionZ;
         float f1 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
-        this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ) * 180.0D / (double)(float)Math.PI);
+        this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
 
-        for (this.rotationPitch = (float)(MathHelper.atan2(this.motionY, (double)f1) * 180.0D / (double)(float)Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
+        for (this.rotationPitch = (float)(MathHelper.atan2(this.motionY, (double)f1) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
         {
             ;
         }
@@ -273,7 +258,7 @@ public abstract class EntityThrowable extends Entity implements IProjectile
             for (int i = 0; i < 4; ++i)
             {
                 float f4 = 0.25F;
-                this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * (double)f4, this.posY - this.motionY * (double)f4, this.posZ - this.motionZ * (double)f4, this.motionX, this.motionY, this.motionZ);
+                this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * (double)f4, this.posY - this.motionY * (double)f4, this.posZ - this.motionZ * (double)f4, this.motionX, this.motionY, this.motionZ, new int[0]);
             }
 
             f2 = 0.8F;
@@ -286,28 +271,19 @@ public abstract class EntityThrowable extends Entity implements IProjectile
         this.setPosition(this.posX, this.posY, this.posZ);
     }
 
-    /**
-     * Gets the amount of gravity to apply to the thrown entity with each tick.
-     */
     protected float getGravityVelocity()
     {
         return 0.03F;
     }
 
-    /**
-     * Called when this EntityThrowable hits a block or entity.
-     */
     protected abstract void onImpact(MovingObjectPosition p_70184_1_);
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     public void writeEntityToNBT(NBTTagCompound tagCompound)
     {
         tagCompound.setShort("xTile", (short)this.xTile);
         tagCompound.setShort("yTile", (short)this.yTile);
         tagCompound.setShort("zTile", (short)this.zTile);
-        ResourceLocation resourcelocation = Block.blockRegistry.getNameForObject(this.inTile);
+        ResourceLocation resourcelocation = (ResourceLocation)Block.blockRegistry.getNameForObject(this.inTile);
         tagCompound.setString("inTile", resourcelocation == null ? "" : resourcelocation.toString());
         tagCompound.setByte("shake", (byte)this.throwableShake);
         tagCompound.setByte("inGround", (byte)(this.inGround ? 1 : 0));
@@ -320,9 +296,6 @@ public abstract class EntityThrowable extends Entity implements IProjectile
         tagCompound.setString("ownerName", this.throwerName == null ? "" : this.throwerName);
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     public void readEntityFromNBT(NBTTagCompound tagCompund)
     {
         this.xTile = tagCompund.getShort("xTile");

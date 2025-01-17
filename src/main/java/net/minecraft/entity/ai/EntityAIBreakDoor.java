@@ -15,9 +15,6 @@ public class EntityAIBreakDoor extends EntityAIDoorInteract
         super(entityIn);
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     public boolean shouldExecute()
     {
         if (!super.shouldExecute())
@@ -35,21 +32,16 @@ public class EntityAIBreakDoor extends EntityAIDoorInteract
         }
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
     public void startExecuting()
     {
         super.startExecuting();
         this.breakingTime = 0;
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
     public boolean continueExecuting()
     {
         double d0 = this.theEntity.getDistanceSq(this.doorPosition);
+        boolean flag;
 
         if (this.breakingTime <= 240)
         {
@@ -57,25 +49,21 @@ public class EntityAIBreakDoor extends EntityAIDoorInteract
 
             if (!BlockDoor.isOpen(this.theEntity.worldObj, this.doorPosition) && d0 < 4.0D)
             {
-                return true;
+                flag = true;
+                return flag;
             }
         }
 
-        return false;
+        flag = false;
+        return flag;
     }
 
-    /**
-     * Resets the task
-     */
     public void resetTask()
     {
         super.resetTask();
         this.theEntity.worldObj.sendBlockBreakProgress(this.theEntity.getEntityId(), this.doorPosition, -1);
     }
 
-    /**
-     * Updates the task
-     */
     public void updateTask()
     {
         super.updateTask();

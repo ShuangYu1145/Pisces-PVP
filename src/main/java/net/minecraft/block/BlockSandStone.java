@@ -3,6 +3,7 @@ package net.minecraft.block;
 import java.util.List;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -13,7 +14,7 @@ import net.minecraft.util.IStringSerializable;
 
 public class BlockSandStone extends Block
 {
-    public static final PropertyEnum<BlockSandStone.EnumType> TYPE = PropertyEnum.create("type", BlockSandStone.EnumType.class);
+    public static final PropertyEnum<BlockSandStone.EnumType> TYPE = PropertyEnum.<BlockSandStone.EnumType>create("type", BlockSandStone.EnumType.class);
 
     public BlockSandStone()
     {
@@ -22,18 +23,11 @@ public class BlockSandStone extends Block
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
-    /**
-     * Gets the metadata of the item this Block can drop. This method is called when the block gets destroyed. It
-     * returns the metadata of the dropped item based on the old metadata of the block.
-     */
     public int damageDropped(IBlockState state)
     {
-        return state.getValue(TYPE).getMetadata();
+        return ((BlockSandStone.EnumType)state.getValue(TYPE)).getMetadata();
     }
 
-    /**
-     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
-     */
     public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
         for (BlockSandStone.EnumType blocksandstone$enumtype : BlockSandStone.EnumType.values())
@@ -42,33 +36,24 @@ public class BlockSandStone extends Block
         }
     }
 
-    /**
-     * Get the MapColor for this Block and the given BlockState
-     */
     public MapColor getMapColor(IBlockState state)
     {
         return MapColor.sandColor;
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
         return this.getDefaultState().withProperty(TYPE, BlockSandStone.EnumType.byMetadata(meta));
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(TYPE).getMetadata();
+        return ((BlockSandStone.EnumType)state.getValue(TYPE)).getMetadata();
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, TYPE);
+        return new BlockState(this, new IProperty[] {TYPE});
     }
 
     public static enum EnumType implements IStringSerializable

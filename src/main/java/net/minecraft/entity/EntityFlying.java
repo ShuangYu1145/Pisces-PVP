@@ -20,18 +20,15 @@ public abstract class EntityFlying extends EntityLiving
     {
     }
 
-    /**
-     * Moves the entity based on the specified heading.  Args: strafe, forward
-     */
     public void moveEntityWithHeading(float strafe, float forward)
     {
         if (this.isInWater())
         {
             this.moveFlying(strafe, forward, 0.02F);
             this.moveEntity(this.motionX, this.motionY, this.motionZ);
-            this.motionX *= (double)0.8F;
-            this.motionY *= (double)0.8F;
-            this.motionZ *= (double)0.8F;
+            this.motionX *= 0.800000011920929D;
+            this.motionY *= 0.800000011920929D;
+            this.motionZ *= 0.800000011920929D;
         }
         else if (this.isInLava())
         {
@@ -79,9 +76,6 @@ public abstract class EntityFlying extends EntityLiving
         this.limbSwing += this.limbSwingAmount;
     }
 
-    /**
-     * returns true if this entity is by a ladder, false otherwise
-     */
     public boolean isOnLadder()
     {
         return false;

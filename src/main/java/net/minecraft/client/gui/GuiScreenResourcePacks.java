@@ -22,11 +22,7 @@ public class GuiScreenResourcePacks extends GuiScreen
     private final GuiScreen parentScreen;
     private List<ResourcePackListEntry> availableResourcePacks;
     private List<ResourcePackListEntry> selectedResourcePacks;
-
-    /** List component that contains the available resource packs */
     private GuiResourcePackAvailable availableResourcePacksList;
-
-    /** List component that contains the selected resource packs */
     private GuiResourcePackSelected selectedResourcePacksList;
     private boolean changed = false;
 
@@ -35,19 +31,15 @@ public class GuiScreenResourcePacks extends GuiScreen
         this.parentScreen = parentScreenIn;
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
     public void initGui()
     {
-        this.buttonList.add(new GuiOptionButton(2, this.width / 2 - 154, this.height - 48, I18n.format("resourcePack.openFolder")));
-        this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 4, this.height - 48, I18n.format("gui.done")));
+        this.buttonList.add(new GuiOptionButton(2, this.width / 2 - 154, this.height - 48, I18n.format("resourcePack.openFolder", new Object[0])));
+        this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 4, this.height - 48, I18n.format("gui.done", new Object[0])));
 
         if (!this.changed)
         {
-            this.availableResourcePacks = Lists.newArrayList();
-            this.selectedResourcePacks = Lists.newArrayList();
+            this.availableResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
+            this.selectedResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
             ResourcePackRepository resourcepackrepository = this.mc.getResourcePackRepository();
             resourcepackrepository.updateRepositoryEntriesAll();
             List<ResourcePackRepository.Entry> list = Lists.newArrayList(resourcepackrepository.getRepositoryEntriesAll());
@@ -74,9 +66,6 @@ public class GuiScreenResourcePacks extends GuiScreen
         this.selectedResourcePacksList.registerScrollButtons(7, 8);
     }
 
-    /**
-     * Handles mouse input.
-     */
     public void handleMouseInput() throws IOException
     {
         super.handleMouseInput();
@@ -104,9 +93,6 @@ public class GuiScreenResourcePacks extends GuiScreen
         return this.selectedResourcePacks;
     }
 
-    /**
-     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-     */
     protected void actionPerformed(GuiButton button) throws IOException
     {
         if (button.enabled)
@@ -126,12 +112,12 @@ public class GuiScreenResourcePacks extends GuiScreen
                     }
                     catch (IOException ioexception1)
                     {
-                        logger.error("Couldn't open file", (Throwable)ioexception1);
+                        logger.error((String)"Couldn\'t open file", (Throwable)ioexception1);
                     }
                 }
                 else if (Util.getOSType() == Util.EnumOS.WINDOWS)
                 {
-                    String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", s);
+                    String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] {s});
 
                     try
                     {
@@ -140,7 +126,7 @@ public class GuiScreenResourcePacks extends GuiScreen
                     }
                     catch (IOException ioexception)
                     {
-                        logger.error("Couldn't open file", (Throwable)ioexception);
+                        logger.error((String)"Couldn\'t open file", (Throwable)ioexception);
                     }
                 }
 
@@ -149,12 +135,12 @@ public class GuiScreenResourcePacks extends GuiScreen
                 try
                 {
                     Class<?> oclass = Class.forName("java.awt.Desktop");
-                    Object object = oclass.getMethod("getDesktop").invoke((Object)null);
-                    oclass.getMethod("browse", URI.class).invoke(object, file1.toURI());
+                    Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
+                    oclass.getMethod("browse", new Class[] {URI.class}).invoke(object, new Object[] {file1.toURI()});
                 }
                 catch (Throwable throwable)
                 {
-                    logger.error("Couldn't open link", throwable);
+                    logger.error("Couldn\'t open link", throwable);
                     flag = true;
                 }
 
@@ -168,7 +154,7 @@ public class GuiScreenResourcePacks extends GuiScreen
             {
                 if (this.changed)
                 {
-                    List<ResourcePackRepository.Entry> list = Lists.newArrayList();
+                    List<ResourcePackRepository.Entry> list = Lists.<ResourcePackRepository.Entry>newArrayList();
 
                     for (ResourcePackListEntry resourcepacklistentry : this.selectedResourcePacks)
                     {
@@ -202,9 +188,6 @@ public class GuiScreenResourcePacks extends GuiScreen
         }
     }
 
-    /**
-     * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
-     */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -212,30 +195,21 @@ public class GuiScreenResourcePacks extends GuiScreen
         this.selectedResourcePacksList.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
-    /**
-     * Called when a mouse button is released.  Args : mouseX, mouseY, releaseButton
-     */
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
         super.mouseReleased(mouseX, mouseY, state);
     }
 
-    /**
-     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
-     */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawBackground(0);
         this.availableResourcePacksList.drawScreen(mouseX, mouseY, partialTicks);
         this.selectedResourcePacksList.drawScreen(mouseX, mouseY, partialTicks);
-        this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.title"), this.width / 2, 16, 16777215);
-        this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.folderInfo"), this.width / 2 - 77, this.height - 26, 8421504);
+        this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.title", new Object[0]), this.width / 2, 16, 16777215);
+        this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.folderInfo", new Object[0]), this.width / 2 - 77, this.height - 26, 8421504);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
-    /**
-     * Marks the selected resource packs list as changed to trigger a resource reload when the screen is closed
-     */
     public void markChanged()
     {
         this.changed = true;

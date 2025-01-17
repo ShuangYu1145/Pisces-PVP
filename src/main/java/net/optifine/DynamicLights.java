@@ -36,8 +36,8 @@ import net.optifine.util.PropertiesOrdered;
 public class DynamicLights
 {
     private static DynamicLightsMap mapDynamicLights = new DynamicLightsMap();
-    private static Map<Class, Integer> mapEntityLightLevels = new HashMap<>();
-    private static Map<Item, Integer> mapItemLightLevels = new HashMap<>();
+    private static Map<Class, Integer> mapEntityLightLevels = new HashMap();
+    private static Map<Item, Integer> mapItemLightLevels = new HashMap();
     private static long timeUpdateMs = 0L;
     private static final double MAX_DIST = 7.5D;
     private static final double MAX_DIST_SQ = 56.25D;
@@ -90,7 +90,7 @@ public class DynamicLights
 
                     for (int j = 0; j < list.size(); ++j)
                     {
-                        DynamicLight dynamiclight = list.get(j);
+                        DynamicLight dynamiclight = (DynamicLight)list.get(j);
                         dynamiclight.update(renderGlobal);
                     }
                 }
@@ -271,13 +271,14 @@ public class DynamicLights
         synchronized (mapDynamicLights)
         {
             List<DynamicLight> list = mapDynamicLights.valueList();
+            int i = list.size();
 
-            for (int i = 0; i < list.size(); ++i)
+            for (int j = 0; j < i; ++j)
             {
-                DynamicLight dynamiclight = list.get(i);
-                int j = dynamiclight.getLastLightLevel();
+                DynamicLight dynamiclight = (DynamicLight)list.get(j);
+                int k = dynamiclight.getLastLightLevel();
 
-                if (j > 0)
+                if (k > 0)
                 {
                     double d1 = dynamiclight.getLastPosX();
                     double d2 = dynamiclight.getLastPosY();
@@ -289,15 +290,15 @@ public class DynamicLights
 
                     if (dynamiclight.isUnderwater() && !Config.isClearWater())
                     {
-                        j = Config.limit(j - 2, 0, 15);
+                        k = Config.limit(k - 2, 0, 15);
                         d7 *= 2.0D;
                     }
 
-                    if (!(d7 > 56.25D))
+                    if (d7 <= 56.25D)
                     {
                         double d8 = Math.sqrt(d7);
                         double d9 = 1.0D - d8 / 7.5D;
-                        double d10 = d9 * (double)j;
+                        double d10 = d9 * (double)k;
 
                         if (d10 > d0)
                         {
@@ -359,11 +360,11 @@ public class DynamicLights
                 {
                     if (!mapItemLightLevels.isEmpty())
                     {
-                        Integer integer = mapItemLightLevels.get(item);
+                        Integer integer = (Integer)mapItemLightLevels.get(item);
 
                         if (integer != null)
                         {
-                            return integer;
+                            return integer.intValue();
                         }
                     }
 
@@ -403,11 +404,11 @@ public class DynamicLights
             {
                 if (!mapEntityLightLevels.isEmpty())
                 {
-                    Integer integer = mapEntityLightLevels.get(entity.getClass());
+                    Integer integer = (Integer)mapEntityLightLevels.get(entity.getClass());
 
                     if (integer != null)
                     {
-                        return integer;
+                        return integer.intValue();
                     }
                 }
 
@@ -473,7 +474,7 @@ public class DynamicLights
 
             for (int i = 0; i < list.size(); ++i)
             {
-                DynamicLight dynamiclight = list.get(i);
+                DynamicLight dynamiclight = (DynamicLight)list.get(i);
                 dynamiclight.updateLitChunks(renderGlobal);
             }
 

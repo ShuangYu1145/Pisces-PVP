@@ -18,9 +18,9 @@ import net.minecraft.world.WorldSavedData;
 public class MapStorage
 {
     private ISaveHandler saveHandler;
-    protected Map<String, WorldSavedData> loadedDataMap = Maps.newHashMap();
-    private List<WorldSavedData> loadedDataList = Lists.newArrayList();
-    private Map<String, Short> idCounts = Maps.newHashMap();
+    protected Map<String, WorldSavedData> loadedDataMap = Maps.<String, WorldSavedData>newHashMap();
+    private List<WorldSavedData> loadedDataList = Lists.<WorldSavedData>newArrayList();
+    private Map<String, Short> idCounts = Maps.<String, Short>newHashMap();
 
     public MapStorage(ISaveHandler saveHandlerIn)
     {
@@ -28,13 +28,9 @@ public class MapStorage
         this.loadIdCounts();
     }
 
-    /**
-     * Loads an existing MapDataBase corresponding to the given String id from disk, instantiating the given Class, or
-     * returns null if none such file exists. args: Class to instantiate, String dataid
-     */
-    public WorldSavedData loadData(Class<? extends WorldSavedData> clazz, String dataIdentifier)
+    public WorldSavedData loadData(Class <? extends WorldSavedData > clazz, String dataIdentifier)
     {
-        WorldSavedData worldsaveddata = this.loadedDataMap.get(dataIdentifier);
+        WorldSavedData worldsaveddata = (WorldSavedData)this.loadedDataMap.get(dataIdentifier);
 
         if (worldsaveddata != null)
         {
@@ -52,7 +48,7 @@ public class MapStorage
                     {
                         try
                         {
-                            worldsaveddata = clazz.getConstructor(String.class).newInstance(dataIdentifier);
+                            worldsaveddata = (WorldSavedData)clazz.getConstructor(new Class[] {String.class}).newInstance(new Object[] {dataIdentifier});
                         }
                         catch (Exception exception)
                         {
@@ -81,9 +77,6 @@ public class MapStorage
         }
     }
 
-    /**
-     * Assigns the given String id to the given MapDataBase, removing any existing ones of the same id.
-     */
     public void setData(String dataIdentifier, WorldSavedData data)
     {
         if (this.loadedDataMap.containsKey(dataIdentifier))
@@ -95,14 +88,11 @@ public class MapStorage
         this.loadedDataList.add(data);
     }
 
-    /**
-     * Saves all dirty loaded MapDataBases to disk.
-     */
     public void saveAllData()
     {
         for (int i = 0; i < this.loadedDataList.size(); ++i)
         {
-            WorldSavedData worldsaveddata = this.loadedDataList.get(i);
+            WorldSavedData worldsaveddata = (WorldSavedData)this.loadedDataList.get(i);
 
             if (worldsaveddata.isDirty())
             {
@@ -112,9 +102,6 @@ public class MapStorage
         }
     }
 
-    /**
-     * Saves the given MapDataBase to disk.
-     */
     private void saveData(WorldSavedData p_75747_1_)
     {
         if (this.saveHandler != null)
@@ -141,9 +128,6 @@ public class MapStorage
         }
     }
 
-    /**
-     * Loads the idCounts Map from the 'idcounts' file.
-     */
     private void loadIdCounts()
     {
         try
@@ -171,7 +155,7 @@ public class MapStorage
                     {
                         NBTTagShort nbttagshort = (NBTTagShort)nbtbase;
                         short short1 = nbttagshort.getShort();
-                        this.idCounts.put(s, short1);
+                        this.idCounts.put(s, Short.valueOf(short1));
                     }
                 }
             }
@@ -182,27 +166,24 @@ public class MapStorage
         }
     }
 
-    /**
-     * Returns an unique new data id for the given prefix and saves the idCounts map to the 'idcounts' file.
-     */
     public int getUniqueDataId(String key)
     {
-        Short oshort = this.idCounts.get(key);
+        Short oshort = (Short)this.idCounts.get(key);
 
         if (oshort == null)
         {
-            oshort = 0;
+            oshort = Short.valueOf((short)0);
         }
         else
         {
-            oshort = (short)(oshort + 1);
+            oshort = Short.valueOf((short)(oshort.shortValue() + 1));
         }
 
         this.idCounts.put(key, oshort);
 
         if (this.saveHandler == null)
         {
-            return oshort;
+            return oshort.shortValue();
         }
         else
         {
@@ -216,7 +197,7 @@ public class MapStorage
 
                     for (String s : this.idCounts.keySet())
                     {
-                        short short1 = this.idCounts.get(s);
+                        short short1 = ((Short)this.idCounts.get(s)).shortValue();
                         nbttagcompound.setShort(s, short1);
                     }
 
@@ -230,7 +211,7 @@ public class MapStorage
                 exception.printStackTrace();
             }
 
-            return oshort;
+            return oshort.shortValue();
         }
     }
 }

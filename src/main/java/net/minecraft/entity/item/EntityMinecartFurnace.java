@@ -41,9 +41,6 @@ public class EntityMinecartFurnace extends EntityMinecart
         this.dataWatcher.addObject(16, new Byte((byte)0));
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         super.onUpdate();
@@ -62,13 +59,10 @@ public class EntityMinecartFurnace extends EntityMinecart
 
         if (this.isMinecartPowered() && this.rand.nextInt(4) == 0)
         {
-            this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX, this.posY + 0.8D, this.posZ, 0.0D, 0.0D, 0.0D);
+            this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX, this.posY + 0.8D, this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
         }
     }
 
-    /**
-     * Get's the maximum speed for a minecart
-     */
     protected double getMaximumSpeed()
     {
         return 0.2D;
@@ -119,25 +113,22 @@ public class EntityMinecartFurnace extends EntityMinecart
             this.pushX /= d0;
             this.pushZ /= d0;
             double d1 = 1.0D;
-            this.motionX *= (double)0.8F;
+            this.motionX *= 0.800000011920929D;
             this.motionY *= 0.0D;
-            this.motionZ *= (double)0.8F;
+            this.motionZ *= 0.800000011920929D;
             this.motionX += this.pushX * d1;
             this.motionZ += this.pushZ * d1;
         }
         else
         {
-            this.motionX *= (double)0.98F;
+            this.motionX *= 0.9800000190734863D;
             this.motionY *= 0.0D;
-            this.motionZ *= (double)0.98F;
+            this.motionZ *= 0.9800000190734863D;
         }
 
         super.applyDrag();
     }
 
-    /**
-     * First layer of player interaction
-     */
     public boolean interactFirst(EntityPlayer playerIn)
     {
         ItemStack itemstack = playerIn.inventory.getCurrentItem();
@@ -157,9 +148,6 @@ public class EntityMinecartFurnace extends EntityMinecart
         return true;
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     protected void writeEntityToNBT(NBTTagCompound tagCompound)
     {
         super.writeEntityToNBT(tagCompound);
@@ -168,9 +156,6 @@ public class EntityMinecartFurnace extends EntityMinecart
         tagCompound.setShort("Fuel", (short)this.fuel);
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     protected void readEntityFromNBT(NBTTagCompound tagCompund)
     {
         super.readEntityFromNBT(tagCompund);
@@ -188,11 +173,11 @@ public class EntityMinecartFurnace extends EntityMinecart
     {
         if (p_94107_1_)
         {
-            this.dataWatcher.updateObject(16, (byte)(this.dataWatcher.getWatchableObjectByte(16) | 1));
+            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(this.dataWatcher.getWatchableObjectByte(16) | 1)));
         }
         else
         {
-            this.dataWatcher.updateObject(16, (byte)(this.dataWatcher.getWatchableObjectByte(16) & -2));
+            this.dataWatcher.updateObject(16, Byte.valueOf((byte)(this.dataWatcher.getWatchableObjectByte(16) & -2)));
         }
     }
 

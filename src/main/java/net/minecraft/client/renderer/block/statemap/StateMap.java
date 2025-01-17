@@ -9,14 +9,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.util.ResourceLocation;
 
 public class StateMap extends StateMapperBase
 {
     private final IProperty<?> name;
     private final String suffix;
-    private final List<IProperty<?>> ignored;
+    private final List < IProperty<? >> ignored;
 
-    private StateMap(IProperty<?> name, String suffix, List<IProperty<?>> ignored)
+    private StateMap(IProperty<?> name, String suffix, List < IProperty<? >> ignored)
     {
         this.name = name;
         this.suffix = suffix;
@@ -25,16 +26,16 @@ public class StateMap extends StateMapperBase
 
     protected ModelResourceLocation getModelResourceLocation(IBlockState state)
     {
-        Map<IProperty, Comparable> map = Maps.newLinkedHashMap(state.getProperties());
+        Map<IProperty, Comparable> map = Maps.<IProperty, Comparable>newLinkedHashMap(state.getProperties());
         String s;
 
         if (this.name == null)
         {
-            s = Block.blockRegistry.getNameForObject(state.getBlock()).toString();
+            s = ((ResourceLocation)Block.blockRegistry.getNameForObject(state.getBlock())).toString();
         }
         else
         {
-        	s = ((IProperty)this.name).getName((Comparable)map.remove(this.name));
+            s = ((IProperty)this.name).getName((Comparable)map.remove(this.name));
         }
 
         if (this.suffix != null)
@@ -54,7 +55,7 @@ public class StateMap extends StateMapperBase
     {
         private IProperty<?> name;
         private String suffix;
-        private final List<IProperty<?>> ignored = Lists.newArrayList();
+        private final List < IProperty<? >> ignored = Lists. < IProperty<? >> newArrayList();
 
         public StateMap.Builder withName(IProperty<?> builderPropertyIn)
         {

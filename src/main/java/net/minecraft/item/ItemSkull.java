@@ -30,9 +30,6 @@ public class ItemSkull extends Item
         this.setHasSubtypes(true);
     }
 
-    /**
-     * Called when a Block is right-clicked with this Item
-     */
     public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if (side == EnumFacing.DOWN)
@@ -118,9 +115,6 @@ public class ItemSkull extends Item
         }
     }
 
-    /**
-     * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
-     */
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
     {
         for (int i = 0; i < skullTypes.length; ++i)
@@ -129,19 +123,11 @@ public class ItemSkull extends Item
         }
     }
 
-    /**
-     * Converts the given ItemStack damage value into a metadata value to be placed in the world when this Item is
-     * placed as a Block (mostly used with ItemBlocks).
-     */
     public int getMetadata(int damage)
     {
         return damage;
     }
 
-    /**
-     * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have
-     * different names based on their damage or NBT.
-     */
     public String getUnlocalizedName(ItemStack stack)
     {
         int i = stack.getMetadata();
@@ -160,7 +146,7 @@ public class ItemSkull extends Item
         {
             if (stack.getTagCompound().hasKey("SkullOwner", 8))
             {
-                return StatCollector.translateToLocalFormatted("item.skull.player.name", stack.getTagCompound().getString("SkullOwner"));
+                return StatCollector.translateToLocalFormatted("item.skull.player.name", new Object[] {stack.getTagCompound().getString("SkullOwner")});
             }
 
             if (stack.getTagCompound().hasKey("SkullOwner", 10))
@@ -169,7 +155,7 @@ public class ItemSkull extends Item
 
                 if (nbttagcompound.hasKey("Name", 8))
                 {
-                    return StatCollector.translateToLocalFormatted("item.skull.player.name", nbttagcompound.getString("Name"));
+                    return StatCollector.translateToLocalFormatted("item.skull.player.name", new Object[] {nbttagcompound.getString("Name")});
                 }
             }
         }
@@ -177,9 +163,6 @@ public class ItemSkull extends Item
         return super.getItemStackDisplayName(stack);
     }
 
-    /**
-     * Called when an ItemStack with NBT data is read to potentially that ItemStack's NBT data
-     */
     public boolean updateItemStackNBT(NBTTagCompound nbt)
     {
         super.updateItemStackNBT(nbt);

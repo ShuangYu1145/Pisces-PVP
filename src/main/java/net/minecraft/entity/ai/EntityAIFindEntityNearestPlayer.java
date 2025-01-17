@@ -18,15 +18,9 @@ import org.apache.logging.log4j.Logger;
 public class EntityAIFindEntityNearestPlayer extends EntityAIBase
 {
     private static final Logger LOGGER = LogManager.getLogger();
-
-    /** The entity that use this AI */
     private EntityLiving entityLiving;
     private final Predicate<Entity> predicate;
-
-    /** Used to compare two entities */
     private final EntityAINearestAttackableTarget.Sorter sorter;
-
-    /** The current target */
     private EntityLivingBase entityTarget;
 
     public EntityAIFindEntityNearestPlayer(EntityLiving entityLivingIn)
@@ -56,7 +50,7 @@ public class EntityAIFindEntityNearestPlayer extends EntityAIBase
 
                     if (p_apply_1_.isSneaking())
                     {
-                        d0 *= (double)0.8F;
+                        d0 *= 0.800000011920929D;
                     }
 
                     if (p_apply_1_.isInvisible())
@@ -78,13 +72,10 @@ public class EntityAIFindEntityNearestPlayer extends EntityAIBase
         this.sorter = new EntityAINearestAttackableTarget.Sorter(entityLivingIn);
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     public boolean shouldExecute()
     {
         double d0 = this.maxTargetRange();
-        List<EntityPlayer> list = this.entityLiving.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.entityLiving.getEntityBoundingBox().expand(d0, 4.0D, d0), this.predicate);
+        List<EntityPlayer> list = this.entityLiving.worldObj.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.entityLiving.getEntityBoundingBox().expand(d0, 4.0D, d0), this.predicate);
         Collections.sort(list, this.sorter);
 
         if (list.isEmpty())
@@ -93,14 +84,11 @@ public class EntityAIFindEntityNearestPlayer extends EntityAIBase
         }
         else
         {
-            this.entityTarget = list.get(0);
+            this.entityTarget = (EntityLivingBase)list.get(0);
             return true;
         }
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
     public boolean continueExecuting()
     {
         EntityLivingBase entitylivingbase = this.entityLiving.getAttackTarget();
@@ -129,40 +117,23 @@ public class EntityAIFindEntityNearestPlayer extends EntityAIBase
             else
             {
                 double d0 = this.maxTargetRange();
-
-                if (this.entityLiving.getDistanceSqToEntity(entitylivingbase) > d0 * d0)
-                {
-                    return false;
-                }
-                else
-                {
-                    return !(entitylivingbase instanceof EntityPlayerMP) || !((EntityPlayerMP)entitylivingbase).theItemInWorldManager.isCreative();
-                }
+                return this.entityLiving.getDistanceSqToEntity(entitylivingbase) > d0 * d0 ? false : !(entitylivingbase instanceof EntityPlayerMP) || !((EntityPlayerMP)entitylivingbase).theItemInWorldManager.isCreative();
             }
         }
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
     public void startExecuting()
     {
         this.entityLiving.setAttackTarget(this.entityTarget);
         super.startExecuting();
     }
 
-    /**
-     * Resets the task
-     */
     public void resetTask()
     {
         this.entityLiving.setAttackTarget((EntityLivingBase)null);
         super.startExecuting();
     }
 
-    /**
-     * Return the max target range of the entiity (16 by default)
-     */
     protected double maxTargetRange()
     {
         IAttributeInstance iattributeinstance = this.entityLiving.getEntityAttribute(SharedMonsterAttributes.followRange);

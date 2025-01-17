@@ -21,13 +21,9 @@ public class GuiAnimationSettingsOF extends GuiScreen
         this.settings = gamesettings;
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
     public void initGui()
     {
-        this.title = I18n.format("of.options.animationsTitle");
+        this.title = I18n.format("of.options.animationsTitle", new Object[0]);
         this.buttonList.clear();
 
         for (int i = 0; i < enumOptions.length; ++i)
@@ -48,12 +44,9 @@ public class GuiAnimationSettingsOF extends GuiScreen
 
         this.buttonList.add(new GuiButton(210, this.width / 2 - 155, this.height / 6 + 168 + 11, 70, 20, Lang.get("of.options.animation.allOn")));
         this.buttonList.add(new GuiButton(211, this.width / 2 - 155 + 80, this.height / 6 + 168 + 11, 70, 20, Lang.get("of.options.animation.allOff")));
-        this.buttonList.add(new GuiOptionButton(200, this.width / 2 + 5, this.height / 6 + 168 + 11, I18n.format("gui.done")));
+        this.buttonList.add(new GuiOptionButton(200, this.width / 2 + 5, this.height / 6 + 168 + 11, I18n.format("gui.done", new Object[0])));
     }
 
-    /**
-     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-     */
     protected void actionPerformed(GuiButton guibutton)
     {
         if (guibutton.enabled)
@@ -85,9 +78,6 @@ public class GuiAnimationSettingsOF extends GuiScreen
         }
     }
 
-    /**
-     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
-     */
     public void drawScreen(int x, int y, float f)
     {
         this.drawDefaultBackground();

@@ -20,7 +20,7 @@ public class GuiKeyBindingList extends GuiListExtended
         super(mcIn, controls.width, controls.height, 63, controls.height - 32, 20);
         this.field_148191_k = controls;
         this.mc = mcIn;
-        KeyBinding[] akeybinding = ArrayUtils.clone(mcIn.gameSettings.keyBindings);
+        KeyBinding[] akeybinding = (KeyBinding[])ArrayUtils.clone(mcIn.gameSettings.keyBindings);
         this.listEntries = new GuiListExtended.IGuiListEntry[akeybinding.length + KeyBinding.getKeybinds().size()];
         Arrays.sort((Object[])akeybinding);
         int i = 0;
@@ -36,7 +36,7 @@ public class GuiKeyBindingList extends GuiListExtended
                 this.listEntries[i++] = new GuiKeyBindingList.CategoryEntry(s1);
             }
 
-            int j = mcIn.fontRendererObj.getStringWidth(I18n.format(keybinding.getKeyDescription()));
+            int j = mcIn.fontRendererObj.getStringWidth(I18n.format(keybinding.getKeyDescription(), new Object[0]));
 
             if (j > this.maxListLabelWidth)
             {
@@ -52,9 +52,6 @@ public class GuiKeyBindingList extends GuiListExtended
         return this.listEntries.length;
     }
 
-    /**
-     * Gets the IGuiListEntry object for the given index
-     */
     public GuiListExtended.IGuiListEntry getListEntry(int index)
     {
         return this.listEntries[index];
@@ -65,9 +62,6 @@ public class GuiKeyBindingList extends GuiListExtended
         return super.getScrollBarX() + 15;
     }
 
-    /**
-     * Gets the width of the list
-     */
     public int getListWidth()
     {
         return super.getListWidth() + 32;
@@ -80,7 +74,7 @@ public class GuiKeyBindingList extends GuiListExtended
 
         public CategoryEntry(String p_i45028_2_)
         {
-            this.labelText = I18n.format(p_i45028_2_);
+            this.labelText = I18n.format(p_i45028_2_, new Object[0]);
             this.labelWidth = GuiKeyBindingList.this.mc.fontRendererObj.getStringWidth(this.labelText);
         }
 
@@ -113,9 +107,9 @@ public class GuiKeyBindingList extends GuiListExtended
         private KeyEntry(KeyBinding p_i45029_2_)
         {
             this.keybinding = p_i45029_2_;
-            this.keyDesc = I18n.format(p_i45029_2_.getKeyDescription());
-            this.btnChangeKeyBinding = new GuiButton(0, 0, 0, 75, 20, I18n.format(p_i45029_2_.getKeyDescription()));
-            this.btnReset = new GuiButton(0, 0, 0, 50, 20, I18n.format("controls.reset"));
+            this.keyDesc = I18n.format(p_i45029_2_.getKeyDescription(), new Object[0]);
+            this.btnChangeKeyBinding = new GuiButton(0, 0, 0, 75, 20, I18n.format(p_i45029_2_.getKeyDescription(), new Object[0]));
+            this.btnReset = new GuiButton(0, 0, 0, 50, 20, I18n.format("controls.reset", new Object[0]));
         }
 
         public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected)

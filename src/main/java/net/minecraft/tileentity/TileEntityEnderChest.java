@@ -7,15 +7,10 @@ import net.minecraft.util.ITickable;
 public class TileEntityEnderChest extends TileEntity implements ITickable
 {
     public float lidAngle;
-
-    /** The angle of the ender chest lid last tick */
     public float prevLidAngle;
     public int numPlayersUsing;
     private int ticksSinceSync;
 
-    /**
-     * Like the old updateEntity(), except more generic.
-     */
     public void update()
     {
         if (++this.ticksSinceSync % 20 * 4 == 0)
@@ -83,9 +78,6 @@ public class TileEntityEnderChest extends TileEntity implements ITickable
         }
     }
 
-    /**
-     * invalidates a tile entity
-     */
     public void invalidate()
     {
         this.updateContainingBlockInfo();
@@ -106,13 +98,6 @@ public class TileEntityEnderChest extends TileEntity implements ITickable
 
     public boolean canBeUsed(EntityPlayer p_145971_1_)
     {
-        if (this.worldObj.getTileEntity(this.pos) != this)
-        {
-            return false;
-        }
-        else
-        {
-            return !(p_145971_1_.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) > 64.0D);
-        }
+        return this.worldObj.getTileEntity(this.pos) != this ? false : p_145971_1_.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
     }
 }

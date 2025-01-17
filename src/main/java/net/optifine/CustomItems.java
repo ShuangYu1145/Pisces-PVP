@@ -124,14 +124,14 @@ public class CustomItems
 
     private static void update(IResourcePack rp)
     {
-        String[] astring = ResUtils.collectFiles(rp, "mcpatcher/cit/", ".properties", (String[])null);
+        String[] astring = ResUtils.collectFiles(rp, (String)"mcpatcher/cit/", (String)".properties", (String[])null);
         Map map = makeAutoImageProperties(rp);
 
         if (map.size() > 0)
         {
             Set set = map.keySet();
-            String[] astring1 = (String[]) set.toArray(new String[set.size()]);
-            astring = (String[])Config.addObjectsToArray(astring, astring1);
+            String[] astring1 = (String[])((String[])set.toArray(new String[set.size()]));
+            astring = (String[])((String[])Config.addObjectsToArray(astring, astring1));
         }
 
         Arrays.sort((Object[])astring);
@@ -165,6 +165,7 @@ public class CustomItems
 
                     Properties properties = new PropertiesOrdered();
                     properties.load(inputstream);
+                    inputstream.close();
                     customitemproperties = new CustomItemProperties(properties, s);
                 }
 
@@ -217,19 +218,7 @@ public class CustomItems
             {
                 CustomItemProperties customitemproperties = (CustomItemProperties)o1;
                 CustomItemProperties customitemproperties1 = (CustomItemProperties)o2;
-
-                if (customitemproperties.layer != customitemproperties1.layer)
-                {
-                    return customitemproperties.layer - customitemproperties1.layer;
-                }
-                else if (customitemproperties.weight != customitemproperties1.weight)
-                {
-                    return customitemproperties1.weight - customitemproperties.weight;
-                }
-                else
-                {
-                    return !customitemproperties.basePath.equals(customitemproperties1.basePath) ? customitemproperties.basePath.compareTo(customitemproperties1.basePath) : customitemproperties.name.compareTo(customitemproperties1.name);
-                }
+                return customitemproperties.layer != customitemproperties1.layer ? customitemproperties.layer - customitemproperties1.layer : (customitemproperties.weight != customitemproperties1.weight ? customitemproperties1.weight - customitemproperties.weight : (!customitemproperties.basePath.equals(customitemproperties1.basePath) ? customitemproperties.basePath.compareTo(customitemproperties1.basePath) : customitemproperties.name.compareTo(customitemproperties1.name)));
             }
         };
         return comparator;
@@ -266,7 +255,7 @@ public class CustomItems
 
     private static List<CustomItemProperties> getAllProperties()
     {
-        List<CustomItemProperties> list = new ArrayList<>();
+        List<CustomItemProperties> list = new ArrayList();
         addAll(itemProperties, list);
         addAll(enchantmentProperties, list);
         return list;
@@ -346,7 +335,7 @@ public class CustomItems
         }
         else
         {
-            int[] aint = (int[])getMapPotionIds().get(name);
+            int[] aint = (int[])((int[])getMapPotionIds().get(name));
 
             if (aint == null)
             {
@@ -491,7 +480,7 @@ public class CustomItems
 
                 if (acustomitemproperties != null)
                 {
-                    list1 = new ArrayList<>(Arrays.asList(acustomitemproperties));
+                    list1 = new ArrayList(Arrays.asList(acustomitemproperties));
                 }
 
                 list.add(list1);
@@ -501,17 +490,17 @@ public class CustomItems
         return list;
     }
 
-    private static CustomItemProperties[][] propertyListToArray(List list)
+    private static CustomItemProperties[][] propertyListToArray(List lists)
     {
-        CustomItemProperties[][] acustomitemproperties = new CustomItemProperties[list.size()][];
+        CustomItemProperties[][] acustomitemproperties = new CustomItemProperties[lists.size()][];
 
-        for (int i = 0; i < list.size(); ++i)
+        for (int i = 0; i < lists.size(); ++i)
         {
-            List l = (List)list.get(i);
+            List list = (List)lists.get(i);
 
-            if (l != null)
+            if (list != null)
             {
-                CustomItemProperties[] acustomitemproperties1 = (CustomItemProperties[]) l.toArray(new CustomItemProperties[l.size()]);
+                CustomItemProperties[] acustomitemproperties1 = (CustomItemProperties[])((CustomItemProperties[])list.toArray(new CustomItemProperties[list.size()]));
                 Arrays.sort(acustomitemproperties1, new CustomItemsComparator());
                 acustomitemproperties[i] = acustomitemproperties1;
             }
@@ -557,22 +546,22 @@ public class CustomItems
         }
     }
 
-    private static void addToList(CustomItemProperties cp, List list, int id)
+    private static void addToList(CustomItemProperties cp, List lists, int id)
     {
-        while (id >= list.size())
+        while (id >= lists.size())
         {
-            list.add((Object)null);
+            lists.add(null);
         }
 
-        List l = (List)list.get(id);
+        List list = (List)lists.get(id);
 
-        if (l == null)
+        if (list == null)
         {
-            l = new ArrayList();
-            list.set(id, l);
+            list = new ArrayList();
+            list.set(id, list);
         }
 
-        l.add(cp);
+        list.add(cp);
     }
 
     public static IBakedModel getCustomItemModel(ItemStack itemStack, IBakedModel model, ResourceLocation modelLocation, boolean fullModel)
@@ -889,7 +878,7 @@ public class CustomItems
                                     set = new HashSet();
                                 }
 
-                                if (set.add(j) && matchesProperties(customitemproperties, itemStack, aint) && customitemproperties.textureLocation != null)
+                                if (set.add(Integer.valueOf(j)) && matchesProperties(customitemproperties, itemStack, aint) && customitemproperties.textureLocation != null)
                                 {
                                     texturemanager.bindTexture(customitemproperties.textureLocation);
                                     float f = customitemproperties.getTextureWidth(texturemanager);
@@ -982,7 +971,7 @@ public class CustomItems
                                     set = new HashSet();
                                 }
 
-                                if (set.add(j) && matchesProperties(customitemproperties, itemStack, aint) && customitemproperties.textureLocation != null)
+                                if (set.add(Integer.valueOf(j)) && matchesProperties(customitemproperties, itemStack, aint) && customitemproperties.textureLocation != null)
                                 {
                                     texturemanager.bindTexture(customitemproperties.textureLocation);
                                     float f = customitemproperties.getTextureWidth(texturemanager);

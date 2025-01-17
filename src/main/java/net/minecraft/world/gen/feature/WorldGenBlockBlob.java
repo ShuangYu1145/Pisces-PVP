@@ -22,20 +22,20 @@ public class WorldGenBlockBlob extends WorldGenerator
     {
         while (true)
         {
-            label50:
+            label0:
             {
                 if (position.getY() > 3)
                 {
                     if (worldIn.isAirBlock(position.down()))
                     {
-                        break label50;
+                        break label0;
                     }
 
                     Block block = worldIn.getBlockState(position.down()).getBlock();
 
                     if (block != Blocks.grass && block != Blocks.dirt && block != Blocks.stone)
                     {
-                        break label50;
+                        break label0;
                     }
                 }
 

@@ -9,18 +9,28 @@ import net.minecraft.world.ChunkCoordIntPair;
 
 public class WorldBorder
 {
-    private final List<IBorderListener> listeners = Lists.newArrayList();
+    private final List<IBorderListener> listeners = Lists.<IBorderListener>newArrayList();
     private double centerX = 0.0D;
     private double centerZ = 0.0D;
     private double startDiameter = 6.0E7D;
-    private double endDiameter = this.startDiameter;
+    private double endDiameter;
     private long endTime;
     private long startTime;
-    private int worldSize = 29999984;
-    private double damageAmount = 0.2D;
-    private double damageBuffer = 5.0D;
-    private int warningTime = 15;
-    private int warningDistance = 5;
+    private int worldSize;
+    private double damageAmount;
+    private double damageBuffer;
+    private int warningTime;
+    private int warningDistance;
+
+    public WorldBorder()
+    {
+        this.endDiameter = this.startDiameter;
+        this.worldSize = 29999984;
+        this.damageAmount = 0.2D;
+        this.damageBuffer = 5.0D;
+        this.warningTime = 15;
+        this.warningDistance = 5;
+    }
 
     public boolean contains(BlockPos pos)
     {
@@ -55,14 +65,7 @@ public class WorldBorder
 
     public EnumBorderStatus getStatus()
     {
-        if (this.endDiameter < this.startDiameter)
-        {
-            return EnumBorderStatus.SHRINKING;
-        }
-        else
-        {
-            return this.endDiameter > this.startDiameter ? EnumBorderStatus.GROWING : EnumBorderStatus.STATIONARY;
-        }
+        return this.endDiameter < this.startDiameter ? EnumBorderStatus.SHRINKING : (this.endDiameter > this.startDiameter ? EnumBorderStatus.GROWING : EnumBorderStatus.STATIONARY);
     }
 
     public double minX()
@@ -140,7 +143,7 @@ public class WorldBorder
         {
             double d0 = (double)((float)(System.currentTimeMillis() - this.startTime) / (float)(this.endTime - this.startTime));
 
-            if (!(d0 >= 1.0D))
+            if (d0 < 1.0D)
             {
                 return this.startDiameter + (this.endDiameter - this.startDiameter) * d0;
             }

@@ -7,9 +7,9 @@ public class EntityFishWakeFX extends EntityFX
     protected EntityFishWakeFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double p_i45073_8_, double p_i45073_10_, double p_i45073_12_)
     {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0.0D, 0.0D, 0.0D);
-        this.motionX *= (double)0.3F;
-        this.motionY = Math.random() * (double)0.2F + (double)0.1F;
-        this.motionZ *= (double)0.3F;
+        this.motionX *= 0.30000001192092896D;
+        this.motionY = Math.random() * 0.20000000298023224D + 0.10000000149011612D;
+        this.motionZ *= 0.30000001192092896D;
         this.particleRed = 1.0F;
         this.particleGreen = 1.0F;
         this.particleBlue = 1.0F;
@@ -22,9 +22,6 @@ public class EntityFishWakeFX extends EntityFX
         this.motionZ = p_i45073_12_;
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
     public void onUpdate()
     {
         this.prevPosX = this.posX;
@@ -32,9 +29,9 @@ public class EntityFishWakeFX extends EntityFX
         this.prevPosZ = this.posZ;
         this.motionY -= (double)this.particleGravity;
         this.moveEntity(this.motionX, this.motionY, this.motionZ);
-        this.motionX *= (double)0.98F;
-        this.motionY *= (double)0.98F;
-        this.motionZ *= (double)0.98F;
+        this.motionX *= 0.9800000190734863D;
+        this.motionY *= 0.9800000190734863D;
+        this.motionZ *= 0.9800000190734863D;
         int i = 60 - this.particleMaxAge;
         float f = (float)i * 0.001F;
         this.setSize(f, f);

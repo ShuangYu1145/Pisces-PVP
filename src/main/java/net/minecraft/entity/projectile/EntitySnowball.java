@@ -24,9 +24,6 @@ public class EntitySnowball extends EntityThrowable
         super(worldIn, x, y, z);
     }
 
-    /**
-     * Called when this EntityThrowable hits a block or entity.
-     */
     protected void onImpact(MovingObjectPosition p_70184_1_)
     {
         if (p_70184_1_.entityHit != null)
@@ -43,7 +40,7 @@ public class EntitySnowball extends EntityThrowable
 
         for (int j = 0; j < 8; ++j)
         {
-            this.worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+            this.worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D, new int[0]);
         }
 
         if (!this.worldObj.isRemote)

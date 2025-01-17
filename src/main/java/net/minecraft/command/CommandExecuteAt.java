@@ -12,38 +12,26 @@ import net.minecraft.world.World;
 
 public class CommandExecuteAt extends CommandBase
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "execute";
     }
 
-    /**
-     * Return the required permission level for this command.
-     */
     public int getRequiredPermissionLevel()
     {
         return 2;
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.execute.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
-    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(final ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 5)
         {
-            throw new WrongUsageException("commands.execute.usage");
+            throw new WrongUsageException("commands.execute.usage", new Object[0]);
         }
         else
         {
@@ -67,14 +55,13 @@ public class CommandExecuteAt extends CommandBase
 
                 if (iblockstate.getBlock() != block || k >= 0 && iblockstate.getBlock().getMetaFromState(iblockstate) != k)
                 {
-                    throw new CommandException("commands.execute.failed", "detect", entity.getName());
+                    throw new CommandException("commands.execute.failed", new Object[] {"detect", entity.getName()});
                 }
 
                 i = 10;
             }
 
             String s = buildString(args, i);
-            final ICommandSender icommandsender1 = sender;
             ICommandSender icommandsender = new ICommandSender()
             {
                 public String getName()
@@ -87,11 +74,11 @@ public class CommandExecuteAt extends CommandBase
                 }
                 public void addChatMessage(IChatComponent component)
                 {
-                    icommandsender1.addChatMessage(component);
+                    sender.addChatMessage(component);
                 }
                 public boolean canCommandSenderUseCommand(int permLevel, String commandName)
                 {
-                    return icommandsender1.canCommandSenderUseCommand(permLevel, commandName);
+                    return sender.canCommandSenderUseCommand(permLevel, commandName);
                 }
                 public BlockPos getPosition()
                 {
@@ -127,39 +114,21 @@ public class CommandExecuteAt extends CommandBase
 
                 if (j < 1)
                 {
-                    throw new CommandException("commands.execute.allInvocationsFailed", s);
+                    throw new CommandException("commands.execute.allInvocationsFailed", new Object[] {s});
                 }
             }
             catch (Throwable var23)
             {
-                throw new CommandException("commands.execute.failed", s, entity.getName());
+                throw new CommandException("commands.execute.failed", new Object[] {s, entity.getName()});
             }
         }
     }
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
-        }
-        else if (args.length > 1 && args.length <= 4)
-        {
-            return func_175771_a(args, 1, pos);
-        }
-        else if (args.length > 5 && args.length <= 8 && "detect".equals(args[4]))
-        {
-            return func_175771_a(args, 5, pos);
-        }
-        else
-        {
-            return args.length == 9 && "detect".equals(args[4]) ? getListOfStringsMatchingLastWord(args, Block.blockRegistry.getKeys()) : null;
-        }
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : (args.length > 1 && args.length <= 4 ? func_175771_a(args, 1, pos) : (args.length > 5 && args.length <= 8 && "detect".equals(args[4]) ? func_175771_a(args, 5, pos) : (args.length == 9 && "detect".equals(args[4]) ? getListOfStringsMatchingLastWord(args, Block.blockRegistry.getKeys()) : null)));
     }
 
-    /**
-     * Return whether the specified command parameter index is a username parameter.
-     */
     public boolean isUsernameIndex(String[] args, int index)
     {
         return index == 0;

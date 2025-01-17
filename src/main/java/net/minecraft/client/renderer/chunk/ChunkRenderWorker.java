@@ -154,14 +154,14 @@ public class ChunkRenderWorker implements Runnable
                 {
                     ChunkRenderWorker.this.freeRenderBuilder(generator);
                     generator.getLock().lock();
-                    label50:
+                    label21:
                     {
                         try
                         {
                             if (generator.getStatus() == ChunkCompileTaskGenerator.Status.UPLOADING)
                             {
                                 generator.setStatus(ChunkCompileTaskGenerator.Status.DONE);
-                                break label50;
+                                break label21;
                             }
 
                             if (!generator.isFinished())

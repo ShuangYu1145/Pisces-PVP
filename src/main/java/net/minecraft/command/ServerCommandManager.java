@@ -108,9 +108,6 @@ public class ServerCommandManager extends CommandHandler implements IAdminComman
         CommandBase.setAdminCommander(this);
     }
 
-    /**
-     * Send an informative message to the server operators
-     */
     public void notifyOperators(ICommandSender sender, ICommand command, int flags, String msgFormat, Object... msgParams)
     {
         boolean flag = true;
@@ -121,9 +118,9 @@ public class ServerCommandManager extends CommandHandler implements IAdminComman
             flag = false;
         }
 
-        IChatComponent ichatcomponent = new ChatComponentTranslation("chat.type.admin", sender.getName(), new ChatComponentTranslation(msgFormat, msgParams));
+        IChatComponent ichatcomponent = new ChatComponentTranslation("chat.type.admin", new Object[] {sender.getName(), new ChatComponentTranslation(msgFormat, msgParams)});
         ichatcomponent.getChatStyle().setColor(EnumChatFormatting.GRAY);
-        ichatcomponent.getChatStyle().setItalic(true);
+        ichatcomponent.getChatStyle().setItalic(Boolean.valueOf(true));
 
         if (flag)
         {

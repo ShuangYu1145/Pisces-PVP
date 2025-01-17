@@ -16,29 +16,13 @@ import net.minecraft.world.World;
 
 public class ContainerEnchantment extends Container
 {
-    /** SlotEnchantmentTable object with ItemStack to be enchanted */
-    public IInventory tableInventory = new InventoryBasic("Enchant", true, 2)
-    {
-        public int getInventoryStackLimit()
-        {
-            return 64;
-        }
-        public void markDirty()
-        {
-            super.markDirty();
-            ContainerEnchantment.this.onCraftMatrixChanged(this);
-        }
-    };
-
-    /** current world (for bookshelf counting) */
+    public IInventory tableInventory;
     private World worldPointer;
     private BlockPos position;
-    private Random rand = new Random();
+    private Random rand;
     public int xpSeed;
-
-    /** 3-member array storing the enchantment levels of each slot */
-    public int[] enchantLevels = new int[3];
-    public int[] enchantmentIds = new int[] {-1, -1, -1};
+    public int[] enchantLevels;
+    public int[] enchantmentIds;
 
     public ContainerEnchantment(InventoryPlayer playerInv, World worldIn)
     {
@@ -47,6 +31,21 @@ public class ContainerEnchantment extends Container
 
     public ContainerEnchantment(InventoryPlayer playerInv, World worldIn, BlockPos pos)
     {
+        this.tableInventory = new InventoryBasic("Enchant", true, 2)
+        {
+            public int getInventoryStackLimit()
+            {
+                return 64;
+            }
+            public void markDirty()
+            {
+                super.markDirty();
+                ContainerEnchantment.this.onCraftMatrixChanged(this);
+            }
+        };
+        this.rand = new Random();
+        this.enchantLevels = new int[3];
+        this.enchantmentIds = new int[] { -1, -1, -1};
         this.worldPointer = worldIn;
         this.position = pos;
         this.xpSeed = playerInv.player.getXPSeed();
@@ -95,16 +94,13 @@ public class ContainerEnchantment extends Container
         listener.sendProgressBarUpdate(this, 6, this.enchantmentIds[2]);
     }
 
-    /**
-     * Looks for changes made in the container, sends them to every listener.
-     */
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
 
         for (int i = 0; i < this.crafters.size(); ++i)
         {
-            ICrafting icrafting = this.crafters.get(i);
+            ICrafting icrafting = (ICrafting)this.crafters.get(i);
             icrafting.sendProgressBarUpdate(this, 0, this.enchantLevels[0]);
             icrafting.sendProgressBarUpdate(this, 1, this.enchantLevels[1]);
             icrafting.sendProgressBarUpdate(this, 2, this.enchantLevels[2]);
@@ -135,9 +131,6 @@ public class ContainerEnchantment extends Container
         }
     }
 
-    /**
-     * Callback for when the crafting matrix is changed.
-     */
     public void onCraftMatrixChanged(IInventory inventoryIn)
     {
         if (inventoryIn == this.tableInventory)
@@ -213,7 +206,7 @@ public class ContainerEnchantment extends Container
 
                             if (list != null && !list.isEmpty())
                             {
-                                EnchantmentData enchantmentdata = list.get(this.rand.nextInt(list.size()));
+                                EnchantmentData enchantmentdata = (EnchantmentData)list.get(this.rand.nextInt(list.size()));
                                 this.enchantmentIds[j1] = enchantmentdata.enchantmentobj.effectId | enchantmentdata.enchantmentLevel << 8;
                             }
                         }
@@ -233,9 +226,6 @@ public class ContainerEnchantment extends Container
         }
     }
 
-    /**
-     * Handles the given Button-click on the server, currently only used by enchanting. Name is for legacy.
-     */
     public boolean enchantItem(EntityPlayer playerIn, int id)
     {
         ItemStack itemstack = this.tableInventory.getStackInSlot(0);
@@ -264,7 +254,7 @@ public class ContainerEnchantment extends Container
 
                     for (int j = 0; j < list.size(); ++j)
                     {
-                        EnchantmentData enchantmentdata = list.get(j);
+                        EnchantmentData enchantmentdata = (EnchantmentData)list.get(j);
 
                         if (flag)
                         {
@@ -320,9 +310,6 @@ public class ContainerEnchantment extends Container
         return itemstack == null ? 0 : itemstack.stackSize;
     }
 
-    /**
-     * Called when the container is closed.
-     */
     public void onContainerClosed(EntityPlayer playerIn)
     {
         super.onContainerClosed(playerIn);
@@ -343,23 +330,13 @@ public class ContainerEnchantment extends Container
 
     public boolean canInteractWith(EntityPlayer playerIn)
     {
-        if (this.worldPointer.getBlockState(this.position).getBlock() != Blocks.enchanting_table)
-        {
-            return false;
-        }
-        else
-        {
-            return !(playerIn.getDistanceSq((double)this.position.getX() + 0.5D, (double)this.position.getY() + 0.5D, (double)this.position.getZ() + 0.5D) > 64.0D);
-        }
+        return this.worldPointer.getBlockState(this.position).getBlock() != Blocks.enchanting_table ? false : playerIn.getDistanceSq((double)this.position.getX() + 0.5D, (double)this.position.getY() + 0.5D, (double)this.position.getZ() + 0.5D) <= 64.0D;
     }
 
-    /**
-     * Take a stack from the specified inventory slot.
-     */
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = null;
-        Slot slot = this.inventorySlots.get(index);
+        Slot slot = (Slot)this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack())
         {
@@ -389,19 +366,19 @@ public class ContainerEnchantment extends Container
             }
             else
             {
-                if (this.inventorySlots.get(0).getHasStack() || !this.inventorySlots.get(0).isItemValid(itemstack1))
+                if (((Slot)this.inventorySlots.get(0)).getHasStack() || !((Slot)this.inventorySlots.get(0)).isItemValid(itemstack1))
                 {
                     return null;
                 }
 
                 if (itemstack1.hasTagCompound() && itemstack1.stackSize == 1)
                 {
-                    this.inventorySlots.get(0).putStack(itemstack1.copy());
+                    ((Slot)this.inventorySlots.get(0)).putStack(itemstack1.copy());
                     itemstack1.stackSize = 0;
                 }
                 else if (itemstack1.stackSize >= 1)
                 {
-                    this.inventorySlots.get(0).putStack(new ItemStack(itemstack1.getItem(), 1, itemstack1.getMetadata()));
+                    ((Slot)this.inventorySlots.get(0)).putStack(new ItemStack(itemstack1.getItem(), 1, itemstack1.getMetadata()));
                     --itemstack1.stackSize;
                 }
             }

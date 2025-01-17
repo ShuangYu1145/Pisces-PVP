@@ -3,6 +3,7 @@ package net.minecraft.block;
 import com.google.common.base.Predicate;
 import java.util.Random;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
@@ -32,7 +33,7 @@ public class BlockStem extends BlockBush implements IGrowable
 
     protected BlockStem(Block crop)
     {
-        this.setDefaultState(this.blockState.getBaseState().withProperty(AGE, 0).withProperty(FACING, EnumFacing.UP));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)).withProperty(FACING, EnumFacing.UP));
         this.crop = crop;
         this.setTickRandomly(true);
         float f = 0.125F;
@@ -40,10 +41,6 @@ public class BlockStem extends BlockBush implements IGrowable
         this.setCreativeTab((CreativeTabs)null);
     }
 
-    /**
-     * Get the actual Block state of this Block at the given position. This applies properties not visible in the
-     * metadata, such as fence connections.
-     */
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
     {
         state = state.withProperty(FACING, EnumFacing.UP);
@@ -60,9 +57,6 @@ public class BlockStem extends BlockBush implements IGrowable
         return state;
     }
 
-    /**
-     * is the block grass, dirt or farmland
-     */
     protected boolean canPlaceBlockOn(Block ground)
     {
         return ground == Blocks.farmland;
@@ -78,11 +72,11 @@ public class BlockStem extends BlockBush implements IGrowable
 
             if (rand.nextInt((int)(25.0F / f) + 1) == 0)
             {
-                int i = state.getValue(AGE);
+                int i = ((Integer)state.getValue(AGE)).intValue();
 
                 if (i < 7)
                 {
-                    state = state.withProperty(AGE, i + 1);
+                    state = state.withProperty(AGE, Integer.valueOf(i + 1));
                     worldIn.setBlockState(pos, state, 2);
                 }
                 else
@@ -109,8 +103,8 @@ public class BlockStem extends BlockBush implements IGrowable
 
     public void growStem(World worldIn, BlockPos pos, IBlockState state)
     {
-        int i = state.getValue(AGE) + MathHelper.getRandomIntegerInRange(worldIn.rand, 2, 5);
-        worldIn.setBlockState(pos, state.withProperty(AGE, Math.min(7, i)), 2);
+        int i = ((Integer)state.getValue(AGE)).intValue() + MathHelper.getRandomIntegerInRange(worldIn.rand, 2, 5);
+        worldIn.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(Math.min(7, i))), 2);
     }
 
     public int getRenderColor(IBlockState state)
@@ -121,7 +115,7 @@ public class BlockStem extends BlockBush implements IGrowable
         }
         else
         {
-            int i = state.getValue(AGE);
+            int i = ((Integer)state.getValue(AGE)).intValue();
             int j = i * 32;
             int k = 255 - i * 8;
             int l = i * 4;
@@ -134,9 +128,6 @@ public class BlockStem extends BlockBush implements IGrowable
         return this.getRenderColor(worldIn.getBlockState(pos));
     }
 
-    /**
-     * Sets the block's bounds for rendering it as an item
-     */
     public void setBlockBoundsForItemRender()
     {
         float f = 0.125F;
@@ -145,14 +136,11 @@ public class BlockStem extends BlockBush implements IGrowable
 
     public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
     {
-        this.maxY = (double)((float)(worldIn.getBlockState(pos).getValue(AGE) * 2 + 2) / 16.0F);
+        this.maxY = (double)((float)(((Integer)worldIn.getBlockState(pos).getValue(AGE)).intValue() * 2 + 2) / 16.0F);
         float f = 0.125F;
         this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, (float)this.maxY, 0.5F + f);
     }
 
-    /**
-     * Spawns this Block's drops into the World as EntityItems.
-     */
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
     {
         super.dropBlockAsItemWithChance(worldIn, pos, state, chance, fortune);
@@ -163,7 +151,7 @@ public class BlockStem extends BlockBush implements IGrowable
 
             if (item != null)
             {
-                int i = state.getValue(AGE);
+                int i = ((Integer)state.getValue(AGE)).intValue();
 
                 for (int j = 0; j < 3; ++j)
                 {
@@ -178,19 +166,9 @@ public class BlockStem extends BlockBush implements IGrowable
 
     protected Item getSeedItem()
     {
-        if (this.crop == Blocks.pumpkin)
-        {
-            return Items.pumpkin_seeds;
-        }
-        else
-        {
-            return this.crop == Blocks.melon_block ? Items.melon_seeds : null;
-        }
+        return this.crop == Blocks.pumpkin ? Items.pumpkin_seeds : (this.crop == Blocks.melon_block ? Items.melon_seeds : null);
     }
 
-    /**
-     * Get the Item that this Block should drop when harvested.
-     */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return null;
@@ -202,12 +180,9 @@ public class BlockStem extends BlockBush implements IGrowable
         return item != null ? item : null;
     }
 
-    /**
-     * Whether this IGrowable can grow
-     */
     public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)
     {
-        return state.getValue(AGE) != 7;
+        return ((Integer)state.getValue(AGE)).intValue() != 7;
     }
 
     public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state)
@@ -220,24 +195,18 @@ public class BlockStem extends BlockBush implements IGrowable
         this.growStem(worldIn, pos, state);
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(AGE, meta);
+        return this.getDefaultState().withProperty(AGE, Integer.valueOf(meta));
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(AGE);
+        return ((Integer)state.getValue(AGE)).intValue();
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, AGE, FACING);
+        return new BlockState(this, new IProperty[] {AGE, FACING});
     }
 }

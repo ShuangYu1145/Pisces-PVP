@@ -1,5 +1,6 @@
 package net.minecraft.block;
 
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -17,9 +18,10 @@ public class BlockWallSign extends BlockSign
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
+    @SuppressWarnings("incomplete-switch")
     public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
     {
-        EnumFacing enumfacing = worldIn.getBlockState(pos).getValue(FACING);
+        EnumFacing enumfacing = (EnumFacing)worldIn.getBlockState(pos).getValue(FACING);
         float f = 0.28125F;
         float f1 = 0.78125F;
         float f2 = 0.0F;
@@ -46,12 +48,9 @@ public class BlockWallSign extends BlockSign
         }
     }
 
-    /**
-     * Called when a neighboring block changes.
-     */
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
-        EnumFacing enumfacing = state.getValue(FACING);
+        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
 
         if (!worldIn.getBlockState(pos.offset(enumfacing.getOpposite())).getBlock().getMaterial().isSolid())
         {
@@ -62,9 +61,6 @@ public class BlockWallSign extends BlockSign
         super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
         EnumFacing enumfacing = EnumFacing.getFront(meta);
@@ -77,16 +73,13 @@ public class BlockWallSign extends BlockSign
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(FACING).getIndex();
+        return ((EnumFacing)state.getValue(FACING)).getIndex();
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, FACING);
+        return new BlockState(this, new IProperty[] {FACING});
     }
 }

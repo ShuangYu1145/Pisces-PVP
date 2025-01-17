@@ -21,10 +21,6 @@ public class ShaderLinkHelper
         return staticShaderLinkHelper;
     }
 
-    private ShaderLinkHelper()
-    {
-    }
-
     public void deleteShader(ShaderManager p_148077_1_)
     {
         p_148077_1_.getFragmentShaderLoader().deleteShader(p_148077_1_);

@@ -30,9 +30,6 @@ public class GuiWinGame extends GuiScreen
     private int field_146579_r;
     private float field_146578_s = 0.5F;
 
-    /**
-     * Called from the main game loop to update the screen.
-     */
     public void updateScreen()
     {
         MusicTicker musicticker = this.mc.getMusicTicker();
@@ -55,10 +52,6 @@ public class GuiWinGame extends GuiScreen
         }
     }
 
-    /**
-     * Fired when a key is typed (except F11 which toggles full screen). This is the equivalent of
-     * KeyListener.keyTyped(KeyEvent e). Args : character (character on the key), keyCode (lwjgl Keyboard key code)
-     */
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
         if (keyCode == 1)
@@ -73,23 +66,16 @@ public class GuiWinGame extends GuiScreen
         this.mc.displayGuiScreen((GuiScreen)null);
     }
 
-    /**
-     * Returns true if this GUI should pause the game when it is displayed in single-player
-     */
     public boolean doesGuiPauseGame()
     {
         return true;
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
     public void initGui()
     {
         if (this.field_146582_i == null)
         {
-            this.field_146582_i = Lists.newArrayList();
+            this.field_146582_i = Lists.<String>newArrayList();
 
             try
             {
@@ -139,7 +125,7 @@ public class GuiWinGame extends GuiScreen
             }
             catch (Exception exception)
             {
-                logger.error("Couldn't load credits", (Throwable)exception);
+                logger.error((String)"Couldn\'t load credits", (Throwable)exception);
             }
         }
     }
@@ -177,9 +163,6 @@ public class GuiWinGame extends GuiScreen
         tessellator.draw();
     }
 
-    /**
-     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
-     */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawWinGameScreen(mouseX, mouseY, partialTicks);
@@ -211,7 +194,7 @@ public class GuiWinGame extends GuiScreen
 
             if ((float)l + f + 12.0F + 8.0F > 0.0F && (float)l + f < (float)this.height)
             {
-                String s = this.field_146582_i.get(i1);
+                String s = (String)this.field_146582_i.get(i1);
 
                 if (s.startsWith("[C]"))
                 {

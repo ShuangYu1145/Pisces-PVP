@@ -14,17 +14,13 @@ public enum EnumCreatureType
     AMBIENT(EntityAmbientCreature.class, 15, Material.air, true, false),
     WATER_CREATURE(EntityWaterMob.class, 5, Material.water, true, false);
 
-    private final Class<? extends IAnimals> creatureClass;
+    private final Class <? extends IAnimals > creatureClass;
     private final int maxNumberOfCreature;
     private final Material creatureMaterial;
-
-    /** A flag indicating whether this creature type is peaceful. */
     private final boolean isPeacefulCreature;
-
-    /** Whether this creature type is an animal. */
     private final boolean isAnimal;
 
-    private EnumCreatureType(Class<? extends IAnimals> creatureClassIn, int maxNumberOfCreatureIn, Material creatureMaterialIn, boolean isPeacefulCreatureIn, boolean isAnimalIn)
+    private EnumCreatureType(Class <? extends IAnimals > creatureClassIn, int maxNumberOfCreatureIn, Material creatureMaterialIn, boolean isPeacefulCreatureIn, boolean isAnimalIn)
     {
         this.creatureClass = creatureClassIn;
         this.maxNumberOfCreature = maxNumberOfCreatureIn;
@@ -33,7 +29,7 @@ public enum EnumCreatureType
         this.isAnimal = isAnimalIn;
     }
 
-    public Class<? extends IAnimals> getCreatureClass()
+    public Class <? extends IAnimals > getCreatureClass()
     {
         return this.creatureClass;
     }
@@ -43,17 +39,11 @@ public enum EnumCreatureType
         return this.maxNumberOfCreature;
     }
 
-    /**
-     * Gets whether or not this creature type is peaceful.
-     */
     public boolean getPeacefulCreature()
     {
         return this.isPeacefulCreature;
     }
 
-    /**
-     * Return whether this creature type is an animal.
-     */
     public boolean getAnimal()
     {
         return this.isAnimal;

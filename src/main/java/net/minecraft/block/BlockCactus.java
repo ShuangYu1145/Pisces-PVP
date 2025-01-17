@@ -2,6 +2,7 @@ package net.minecraft.block;
 
 import java.util.Random;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -22,7 +23,7 @@ public class BlockCactus extends Block
     protected BlockCactus()
     {
         super(Material.cactus);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(AGE, 0));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)));
         this.setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
@@ -42,18 +43,18 @@ public class BlockCactus extends Block
 
             if (i < 3)
             {
-                int j = state.getValue(AGE);
+                int j = ((Integer)state.getValue(AGE)).intValue();
 
                 if (j == 15)
                 {
                     worldIn.setBlockState(blockpos, this.getDefaultState());
-                    IBlockState iblockstate = state.withProperty(AGE, 0);
+                    IBlockState iblockstate = state.withProperty(AGE, Integer.valueOf(0));
                     worldIn.setBlockState(pos, iblockstate, 4);
                     this.onNeighborBlockChange(worldIn, blockpos, iblockstate, this);
                 }
                 else
                 {
-                    worldIn.setBlockState(pos, state.withProperty(AGE, j + 1), 4);
+                    worldIn.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(j + 1)), 4);
                 }
             }
         }
@@ -76,9 +77,6 @@ public class BlockCactus extends Block
         return false;
     }
 
-    /**
-     * Used to determine ambient occlusion and culling when rebuilding chunks for render
-     */
     public boolean isOpaqueCube()
     {
         return false;
@@ -89,9 +87,6 @@ public class BlockCactus extends Block
         return super.canPlaceBlockAt(worldIn, pos) ? this.canBlockStay(worldIn, pos) : false;
     }
 
-    /**
-     * Called when a neighboring block changes.
-     */
     public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
     {
         if (!this.canBlockStay(worldIn, pos))
@@ -114,9 +109,6 @@ public class BlockCactus extends Block
         return block == Blocks.cactus || block == Blocks.sand;
     }
 
-    /**
-     * Called When an Entity Collided with the Block
-     */
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     {
         entityIn.attackEntityFrom(DamageSource.cactus, 1.0F);
@@ -127,24 +119,18 @@ public class BlockCactus extends Block
         return EnumWorldBlockLayer.CUTOUT;
     }
 
-    /**
-     * Convert the given metadata into a BlockState for this Block
-     */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(AGE, meta);
+        return this.getDefaultState().withProperty(AGE, Integer.valueOf(meta));
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(AGE);
+        return ((Integer)state.getValue(AGE)).intValue();
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, AGE);
+        return new BlockState(this, new IProperty[] {AGE});
     }
 }

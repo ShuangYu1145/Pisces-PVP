@@ -19,13 +19,13 @@ public class DynamicLight
 {
     private Entity entity = null;
     private double offsetY = 0.0D;
-    private double lastPosX = (double) -2.14748365E9F;
-    private double lastPosY = (double) -2.14748365E9F;
-    private double lastPosZ = (double) -2.14748365E9F;
+    private double lastPosX = -2.147483648E9D;
+    private double lastPosY = -2.147483648E9D;
+    private double lastPosZ = -2.147483648E9D;
     private int lastLightLevel = 0;
     private boolean underwater = false;
     private long timeCheckMs = 0L;
-    private Set<BlockPos> setLitChunkPos = new HashSet<>();
+    private Set<BlockPos> setLitChunkPos = new HashSet();
     private BlockPos.MutableBlockPos blockPosMutable = new BlockPos.MutableBlockPos();
 
     public DynamicLight(Entity entity)
@@ -57,7 +57,7 @@ public class DynamicLight
         double d4 = d1 - this.lastPosZ;
         double d5 = 0.1D;
 
-        if (!(Math.abs(d2) <= d5) || !(Math.abs(d3) <= d5) || !(Math.abs(d4) <= d5) || this.lastLightLevel != j)
+        if (Math.abs(d2) > d5 || Math.abs(d3) > d5 || Math.abs(d4) > d5 || this.lastLightLevel != j)
         {
             this.lastPosX = d6;
             this.lastPosY = d0;
@@ -74,7 +74,7 @@ public class DynamicLight
                 this.underwater = block == Blocks.water;
             }
 
-            Set<BlockPos> set = new HashSet<>();
+            Set<BlockPos> set = new HashSet();
 
             if (j > 0)
             {

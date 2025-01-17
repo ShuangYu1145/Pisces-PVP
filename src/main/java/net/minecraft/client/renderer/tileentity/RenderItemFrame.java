@@ -50,9 +50,6 @@ public class RenderItemFrame extends Render<EntityItemFrame>
         this.itemRenderer = itemRendererIn;
     }
 
-    /**
-     * Renders the desired {@code T} type Entity.
-     */
     public void doRender(EntityItemFrame entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         GlStateManager.pushMatrix();
@@ -86,9 +83,6 @@ public class RenderItemFrame extends Render<EntityItemFrame>
         this.renderName(entity, x + (double)((float)entity.facingDirection.getFrontOffsetX() * 0.3F), y - 0.25D, z + (double)((float)entity.facingDirection.getFrontOffsetZ() * 0.3F));
     }
 
-    /**
-     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
-     */
     protected ResourceLocation getEntityTexture(EntityItemFrame entity)
     {
         return null;
@@ -131,7 +125,7 @@ public class RenderItemFrame extends Render<EntityItemFrame>
 
             GlStateManager.rotate((float)i * 360.0F / 8.0F, 0.0F, 0.0F, 1.0F);
 
-            if (!Reflector.postForgeBusEvent(Reflector.RenderItemInFrameEvent_Constructor, itemFrame, this))
+            if (!Reflector.postForgeBusEvent(Reflector.RenderItemInFrameEvent_Constructor, new Object[] {itemFrame, this}))
             {
                 if (item instanceof ItemMap)
                 {
@@ -193,7 +187,6 @@ public class RenderItemFrame extends Render<EntityItemFrame>
                     }
                 }
             }
-
             GlStateManager.enableLighting();
             GlStateManager.popMatrix();
         }

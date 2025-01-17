@@ -55,14 +55,9 @@ import org.apache.logging.log4j.Logger;
 public class Bootstrap
 {
     private static final PrintStream SYSOUT = System.out;
-
-    /** Whether the blocks, items, etc have already been registered */
     private static boolean alreadyRegistered = false;
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /**
-     * Is Bootstrap registration already done?
-     */
     public static boolean isRegistered()
     {
         return alreadyRegistered;
@@ -127,7 +122,7 @@ public class Bootstrap
                     {
                         return super.func_82500_b() * 1.25F;
                     }
-                }).dispense(source, stack) : this.field_150843_b.dispense(source, stack);
+                }).dispense(source, stack): this.field_150843_b.dispense(source, stack);
             }
         });
         BlockDispenser.dispenseBehaviorRegistry.putObject(Items.spawn_egg, new BehaviorDefaultDispenseItem()
@@ -262,13 +257,13 @@ public class Bootstrap
                 Material material = block.getMaterial();
                 Item item;
 
-                if (Material.water.equals(material) && block instanceof BlockLiquid && iblockstate.getValue(BlockLiquid.LEVEL) == 0)
+                if (Material.water.equals(material) && block instanceof BlockLiquid && ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0)
                 {
                     item = Items.water_bucket;
                 }
                 else
                 {
-                    if (!Material.lava.equals(material) || !(block instanceof BlockLiquid) || iblockstate.getValue(BlockLiquid.LEVEL) != 0)
+                    if (!Material.lava.equals(material) || !(block instanceof BlockLiquid) || ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() != 0)
                     {
                         return super.dispenseStack(source, stack);
                     }
@@ -283,7 +278,7 @@ public class Bootstrap
                     stack.setItem(item);
                     stack.stackSize = 1;
                 }
-                else if (source.<TileEntityDispenser>getBlockTileEntity().addItemStack(new ItemStack(item)) < 0)
+                else if (((TileEntityDispenser)source.getBlockTileEntity()).addItemStack(new ItemStack(item)) < 0)
                 {
                     this.field_150840_b.dispense(source, new ItemStack(item));
                 }
@@ -310,7 +305,7 @@ public class Bootstrap
                 }
                 else if (world.getBlockState(blockpos).getBlock() == Blocks.tnt)
                 {
-                    Blocks.tnt.onBlockDestroyedByPlayer(world, blockpos, Blocks.tnt.getDefaultState().withProperty(BlockTNT.EXPLODE, true));
+                    Blocks.tnt.onBlockDestroyedByPlayer(world, blockpos, Blocks.tnt.getDefaultState().withProperty(BlockTNT.EXPLODE, Boolean.valueOf(true)));
                     world.setBlockToAir(blockpos);
                 }
                 else
@@ -500,9 +495,6 @@ public class Bootstrap
         });
     }
 
-    /**
-     * Registers blocks, items, stats, etc.
-     */
     public static void register()
     {
         if (!alreadyRegistered)
@@ -522,9 +514,6 @@ public class Bootstrap
         }
     }
 
-    /**
-     * redirect standard streams to logger
-     */
     private static void redirectOutputToLog()
     {
         System.setErr(new LoggingPrintStream("STDERR", System.err));

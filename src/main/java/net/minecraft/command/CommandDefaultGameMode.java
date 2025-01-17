@@ -7,36 +7,27 @@ import net.minecraft.world.WorldSettings;
 
 public class CommandDefaultGameMode extends CommandGameMode
 {
-    /**
-     * Gets the name of the command
-     */
     public String getCommandName()
     {
         return "defaultgamemode";
     }
 
-    /**
-     * Gets the usage string for the command.
-     */
     public String getCommandUsage(ICommandSender sender)
     {
         return "commands.defaultgamemode.usage";
     }
 
-    /**
-     * Callback when the command is invoked
-     */
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length <= 0)
         {
-            throw new WrongUsageException("commands.defaultgamemode.usage");
+            throw new WrongUsageException("commands.defaultgamemode.usage", new Object[0]);
         }
         else
         {
             WorldSettings.GameType worldsettings$gametype = this.getGameModeFromCommand(sender, args[0]);
             this.setGameType(worldsettings$gametype);
-            notifyOperators(sender, this, "commands.defaultgamemode.success", new Object[] {new ChatComponentTranslation("gameMode." + worldsettings$gametype.getName())});
+            notifyOperators(sender, this, "commands.defaultgamemode.success", new Object[] {new ChatComponentTranslation("gameMode." + worldsettings$gametype.getName(), new Object[0])});
         }
     }
 

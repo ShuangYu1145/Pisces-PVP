@@ -19,35 +19,29 @@ public class GuiScreenCapeOF extends GuiScreenOF
     private long messageHideTimeMs;
     private String linkUrl;
     private GuiButtonOF buttonCopyLink;
-    private FontRenderer fontRenderer = Config.getMinecraft().fontRendererObj;
+    private FontRenderer fontRenderer;
 
     public GuiScreenCapeOF(GuiScreen parentScreenIn)
     {
+        this.fontRenderer = Config.getMinecraft().fontRendererObj;
         this.parentScreen = parentScreenIn;
     }
 
-    /**
-     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
-     * window resizes, the buttonList is cleared beforehand.
-     */
     public void initGui()
     {
         int i = 0;
-        this.title = I18n.format("of.options.capeOF.title");
+        this.title = I18n.format("of.options.capeOF.title", new Object[0]);
         i = i + 2;
-        this.buttonList.add(new GuiButtonOF(210, this.width / 2 - 155, this.height / 6 + 24 * (i >> 1), 150, 20, I18n.format("of.options.capeOF.openEditor")));
-        this.buttonList.add(new GuiButtonOF(220, this.width / 2 - 155 + 160, this.height / 6 + 24 * (i >> 1), 150, 20, I18n.format("of.options.capeOF.reloadCape")));
+        this.buttonList.add(new GuiButtonOF(210, this.width / 2 - 155, this.height / 6 + 24 * (i >> 1), 150, 20, I18n.format("of.options.capeOF.openEditor", new Object[0])));
+        this.buttonList.add(new GuiButtonOF(220, this.width / 2 - 155 + 160, this.height / 6 + 24 * (i >> 1), 150, 20, I18n.format("of.options.capeOF.reloadCape", new Object[0])));
         i = i + 6;
-        this.buttonCopyLink = new GuiButtonOF(230, this.width / 2 - 100, this.height / 6 + 24 * (i >> 1), 200, 20, I18n.format("of.options.capeOF.copyEditorLink"));
+        this.buttonCopyLink = new GuiButtonOF(230, this.width / 2 - 100, this.height / 6 + 24 * (i >> 1), 200, 20, I18n.format("of.options.capeOF.copyEditorLink", new Object[0]));
         this.buttonCopyLink.visible = this.linkUrl != null;
         this.buttonList.add(this.buttonCopyLink);
         i = i + 4;
-        this.buttonList.add(new GuiButtonOF(200, this.width / 2 - 100, this.height / 6 + 24 * (i >> 1), I18n.format("gui.done")));
+        this.buttonList.add(new GuiButtonOF(200, this.width / 2 - 100, this.height / 6 + 24 * (i >> 1), I18n.format("gui.done", new Object[0])));
     }
 
-    /**
-     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-     */
     protected void actionPerformed(GuiButton button)
     {
         if (button.enabled)
@@ -86,7 +80,7 @@ public class GuiScreenCapeOF extends GuiScreenOF
                 }
                 catch (InvalidCredentialsException invalidcredentialsexception)
                 {
-                    Config.showGuiMessage(I18n.format("of.message.capeOF.error1"), I18n.format("of.message.capeOF.error2", invalidcredentialsexception.getMessage()));
+                    Config.showGuiMessage(I18n.format("of.message.capeOF.error1", new Object[0]), I18n.format("of.message.capeOF.error2", new Object[] {invalidcredentialsexception.getMessage()}));
                     Config.warn("Mojang authentication failed");
                     Config.warn(invalidcredentialsexception.getClass().getName() + ": " + invalidcredentialsexception.getMessage());
                 }
@@ -123,9 +117,6 @@ public class GuiScreenCapeOF extends GuiScreenOF
         this.setLinkUrl((String)null);
     }
 
-    /**
-     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
-     */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();

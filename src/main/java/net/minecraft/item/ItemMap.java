@@ -98,7 +98,7 @@ public class ItemMap extends ItemMapBase
                             boolean flag1 = i2 * i2 + j2 * j2 > (j1 - 2) * (j1 - 2);
                             int k2 = (j / i + k1 - 64) * i;
                             int l2 = (k / i + l1 - 64) * i;
-                            Multiset<MapColor> multiset = HashMultiset.create();
+                            Multiset<MapColor> multiset = HashMultiset.<MapColor>create();
                             Chunk chunk = worldIn.getChunkFromBlockCoords(new BlockPos(k2, 0, l2));
 
                             if (!chunk.isEmpty())
@@ -137,7 +137,7 @@ public class ItemMap extends ItemMapBase
 
                                             if (k4 > 1)
                                             {
-                                                label173:
+                                                label541:
                                                 {
                                                     while (true)
                                                     {
@@ -161,7 +161,7 @@ public class ItemMap extends ItemMapBase
 
                                                             if (l4 <= 0 || !block.getMaterial().isLiquid())
                                                             {
-                                                                break label173;
+                                                                break label541;
                                                             }
                                                         }
                                                     }
@@ -188,7 +188,7 @@ public class ItemMap extends ItemMapBase
                                     i5 = 0;
                                 }
 
-                                MapColor mapcolor = Iterables.getFirst(Multisets.copyHighestCountFirst(multiset), MapColor.airColor);
+                                MapColor mapcolor = (MapColor)Iterables.getFirst(Multisets.<MapColor>copyHighestCountFirst(multiset), MapColor.airColor);
 
                                 if (mapcolor == MapColor.waterColor)
                                 {
@@ -228,10 +228,6 @@ public class ItemMap extends ItemMapBase
         }
     }
 
-    /**
-     * Called each tick as long the item is on a player inventory. Uses by maps to check if is on a player hand and
-     * update it's contents.
-     */
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
     {
         if (!worldIn.isRemote)
@@ -256,9 +252,6 @@ public class ItemMap extends ItemMapBase
         return this.getMapData(stack, worldIn).getMapPacket(stack, worldIn, player);
     }
 
-    /**
-     * Called when item is crafted/smelted. Used only by maps so far.
-     */
     public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
     {
         if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("map_is_scaling"))
@@ -280,9 +273,6 @@ public class ItemMap extends ItemMapBase
         }
     }
 
-    /**
-     * allows items to add custom lines of information to the mouseover description
-     */
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
         MapData mapdata = this.getMapData(stack, playerIn.worldObj);

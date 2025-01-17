@@ -44,8 +44,8 @@ public class EntityTracker
 {
     private static final Logger logger = LogManager.getLogger();
     private final WorldServer theWorld;
-    private Set<EntityTrackerEntry> trackedEntities = Sets.newHashSet();
-    private IntHashMap<EntityTrackerEntry> trackedEntityHashTable = new IntHashMap<>();
+    private Set<EntityTrackerEntry> trackedEntities = Sets.<EntityTrackerEntry>newHashSet();
+    private IntHashMap<EntityTrackerEntry> trackedEntityHashTable = new IntHashMap();
     private int maxTrackingDistanceThreshold;
 
     public EntityTracker(WorldServer theWorldIn)
@@ -176,9 +176,6 @@ public class EntityTracker
         this.addEntityToTracker(entityIn, trackingRange, updateFrequency, false);
     }
 
-    /**
-     * Args : Entity, trackingRange, updateFrequency, sendVelocityUpdates
-     */
     public void addEntityToTracker(Entity entityIn, int trackingRange, final int updateFrequency, boolean sendVelocityUpdates)
     {
         if (trackingRange > this.maxTrackingDistanceThreshold)
@@ -219,7 +216,7 @@ public class EntityTracker
             });
             entityIn.addEntityCrashInfo(crashreportcategory);
             CrashReportCategory crashreportcategory1 = crashreport.makeCategory("Entity That Is Already Tracked");
-            (this.trackedEntityHashTable.lookup(entityIn.getEntityId())).trackedEntity.addEntityCrashInfo(crashreportcategory1);
+            ((EntityTrackerEntry)this.trackedEntityHashTable.lookup(entityIn.getEntityId())).trackedEntity.addEntityCrashInfo(crashreportcategory1);
 
             try
             {
@@ -227,7 +224,7 @@ public class EntityTracker
             }
             catch (ReportedException reportedexception)
             {
-                logger.error("\"Silently\" catching entity tracking error.", (Throwable)reportedexception);
+                logger.error((String)"\"Silently\" catching entity tracking error.", (Throwable)reportedexception);
             }
         }
     }
@@ -244,7 +241,7 @@ public class EntityTracker
             }
         }
 
-        EntityTrackerEntry entitytrackerentry1 = this.trackedEntityHashTable.removeObject(entityIn.getEntityId());
+        EntityTrackerEntry entitytrackerentry1 = (EntityTrackerEntry)this.trackedEntityHashTable.removeObject(entityIn.getEntityId());
 
         if (entitytrackerentry1 != null)
         {
@@ -255,7 +252,7 @@ public class EntityTracker
 
     public void updateTrackedEntities()
     {
-        List<EntityPlayerMP> list = Lists.newArrayList();
+        List<EntityPlayerMP> list = Lists.<EntityPlayerMP>newArrayList();
 
         for (EntityTrackerEntry entitytrackerentry : this.trackedEntities)
         {
@@ -267,9 +264,9 @@ public class EntityTracker
             }
         }
 
-        for (int i = 0; i < list.size(); ++i)
+        for (int i = 0; i < ((List)list).size(); ++i)
         {
-            EntityPlayerMP entityplayermp = list.get(i);
+            EntityPlayerMP entityplayermp = (EntityPlayerMP)list.get(i);
 
             for (EntityTrackerEntry entitytrackerentry1 : this.trackedEntities)
             {
@@ -298,7 +295,7 @@ public class EntityTracker
 
     public void sendToAllTrackingEntity(Entity entityIn, Packet p_151247_2_)
     {
-        EntityTrackerEntry entitytrackerentry = this.trackedEntityHashTable.lookup(entityIn.getEntityId());
+        EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry)this.trackedEntityHashTable.lookup(entityIn.getEntityId());
 
         if (entitytrackerentry != null)
         {
@@ -308,7 +305,7 @@ public class EntityTracker
 
     public void func_151248_b(Entity entityIn, Packet p_151248_2_)
     {
-        EntityTrackerEntry entitytrackerentry = this.trackedEntityHashTable.lookup(entityIn.getEntityId());
+        EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry)this.trackedEntityHashTable.lookup(entityIn.getEntityId());
 
         if (entitytrackerentry != null)
         {

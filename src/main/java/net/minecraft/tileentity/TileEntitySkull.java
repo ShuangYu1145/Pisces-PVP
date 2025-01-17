@@ -61,10 +61,6 @@ public class TileEntitySkull extends TileEntity
         return this.playerProfile;
     }
 
-    /**
-     * Allows for a specialized description packet to be created. This is often used to sync tile entity data from the
-     * server to the client easily. For example this is used by signs to synchronise the text to be displayed.
-     */
     public Packet getDescriptionPacket()
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
@@ -113,7 +109,7 @@ public class TileEntitySkull extends TileEntity
                 }
                 else
                 {
-                    Property property = Iterables.getFirst(gameprofile.getProperties().get("textures"), (Property)null);
+                    Property property = (Property)Iterables.getFirst(gameprofile.getProperties().get("textures"), null);
 
                     if (property == null)
                     {

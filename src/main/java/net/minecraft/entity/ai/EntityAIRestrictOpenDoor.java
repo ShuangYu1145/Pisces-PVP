@@ -21,9 +21,6 @@ public class EntityAIRestrictOpenDoor extends EntityAIBase
         }
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     public boolean shouldExecute()
     {
         if (this.entityObj.worldObj.isDaytime())
@@ -42,46 +39,22 @@ public class EntityAIRestrictOpenDoor extends EntityAIBase
             else
             {
                 this.frontDoor = village.getNearestDoor(blockpos);
-
-                if (this.frontDoor == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return (double)this.frontDoor.getDistanceToInsideBlockSq(blockpos) < 2.25D;
-                }
+                return this.frontDoor == null ? false : (double)this.frontDoor.getDistanceToInsideBlockSq(blockpos) < 2.25D;
             }
         }
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
     public boolean continueExecuting()
     {
-        if (this.entityObj.worldObj.isDaytime())
-        {
-            return false;
-        }
-        else
-        {
-            return !this.frontDoor.getIsDetachedFromVillageFlag() && this.frontDoor.func_179850_c(new BlockPos(this.entityObj));
-        }
+        return this.entityObj.worldObj.isDaytime() ? false : !this.frontDoor.getIsDetachedFromVillageFlag() && this.frontDoor.func_179850_c(new BlockPos(this.entityObj));
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
     public void startExecuting()
     {
         ((PathNavigateGround)this.entityObj.getNavigator()).setBreakDoors(false);
         ((PathNavigateGround)this.entityObj.getNavigator()).setEnterDoors(false);
     }
 
-    /**
-     * Resets the task
-     */
     public void resetTask()
     {
         ((PathNavigateGround)this.entityObj.getNavigator()).setBreakDoors(true);
@@ -89,9 +62,6 @@ public class EntityAIRestrictOpenDoor extends EntityAIBase
         this.frontDoor = null;
     }
 
-    /**
-     * Updates the task
-     */
     public void updateTask()
     {
         this.frontDoor.incrementDoorOpeningRestrictionCounter();

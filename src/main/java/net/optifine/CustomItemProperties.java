@@ -187,7 +187,7 @@ public class CustomItemProperties
             str = str.trim();
             Set set = new TreeSet();
             String[] astring = Config.tokenize(str, " ");
-            label57:
+            label45:
 
             for (int i = 0; i < astring.length; ++i)
             {
@@ -219,7 +219,7 @@ public class CustomItemProperties
                                 {
                                     if (k1 > j1)
                                     {
-                                        continue label57;
+                                        continue label45;
                                     }
 
                                     set.add(new Integer(k1));
@@ -251,12 +251,12 @@ public class CustomItemProperties
                 }
             }
 
-            Integer[] ainteger = (Integer[]) set.toArray(new Integer[set.size()]);
+            Integer[] ainteger = (Integer[])((Integer[])set.toArray(new Integer[set.size()]));
             int[] aint = new int[ainteger.length];
 
             for (int l1 = 0; l1 < aint.length; ++l1)
             {
-                aint[l1] = ainteger[l1];
+                aint[l1] = ainteger[l1].intValue();
             }
 
             return aint;
@@ -295,7 +295,7 @@ public class CustomItemProperties
         {
             if (mapTexs != null)
             {
-                String s = mapTexs.get("texture.bow_standby");
+                String s = (String)mapTexs.get("texture.bow_standby");
 
                 if (s != null)
                 {
@@ -346,7 +346,7 @@ public class CustomItemProperties
 
             for (Object o : set)
             {
-            	String s1 = (String)o;
+                String s1 = (String) o;
                 String s2 = (String)map.get(s1);
                 s2 = fixTextureName(s2, basePath);
                 map1.put(s1, s2);
@@ -400,7 +400,7 @@ public class CustomItemProperties
         {
             if (mapModelNames != null)
             {
-                String s = mapModelNames.get("model.bow_standby");
+                String s = (String)mapModelNames.get("model.bow_standby");
 
                 if (s != null)
                 {
@@ -428,7 +428,7 @@ public class CustomItemProperties
 
             for (Object o : set)
             {
-            	String s1 = (String)o;
+                String s1 = (String) o;
                 String s2 = (String)map.get(s1);
                 s2 = fixModelName(s2, basePath);
                 map1.put(s1, s2);
@@ -598,9 +598,13 @@ public class CustomItemProperties
                     {
                         return new RangeInt(0, i1);
                     }
+                    else if (str.endsWith("-"))
+                    {
+                        return new RangeInt(i1, 65535);
+                    }
                     else
                     {
-                        return str.endsWith("-") ? new RangeInt(i1, 65535) : new RangeInt(i1, i1);
+                        return new RangeInt(i1, i1);
                     }
                 }
                 else if (aint.length == 2)
@@ -633,14 +637,14 @@ public class CustomItemProperties
 
             for (Object o : map.keySet())
             {
-            	String s1 = (String)o;
+                String s1 = (String) o;
                 String s2 = (String)map.get(s1);
                 String s3 = s1.substring(s.length());
                 NbtTagValue nbttagvalue = new NbtTagValue(s3, s2);
                 list.add(nbttagvalue);
             }
 
-            NbtTagValue[] anbttagvalue = (NbtTagValue[]) list.toArray(new NbtTagValue[list.size()]);
+            NbtTagValue[] anbttagvalue = (NbtTagValue[])((NbtTagValue[])list.toArray(new NbtTagValue[list.size()]));
             return anbttagvalue;
         }
     }
@@ -649,9 +653,9 @@ public class CustomItemProperties
     {
         Map map = new LinkedHashMap();
 
-        for (Object o : props.keySet())
+        for (Object o: props.keySet())
         {
-        	String s = (String)o;
+            String s = (String) o;
             String s1 = props.getProperty(s);
 
             if (s.startsWith(keyPrefix))
@@ -781,7 +785,7 @@ public class CustomItemProperties
 
             for (String s : this.mapTextures.keySet())
             {
-                String s1 = this.mapTextures.get(s);
+                String s1 = (String)this.mapTextures.get(s);
                 ResourceLocation resourcelocation1 = this.getTextureLocation(s1);
                 this.mapTextureLocations.put(s, resourcelocation1);
 
@@ -846,7 +850,7 @@ public class CustomItemProperties
             {
                 for (String s : this.mapTextures.keySet())
                 {
-                    String s1 = this.mapTextures.get(s);
+                    String s1 = (String)this.mapTextures.get(s);
                     String s2 = StrUtils.removePrefix(s, "texture.");
 
                     if (s2.startsWith("bow") || s2.startsWith("fishing_rod") || s2.startsWith("shield"))
@@ -856,11 +860,10 @@ public class CustomItemProperties
 
                         if (this.mapBakedModelsTexture == null)
                         {
-                            this.mapBakedModelsTexture = new HashMap<>();
+                            this.mapBakedModelsTexture = new HashMap();
                         }
 
-                        String s3 = "item/" + s2;
-                        this.mapBakedModelsTexture.put(s3, ibakedmodel);
+                        this.mapBakedModelsTexture.put(s2, ibakedmodel);
                     }
                 }
             }
@@ -962,7 +965,7 @@ public class CustomItemProperties
         }
         else
         {
-            String s = map.get(key);
+            String s = (String)map.get(key);
             return s == null ? def : s;
         }
     }
@@ -1002,7 +1005,7 @@ public class CustomItemProperties
         {
             for (EnumFacing enumfacing : blockpart.mapFaces.keySet())
             {
-                BlockPartFace blockpartface = blockpart.mapFaces.get(enumfacing);
+                BlockPartFace blockpartface = (BlockPartFace)blockpart.mapFaces.get(enumfacing);
 
                 if (!useTint)
                 {
@@ -1103,7 +1106,7 @@ public class CustomItemProperties
         if (modelLocation != null && map != null)
         {
             String s = modelLocation.getResourcePath();
-            IBakedModel ibakedmodel1 = map.get(s);
+            IBakedModel ibakedmodel1 = (IBakedModel)map.get(s);
 
             if (ibakedmodel1 != null)
             {
@@ -1125,7 +1128,7 @@ public class CustomItemProperties
         {
             for (String s : this.mapModels.keySet())
             {
-                String s1 = this.mapModels.get(s);
+                String s1 = (String)this.mapModels.get(s);
                 String s2 = StrUtils.removePrefix(s, "model.");
 
                 if (s2.startsWith("bow") || s2.startsWith("fishing_rod") || s2.startsWith("shield"))
@@ -1158,7 +1161,7 @@ public class CustomItemProperties
         {
             for (String s : this.mapModels.keySet())
             {
-                String s1 = this.mapModels.get(s);
+                String s1 = (String)this.mapModels.get(s);
                 String s2 = StrUtils.removePrefix(s, "model.");
 
                 if (s2.startsWith("bow") || s2.startsWith("fishing_rod") || s2.startsWith("shield"))
@@ -1175,11 +1178,10 @@ public class CustomItemProperties
                     {
                         if (this.mapBakedModelsFull == null)
                         {
-                            this.mapBakedModelsFull = new HashMap<>();
+                            this.mapBakedModelsFull = new HashMap();
                         }
 
-                        String s3 = "item/" + s2;
-                        this.mapBakedModelsFull.put(s3, ibakedmodel1);
+                        this.mapBakedModelsFull.put(s2, ibakedmodel1);
                     }
                 }
             }
@@ -1197,14 +1199,14 @@ public class CustomItemProperties
             {
                 Object object = Reflector.ModelLoader_VanillaLoader_INSTANCE.getValue();
                 checkNull(object, "vanillaLoader is null");
-                Object object1 = Reflector.call(object, Reflector.ModelLoader_VanillaLoader_loadModel, modelresourcelocation);
+                Object object1 = Reflector.call(object, Reflector.ModelLoader_VanillaLoader_loadModel, new Object[] {modelresourcelocation});
                 checkNull(object1, "iModel is null");
                 Map map = (Map)Reflector.getFieldValue(modelBakery, Reflector.ModelLoader_stateModels);
                 checkNull(map, "stateModels is null");
                 map.put(modelresourcelocation, object1);
                 Set set = (Set)Reflector.getFieldValue(modelBakery, Reflector.ModelLoader_textures);
                 checkNull(set, "registryTextures is null");
-                Collection collection = (Collection)Reflector.call(object1, Reflector.IModel_getTextures);
+                Collection collection = (Collection)Reflector.call(object1, Reflector.IModel_getTextures, new Object[0]);
                 checkNull(collection, "modelTextures is null");
                 set.addAll(collection);
             }

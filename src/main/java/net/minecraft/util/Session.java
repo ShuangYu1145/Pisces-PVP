@@ -54,9 +54,6 @@ public class Session
         }
     }
 
-    /**
-     * Returns either 'legacy' or 'mojang' whether the account is migrated or not
-     */
     public Session.Type getSessionType()
     {
         return this.sessionType;
@@ -67,7 +64,7 @@ public class Session
         LEGACY("legacy"),
         MOJANG("mojang");
 
-        private static final Map<String, Session.Type> SESSION_TYPES = Maps.newHashMap();
+        private static final Map<String, Session.Type> SESSION_TYPES = Maps.<String, Session.Type>newHashMap();
         private final String sessionType;
 
         private Type(String sessionTypeIn)
@@ -77,7 +74,7 @@ public class Session
 
         public static Session.Type setSessionType(String sessionTypeIn)
         {
-            return SESSION_TYPES.get(sessionTypeIn.toLowerCase());
+            return (Session.Type)SESSION_TYPES.get(sessionTypeIn.toLowerCase());
         }
 
         static {

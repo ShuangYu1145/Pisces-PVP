@@ -25,7 +25,7 @@ public class RenderZombie extends RenderBiped<EntityZombie>
     public RenderZombie(RenderManager renderManagerIn)
     {
         super(renderManagerIn, new ModelZombie(), 0.5F, 1.0F);
-        LayerRenderer layerrenderer = this.layerRenderers.get(0);
+        LayerRenderer layerrenderer = (LayerRenderer)this.layerRenderers.get(0);
         this.field_82434_o = this.modelBipedMain;
         this.zombieVillagerModel = new ModelZombieVillager();
         this.addLayer(new LayerHeldItem(this));
@@ -51,18 +51,12 @@ public class RenderZombie extends RenderBiped<EntityZombie>
         this.field_177121_n = Lists.newArrayList(this.layerRenderers);
     }
 
-    /**
-     * Renders the desired {@code T} type Entity.
-     */
     public void doRender(EntityZombie entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         this.func_82427_a(entity);
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
-    /**
-     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
-     */
     protected ResourceLocation getEntityTexture(EntityZombie entity)
     {
         return entity.isVillager() ? zombieVillagerTextures : zombieTextures;

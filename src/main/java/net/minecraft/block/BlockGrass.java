@@ -2,6 +2,7 @@ package net.minecraft.block;
 
 import java.util.Random;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -22,19 +23,15 @@ public class BlockGrass extends Block implements IGrowable
     protected BlockGrass()
     {
         super(Material.grass);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(SNOWY, false));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(SNOWY, Boolean.valueOf(false)));
         this.setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
-    /**
-     * Get the actual Block state of this Block at the given position. This applies properties not visible in the
-     * metadata, such as fence connections.
-     */
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
     {
         Block block = worldIn.getBlockState(pos.up()).getBlock();
-        return state.withProperty(SNOWY, block == Blocks.snow || block == Blocks.snow_layer);
+        return state.withProperty(SNOWY, Boolean.valueOf(block == Blocks.snow || block == Blocks.snow_layer));
     }
 
     public int getBlockColor()
@@ -80,17 +77,11 @@ public class BlockGrass extends Block implements IGrowable
         }
     }
 
-    /**
-     * Get the Item that this Block should drop when harvested.
-     */
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Blocks.dirt.getItemDropped(Blocks.dirt.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT), rand, fortune);
     }
 
-    /**
-     * Whether this IGrowable can grow
-     */
     public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)
     {
         return true;
@@ -158,9 +149,6 @@ public class BlockGrass extends Block implements IGrowable
         return EnumWorldBlockLayer.CUTOUT_MIPPED;
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     public int getMetaFromState(IBlockState state)
     {
         return 0;
@@ -168,6 +156,6 @@ public class BlockGrass extends Block implements IGrowable
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, SNOWY);
+        return new BlockState(this, new IProperty[] {SNOWY});
     }
 }
